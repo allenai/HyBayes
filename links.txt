@@ -1,0 +1,8 @@
+Best:
+http://www.sumsar.net/best_online/
+Hitch hiker's guide:
+    paper: https://aclweb.org/anthology/P18-1128
+    repo: https://github.com/rtmdrr/testSignificanceNLP
+    Apendix: https://arxiv.org/pdf/1809.01448.pdf
+python DBDA:
+    https://github.com/JWarmenhoven/DBDA-python
