@@ -13,8 +13,8 @@ python makeData.py
 ```
 
 To run the main analysis you need to give the addresses of two input files and an output folder. For example:
-```bash
-python main.py --file1 .\fakeExperimentResults\PositiveInp_0.csv --file2 .\fakeExperimentResults\PositiveInp_1.csv --output-prefix .\posOutput\Positive
+```bashmodule 'pymc3' has no attribute 'model_to_graphviz'
+python main.py --file1 ./fakeExperimentResults/PositiveInp_0.csv --file2 ./fakeExperimentResults/PositiveInp_1.csv --output-prefix ./posOutput/Positive
 ```
 
 And here is the command template
