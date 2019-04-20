@@ -1,6 +1,7 @@
 # BayesianEstimationInNLP
-A frame work to do Bayesian hypothesis assessment for comparing the performences of two algorithms.
+A frame work to do Bayesian hypothesis assessment for comparing the performances of two algorithms.
 
+For running this code, you will need python at least 3.6 and probabilistic programming package pymc3/3.6.
 Before running the codes, make sure you have all the requirements by running the following line:
 ```bash
 pip install -r requirements.txt
