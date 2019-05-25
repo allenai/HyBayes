@@ -38,6 +38,7 @@ class HierarchicalModel:
     return numerator, denominator
 
   def addOrdinalModel(self):
+    # TODO finish up the ordinal
     meanY = np.mean([self.statsY[i].mean for i in range(self.nGroups)])
     sdY = np.mean([self.statsY[i].variance for i in range(self.nGroups)]) ** (0.5)
     logger.debug("sdY=" + str(sdY))
