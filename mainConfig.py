@@ -5,6 +5,7 @@ from Experiment import Experiment
 import logging
 import time
 from dataVizualisation import preAnalysisPlots
+from shutil import copyfile
 mpl.use('Agg')
 
 loggingTotalFileName = f"logs/allLogs.log"
@@ -17,8 +18,9 @@ parser.add_argument("-v", "--verbose", help="prints the report of the steps", ac
 args = parser.parse_args()
 
 if __name__ == '__main__':
-  loggingOneFileName = f"logs/{time.time()}.log"
-  print(f"Logs for this run will be stored at {loggingOneFileName}", flush=True)
+  loggingOneFileName = f"{time.time()}.log"
+  loggingOneFileAddress = f"logs/{loggingOneFileName}"
+  print(f"Logs for this run will be stored at {loggingOneFileAddress}", flush=True)
   shortFormatter = logging.Formatter('%(levelname)s: %(message)s')
   # longFormatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
@@ -30,29 +32,33 @@ if __name__ == '__main__':
   consoleHandler.setFormatter(shortFormatter)
   logger.addHandler(consoleHandler)
 
-  fho = logging.FileHandler(filename=loggingOneFileName, mode='w')
+  fho = logging.FileHandler(filename=loggingOneFileAddress, mode='w')
   fho.setLevel(logging.DEBUG)
   logger.addHandler(fho)
 
   try:
     config = configparser.ConfigParser()
     config.read(args.config)
-    nCol = np.int(config["Files"]["NumberOfColumns"])
+    nCol = config["Files"].getint("NumberOfColumns")
     y = list()
-    for fileName in [config["Files"]["File1"], config["Files"]["File2"]]:
+    fileNameList = [config["Files"].get(x) for x in ["File1", "File2"]]
+    for fileName in fileNameList:
       y.append(np.loadtxt(fileName))
       if nCol > 1:
         y[-1] = y[-1].reshape(-1, nCol)
       logger.info(f"File {fileName} is loaded.")
 
-
-    config.write(open(config["Files"]["OutputPrefix"]+"_config.ini", 'w'))
+    destConfigFileName = config["Files"].get("OutputPrefix") + "_config.ini"
+    config.write(open(destConfigFileName, 'w'))
+    logger.info(f"Copying the Config file of this run to {destConfigFileName}.")
 
     preAnalysisPlots(y=y, config=config)
     experiment = Experiment(y=y, config=config)
     experiment.run()
   except Exception as e: #TODO: make seperate messages for Exceptions (config file not found, import not working, theano...)
     logger.exception("An exception occurred. Halting the execution!")
-  # TODO: Copy log file in the folder
+  finally:
+    userLogFileName = f'{config["Files"].get("OutputPrefix")}_log.log'
+    logger.info(f"Copying the log file of this run to {userLogFileName}.")
+    copyfile(loggingOneFileAddress, userLogFileName)
   # TODO: draw post on top of prior
-  # TODO: change use getBoolean() for config

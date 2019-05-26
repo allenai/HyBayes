@@ -22,7 +22,7 @@ def preAnalysisPlots(y, config):
   # TODO:
   # for binomial make histogram of y[.][:,1]/y[.][:,0]
   dfs = []
-  if config["Model"]["VariableType"] in ["Count", "Ordinal"]:
+  if config["Model"].get("VariableType") in ["Count", "Ordinal"]:
     for i in range(len(y)):
       dfs.append(pd.DataFrame(columns=["val", "level"]))
       dfs[-1].val = y[i]
@@ -30,18 +30,18 @@ def preAnalysisPlots(y, config):
       dfs[-1] = dfs[-1].astype(np.int)
     df = pd.concat(dfs)
   # logger.debug(df)
-  if config["Model"]["VariableType"] in ["Count", "Ordinal"]:
-    if config["Model"]["CountPlot"] == "True":
+  if config["Model"].get("VariableType") in ["Count", "Ordinal"]:
+    if config["Model"].getboolean("CountPlot"):
       sns.countplot(x=df["val"], hue= df["level"])
-    plt.savefig(f"{config['Files']['OutputPrefix']}_countPlot.{config['Files'].get('PlotExtension')}")
+    plt.savefig(f"{config['Files'].get('OutputPrefix')}_countPlot.{config['Files'].get('PlotExtension')}")
     plt.clf()
 
-    if config["Model"]["ScatterPlot"] == "True":
+    if config["Model"].getboolean("ScatterPlot"):
       plt.ylim(-0.9, 1.9)
       plt.yticks([0, 1], ["Group 0", "Group 1", ])
       plt.scatter(df["val"], df["level"], c=df["level"])
 
-    plt.savefig(f"{config['Files']['OutputPrefix']}_scatterPlot.{config['Files'].get('PlotExtension')}")
+    plt.savefig(f"{config['Files'].get('OutputPrefix')}_scatterPlot.{config['Files'].get('PlotExtension')}")
     plt.clf()
 
 
@@ -133,17 +133,17 @@ def differencePlots(hierarchicalModel, modelConfig, filePrefix, rope, config):
   trace = hierarchicalModel.trace
   muVar = hierarchicalModel.MuParameter
   sigmaVar = hierarchicalModel.SigmaParameter
-  if modelConfig["MeanPlot"] == "True":
+  if modelConfig.getboolean("MeanPlot"):
     oneParameterPlot(hierarchicalModel, muVar, filePrefix, rope,
                      modelConfig.getboolean("PlotImprovements"),
                      config,
                      )
 
-  if modelConfig["SDPlot"] == "True":
+  if modelConfig.getboolean("SDPlot"):
     oneParameterPlot(hierarchicalModel, sigmaVar, filePrefix, rope,
                      modelConfig.getboolean("PlotImprovements"), config)
 
-  if modelConfig["AllCompPlot"] == "True":
+  if modelConfig.getboolean("AllCompPlot"):
     fig, axes = plt.subplots(3, 1, figsize=(20, 60))
 
     pm.plot_posterior(trace[muVar][:, 0] - trace[muVar][:, 1],

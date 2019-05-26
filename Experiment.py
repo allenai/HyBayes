@@ -169,14 +169,14 @@ class Experiment:
   def __init__(self, y, config) -> None:
     super().__init__()
     self.y = y
-    self.runPrior = config["Prior"]["Analyze"]
-    self.runPost = config["Posterior"]["Analyze"]
-    self.filePrefix = config["Files"]["OutputPrefix"]
+    self.runPrior = config["Prior"].getboolean("Analyze")
+    self.runPost = config["Posterior"].getboolean("Analyze")
+    self.filePrefix = config["Files"].get("OutputPrefix")
     self.configModel = config["Model"]
     self.configPrior = config["Prior"]
     self.configPost = config["Posterior"]
     self.configPlots = config["Plots"]
-    self.rope = (float(self.configModel["ROPE0"]), float(self.configModel["ROPE1"]))
+    self.rope = (self.configModel.getfloat("ROPE0"), self.configModel.getfloat("ROPE1"))
     self.extension = self.configPlots.get("Extension")
 
 
@@ -192,7 +192,7 @@ class Experiment:
     hierarchicalModel.trace = pm.sample(model=hierarchicalModel.pymcModel,
                                         draws=draws, chaines=chains, cores=cores, tune=tune)
     logger.info(f"Effective Sample Size (ESS) = {pm.diagnostics.effective_n(hierarchicalModel.trace)}")
-    if modelConfig["SaveTrace"] == "True":
+    if modelConfig.getboolean("SaveTrace"):
       traceFolderName = f"{filePrefix}_trace"
       if os.path.exists(traceFolderName):
         ind = 0
@@ -205,7 +205,7 @@ class Experiment:
       logger.info(f"{traceFolderName} is saved!")
     # Plot autocor
     #pm.autocorrplot()
-    if modelConfig["DiagnosticPlots"]=="True":
+    if modelConfig.getboolean("DiagnosticPlots"):
       pm.traceplot(hierarchicalModel.trace)
       diagFileName = f"{filePrefix}_diagnostics.{self.extension}"
       plt.savefig(diagFileName)
@@ -222,14 +222,14 @@ class Experiment:
 
   def addModel(self, modelObj):
     Error = False
-    modelName = self.configModel["VariableType"]
+    modelName = self.configModel.get("VariableType")
     if modelName == "Binary":
-      if self.configModel["PriorModel"] == "Beta":
+      if self.configModel.get("PriorModel") == "Beta":
         modelObj.addBetaBernModel()
       else:
-        logger.error(f'The given prior model {self.configModel["PriorModel"]} is not recognized')
+        logger.error(f'The given prior model {self.configModel.get("PriorModel")} is not recognized')
     elif modelName == "Metric":
-      if self.configModel["UnitInterval"] == "True":
+      if self.configModel.getboolean("UnitInterval"):
         modelObj.addInvLogitNormalModel()
       else:
         modelObj.addExpUniformNormalTModel()
@@ -255,18 +255,18 @@ class Experiment:
     if self.runPrior:
       priorModel.getGraphViz(
         self.filePrefix+"_prior",
-        self.configPrior["SaveHierarchicalTXT"] == "True",
-        self.configPrior["SaveHierarchicalPNG"] == "True",
+        self.configPrior.getboolean("SaveHierarchicalTXT"),
+        self.configPrior.getboolean("SaveHierarchicalPNG"),
         extension=self.extension,
         config=self.configPlots,
       )
       self.runModel(
         priorModel,
         filePrefix=self.filePrefix+"_prior",
-        draws=int(self.configPrior["Draws"]),
-        chains=int(self.configPrior["Chains"]),
+        draws=self.configPrior.getint("Draws"),
+        chains=self.configPrior.getint("Chains"),
         cores=1,
-        tune=int(self.configPrior["Tune"]),
+        tune=self.configPrior.getint("Tune"),
         modelConfig=self.configPrior,
         plotsConfig=self.configPlots,
       )
@@ -278,22 +278,22 @@ class Experiment:
       postModel.addObservationsFunction()
       postModel.getGraphViz(
         self.filePrefix + "_posterior",
-        self.configPost["SaveHierarchicalTXT"] == "True",
-        self.configPost["SaveHierarchicalPNG"] == "True",
+        self.configPost.getboolean("SaveHierarchicalTXT"),
+        self.configPost.getboolean("SaveHierarchicalPNG"),
         extension=self.extension,
         config=self.configPlots,
       )
       self.runModel(
         postModel,
         filePrefix=self.filePrefix + "_posterior",
-        draws=int(self.configPost["Draws"]),
-        chains=int(self.configPost["Chains"]),
+        draws=self.configPost.getint("Draws"),
+        chains=self.configPost.getint("Chains"),
         cores=1,
-        tune=int(self.configPost["Tune"]),
+        tune=self.configPost.getint("Tune"),
         modelConfig=self.configPost,
         plotsConfig=self.configPlots,
       )
-      if self.runPrior and self.runPost and self.configModel["BayesFactor"] == "True":
+      if self.runPrior and self.runPost and self.configModel.getboolean("BayesFactor"):
         BFDataFrame = self.bayesFactorAnalysis(priorModel, postModel, initRope= self.rope)
         BFfileName = self.filePrefix+"_BayesFactor.csv"
         BFDataFrame.to_csv(BFfileName)
@@ -306,7 +306,7 @@ class Experiment:
                    "prioNSample", "postNSample"]
     df = pd.DataFrame(columns=columnNames)
     rope = np.array(initRope)
-    n = 100 if self.configModel["TrySmallerROPEs"] == "True" else 1
+    n = 100 if self.configModel.getboolean("TrySmallerROPEs") else 1
     for i in range(n):
       priorRopeProbFrac = priorModel.gerIntervalProb(rope[0], rope[1])
       postRopeProbFrac = postModel.gerIntervalProb(rope[0], rope[1])
