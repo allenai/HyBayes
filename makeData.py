@@ -32,7 +32,7 @@ def getCountInput(n1=67, lambda1=11.1, n2=76, lambda2=9.9):
  return [x1, x2]
 
 
-def getOrdinalInput(f1 = (10, 9, 11), f2 = (8, 9, 7)):
+def getOrdinalInput(f1 = (10, 9, 20), f2 = (18, 9, 7)):
  x1 = np.zeros(shape=sum(f1), dtype=np.int)
  for i in range(1, len(f1)):
    begin = sum(f1[:i])

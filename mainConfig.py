@@ -13,7 +13,7 @@ logging.basicConfig(filename=loggingTotalFileName, filemode="a", level=logging.D
 logger = logging.getLogger('root')
 
 parser = argparse.ArgumentParser(description="Run Bayesian Stat")
-parser.add_argument("-c", "--config", help="address of Configfile", default="configs/configQABinomial.ini")
+parser.add_argument("-c", "--config", help="address of Configfile", default="configs/configOrdinal.ini")
 parser.add_argument("-v", "--verbose", help="prints the report of the steps", action="store_true", default=True)
 args = parser.parse_args()
 
@@ -62,3 +62,6 @@ if __name__ == '__main__':
     logger.info(f"Copying the log file of this run to {userLogFileName}.")
     copyfile(loggingOneFileAddress, userLogFileName)
   # TODO: draw post on top of prior
+  # TODO: Ordinal:
+  # read MinLevel = 0, MaxLevel = 2 from config
+  # debug the savetrace for ordinal tt.op does not accept pickling

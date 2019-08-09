@@ -37,34 +37,53 @@ class HierarchicalModel:
     denominator = muDiff.size
     return numerator, denominator
 
-  def addOrdinalModel(self):
+  def addOrdinalModel(self, minLevel=0, maxLevel=2):
     # TODO finish up the ordinal
     meanY = np.mean([self.statsY[i].mean for i in range(self.nGroups)])
     sdY = np.mean([self.statsY[i].variance for i in range(self.nGroups)]) ** (0.5)
     logger.debug("sdY=" + str(sdY))
     logger.debug("meanY=" + str(meanY))
+    nYlevels = maxLevel - minLevel + 1
 
-    @as_op(itypes=[tt.fvector, tt.fvector, tt.fvector], otypes=[tt.fmatrix])
+
+    thresh = np.arange(nYlevels, dtype=np.float) + minLevel + 0.5
+    thresh_obs = np.ma.asarray(thresh)
+    thresh_obs[1:-1] = np.ma.masked
+
+
+    @as_op(itypes=[tt.dvector, tt.dvector, tt.dvector], otypes=[tt.dmatrix])
     def outcome_probabilities(theta, mu, sigma): # TODO working here
-      out = np.empty((nYlevels2, self.nGroups), dtype=np.float32)
-      n = tt.norm(loc=mu, scale=sigma)
-      out[0, :] = n.cdf(theta[0])
-      out[1, :] = np.max([[0, 0], n.cdf(theta[1]) - n.cdf(theta[0])], axis=0)
-      out[2, :] = np.max([[0, 0], n.cdf(theta[2]) - n.cdf(theta[1])], axis=0)
-      out[3, :] = np.max([[0, 0], n.cdf(theta[3]) - n.cdf(theta[2])], axis=0)
-      out[4, :] = 1 - n.cdf(theta[3])
+      out = np.empty((nYlevels, self.nGroups), dtype=np.float)
+      normalDist = stats.norm(loc=mu, scale=sigma)
+      out[0, :] = normalDist.cdf(theta[0])
+      for i in range(1, nYlevels-1):
+        out[i, :] = np.max([[0, 0], normalDist.cdf(theta[i]) - normalDist.cdf(theta[i - 1])], axis=0)
+      out[-1, :] = 1 - normalDist.cdf(theta[-2])
       return out
 
     with pm.Model() as self.pymcModel:
-      theta = pm.Normal('theta', mu=thresh2, tau=np.repeat(.5 ** 2, len(thresh2)),
-                        shape=len(thresh2), observed=thresh_obs2)
+      theta = pm.Normal('theta', mu=thresh, tau=np.repeat(.5 ** 2, len(thresh)),
+                        shape=len(thresh), observed=thresh_obs)
+      mu = pm.Normal('mu', mu=nYlevels / 2.0, tau=1.0 / (nYlevels ** 2), shape=self.nGroups)
+      sigma = pm.Uniform('sigma', nYlevels / 1000.0, nYlevels * 10.0, shape=self.nGroups)
 
-    mu = pm.Normal('mu', mu=nYlevels2 / 2.0, tau=1.0 / (nYlevels2 ** 2), shape=n_grps)
-    sigma = pm.Uniform('sigma', nYlevels2 / 1000.0, nYlevels2 * 10.0, shape=n_grps)
+      levelProbs = pm.Deterministic("levelProbs", outcome_probabilities(theta, mu, sigma))
 
-    pr = outcome_probabilities(theta, mu, sigma)
+    observations = []
+    self.MuParameter = "mu"
+    self.SigmaParameter = "sigma"
 
-    y = pm.Categorical('y', pr[:, grp_idx].T, observed=df2.Y.cat.codes.as_matrix())
+    def addObservations():
+      with self.pymcModel:
+        for i in range(self.nGroups):
+          # observations.append(pm.StudentT(f'y_{i}', nu=nu, mu=mu[i], sd=sigma[i], observed=self.y[i]))
+          observations.append(pm.Categorical(f'y_{i}', levelProbs[:, i], observed = self.y[i]))
+
+    self.addObservationsFunction = addObservations
+    # logger.debug("line 71")
+    # exit(0)
+    # y = pm.Categorical('y', levelProbs[:, grp_idx].T, observed=df2.Y.cat.codes.as_matrix())
+
 
   def addCountModel(self):
     meanY = np.mean([self.statsY[i].mean for i in range(self.nGroups)])
@@ -189,8 +208,9 @@ class Experiment:
                progressbar=True,
                modelConfig=None,
                plotsConfig=None):
-    hierarchicalModel.trace = pm.sample(model=hierarchicalModel.pymcModel,
-                                        draws=draws, chaines=chains, cores=cores, tune=tune)
+    with hierarchicalModel.pymcModel:
+      hierarchicalModel.trace = pm.sample(model=hierarchicalModel.pymcModel,
+                                        draws=draws, chaines=chains, cores=cores, tune=tune, njobs=1)
     logger.info(f"Effective Sample Size (ESS) = {pm.diagnostics.effective_n(hierarchicalModel.trace)}")
     if modelConfig.getboolean("SaveTrace"):
       traceFolderName = f"{filePrefix}_trace"
@@ -260,6 +280,8 @@ class Experiment:
         extension=self.extension,
         config=self.configPlots,
       )
+
+      logger.debug("line 264")
       self.runModel(
         priorModel,
         filePrefix=self.filePrefix+"_prior",

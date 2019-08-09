@@ -29,20 +29,24 @@ def preAnalysisPlots(y, config):
       dfs[-1].level = i  # or class or category
       dfs[-1] = dfs[-1].astype(np.int)
     df = pd.concat(dfs)
-  # logger.debug(df)
+  logger.debug(df)
   if config["Model"].get("VariableType") in ["Count", "Ordinal"]:
     if config["Model"].getboolean("CountPlot"):
-      sns.countplot(x=df["val"], hue= df["level"])
-    plt.savefig(f"{config['Files'].get('OutputPrefix')}_countPlot.{config['Files'].get('PlotExtension')}")
-    plt.clf()
+      sns_count_plot = sns.countplot(x=df["val"], hue=df["level"])
+      fileName = f"{config['Files'].get('OutputPrefix')}_countPlot.{config['Plots'].get('Extension')}"
+      # print(fileName)
+      plt.savefig(fileName)
+      logger.info(f"Count Plot is saved to {fileName}.")
+      plt.clf()
 
     if config["Model"].getboolean("ScatterPlot"):
       plt.ylim(-0.9, 1.9)
       plt.yticks([0, 1], ["Group 0", "Group 1", ])
       plt.scatter(df["val"], df["level"], c=df["level"])
-
-    plt.savefig(f"{config['Files'].get('OutputPrefix')}_scatterPlot.{config['Files'].get('PlotExtension')}")
-    plt.clf()
+      fileName = f"{config['Files'].get('OutputPrefix')}_scatterPlot.{config['Plots'].get('Extension')}"
+      plt.savefig(fileName)
+      logger.info(f"Scatter Plot is saved to {fileName}.")
+      plt.clf()
 
 
 def oneParameterPlot(hierarchicalModel, var, filePrefix, rope, improvements = False,
@@ -55,7 +59,7 @@ def oneParameterPlot(hierarchicalModel, var, filePrefix, rope, improvements = Fa
   ax2 = plt.subplot(gs[2, :2])
   ax3 = plt.subplot(gs[2, 2:])
   diff = trace[var][:, 0] - trace[var][:, 1]
-  diffVarName = "theta_1-theta_2"
+  diffVarName = f"{var}_1-{var}_2"
   trace.add_values({diffVarName: diff})
   pm.plot_posterior(trace[diffVarName],
                     figsize=(4, 4),
