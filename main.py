@@ -1,24 +1,71 @@
+import argparse, configparser
 import matplotlib as mpl
-mpl.use('Agg')
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from scipy import stats
-import argparse
 from Experiment import Experiment
+import logging
+import time
+from dataVizualisation import preAnalysisPlots
+from shutil import copyfile
+mpl.use('Agg')
 
+loggingTotalFileName = f"logs/allLogs.log"
+logging.basicConfig(filename=loggingTotalFileName, filemode="a", level=logging.DEBUG)
+logger = logging.getLogger('root')
 
-#parsing arguments
 parser = argparse.ArgumentParser(description="Run Bayesian Stat")
-parser.add_argument("-f1", "--file1", help="Performances of first Algorithm", required=True)
-parser.add_argument("-f2", "--file2", help="Performances of second Algorithm", required=True)
-parser.add_argument("-o", "--output-prefix", help="Where to put output", required=True)
-
+# parser.add_argument("-c", "--config", help="address of Config file", default="configs/configBinomial.ini")
+# parser.add_argument("-c", "--config", help="address of Config file", default="configs/configMetric.ini")
+# parser.add_argument("-c", "--config", help="address of Config file", default="configs/configCount.ini")
+parser.add_argument("-c", "--config", help="address of Config file", default="configs/configBinary.ini")
+parser.add_argument("-v", "--verbose", help="prints the report of the steps", action="store_true", default=False)
 args = parser.parse_args()
+
 if __name__ == '__main__':
-  y = list()
-  y.append(np.loadtxt(args.file1))
-  y.append(np.loadtxt(args.file2))
-  # print(args.output_prefix)
-  exp1 = Experiment(y=y, runPrior=True, runPost=True, filePrefix=args.output_prefix, postPredict=False)
-  exp1.run()
+  loggingOneFileName = f"{time.time()}.log"
+  loggingOneFileAddress = f"logs/{loggingOneFileName}"
+  print(f"Logs for this run will be stored at {loggingOneFileAddress}", flush=True)
+  shortFormatter = logging.Formatter('%(levelname)s: %(message)s')
+  # longFormatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+  consoleHandler = logging.StreamHandler()
+  if args.verbose:
+    consoleHandler.setLevel(logging.DEBUG)
+  else:
+    consoleHandler.setLevel(logging.ERROR)
+  consoleHandler.setFormatter(shortFormatter)
+  logger.addHandler(consoleHandler)
+
+  fho = logging.FileHandler(filename=loggingOneFileAddress, mode='w')
+  fho.setLevel(logging.DEBUG)
+  logger.addHandler(fho)
+
+  try:
+    config = configparser.ConfigParser()
+    config.read(args.config)
+    nCol = config["Files"].getint("NumberOfColumns")
+    y = list()
+    fileNameList = [config["Files"].get(x) for x in ["File1", "File2"]]
+    for fileName in fileNameList:
+      y.append(np.loadtxt(fileName))
+      if nCol > 1:
+        y[-1] = y[-1].reshape(-1, nCol)
+      logger.info(f"File {fileName} is loaded.")
+
+    destConfigFileName = config["Files"].get("OutputPrefix") + "_config.ini"
+    config.write(open(destConfigFileName, 'w'))
+    logger.info(f"Copying the Config file of this run to {destConfigFileName}.")
+
+    preAnalysisPlots(y=y, config=config)
+
+    experiment = Experiment(y=y, config=config)
+    experiment.run()
+  except Exception as e: #TODO: make seperate messages for Exceptions (config file not found, import not working, theano...)
+    logger.exception("An exception occurred. Halting the execution!")
+  finally:
+    userLogFileName = f'{config["Files"].get("OutputPrefix")}_log.log'
+    logger.info(f"Copying the log file of this run to {userLogFileName}.")
+    copyfile(loggingOneFileAddress, userLogFileName)
+  # TODO: draw post on top of prior
+  # TODO: Ordinal:
+  # read MinLevel = 0, MaxLevel = 2 from config
+  # debug the savetrace for ordinal tt.op does not accept pickling
