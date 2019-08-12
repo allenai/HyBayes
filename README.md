@@ -77,9 +77,9 @@ For regular usages, you don't need to touch these files. However for long chains
 It also highly recommended that the files in this directory be made available for public to investigate and run their own analysis. 
 
 - **prior_trace** : A directory where all the samples taken using pymc3 engine for the [prior] distribution is stored for further analysis. See [posterior_trace] for more info.
-
 - **config.ini** : The user's desired configuration file is also copied alongside other output files, for reproducibility and ease of future references.
-
 - **log.log** : The log of the analysis is stored in this file for debugging purposes.
-
 - **posterior_hierarchicalGraph.png** : A pictorial representation of the hierarchical model used in the analysis. This file is made using the  'model_to_graphviz' in 'pymc3' directly. To understand the notation refer to their docs.
+    - https://graphviz.readthedocs.io/en/stable/manual.html
+    - https://github.com/pymc-devs/pymc3/blob/master/pymc3/model_graph.py
+- **posterior_hierarchicalGraph.txt** : 
