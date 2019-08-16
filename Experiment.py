@@ -281,7 +281,7 @@ class Experiment:
         config=self.configPlots,
       )
 
-      logger.debug("line 264")
+      logger.info("Sampling From Prior ...")
       self.runModel(
         priorModel,
         filePrefix=self.filePrefix+"_prior",
@@ -305,6 +305,8 @@ class Experiment:
         extension=self.extension,
         config=self.configPlots,
       )
+
+      logger.info("Sampling From Posterior ...")
       self.runModel(
         postModel,
         filePrefix=self.filePrefix + "_posterior",

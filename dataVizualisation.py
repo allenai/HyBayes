@@ -231,7 +231,7 @@ def differencePlots(hierarchicalModel, modelConfig, filePrefix, rope, config):
                       ref_val=0,
                       )
     axes[2].set_title("Effect size")
-    distFileName = f"{filePrefix}_allComp.{ex}"
+    distFileName = f"{filePrefix}_allComp.{config.get('Extension')}"
     plt.savefig(distFileName)
     logger.info(f"{distFileName} is saved!")
     plt.clf()

@@ -16,7 +16,7 @@ parser = argparse.ArgumentParser(description="Run Bayesian Stat")
 # parser.add_argument("-c", "--config", help="address of Config file", default="configs/configBinomial.ini")
 # parser.add_argument("-c", "--config", help="address of Config file", default="configs/configMetric.ini")
 # parser.add_argument("-c", "--config", help="address of Config file", default="configs/configCount.ini")
-parser.add_argument("-c", "--config", help="address of Config file", default="configs/configBinary.ini")
+parser.add_argument("-c", "--config", help="address of Config file", default="configs/configMetric.ini")
 parser.add_argument("-v", "--verbose", help="prints the report of the steps", action="store_true", default=False)
 args = parser.parse_args()
 
