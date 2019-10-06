@@ -57,8 +57,9 @@ def getBinomialInput(n1=20, p1=0.44, n2=25, p2=0.52):
 
 
 if __name__ == '__main__':
-  if not os.path.exists(folderName):
-    os.mkdir(folderName)
+  for folder in [folderName, "logs", "experimentFiles"]:
+    if not os.path.exists(folder):
+      os.mkdir(folder)
   saveInput(getBinaryInput, fileNamePrefix="BinaryData")
   saveInput(getPositiveInput, fileNamePrefix="PositiveRealData")
   saveInput(getCountInput, fileNamePrefix="CountData")

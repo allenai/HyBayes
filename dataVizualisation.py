@@ -106,18 +106,18 @@ def oneParameterPlot(hierarchicalModel, var, filePrefix, rope, improvements = Fa
   diff = trace[var][:, 0] - trace[var][:, 1]
   diffVarName = f"{var}_1-{var}_2"
   trace.add_values({diffVarName: diff})
-  pm.plot_posterior(trace[diffVarName],
+  # print(trace.varnames, diffVarName)
+  pm.plot_posterior(diff,
                     figsize=(4, 4),
-                    varnames=diffVarName,
-                    alpha_level=0.05,
+                    # varnames=diffVarName,
+                    # alpha_level=0.05,
                     rope=rope,
                     point_estimate='mode',
-                    # point_estimate='mode',
                     ax=ax1,
                     color=color,
                     round_to=3,
                     ref_val=0,
-                    text_size=config.getint("FontSize"),
+                    # text_size=config.getint("FontSize"),
                     )
   ax1.set_xlabel(r"$\theta_1-\theta_2$", fontdict = {"size": int(config.getint("FontSize")*0.5)})
 
@@ -147,25 +147,25 @@ def oneParameterPlot(hierarchicalModel, var, filePrefix, rope, improvements = Fa
 
   pm.plot_posterior(trace[var][:, 0],
                     figsize=(4, 4),
-                    varnames=var,
-                    alpha_level=0.05,
+                    # varnames=var,
+                    # alpha_level=0.05,
                     point_estimate='mode',
                     ax=ax2,
                     color=color,
                     round_to=3,
                     # ref_val=hierarchicalModel.statsY[0].mean,
-                    text_size=config.getint("FontSize"),
+                    # text_size=config.getint("FontSize"),
                     )
   ax2.set_xlabel(r"$\theta_1$", fontdict = {"size": int(config.getint("FontSize"))})
   pm.plot_posterior(trace[var][:, 1],
                     figsize=(4, 4),
-                    varnames=var,
-                    alpha_level=0.05,
+                    # varnames=var,
+                    # alpha_level=0.05,
                     point_estimate='mode',
                     ax=ax3,
                     color=color,
                     round_to=3,
-                    text_size=config.getint("FontSize"),
+                    # text_size=config.getint("FontSize"),
                     # ref_val=hierarchicalModel.statsY[1].mean,
                     )
   ax3.set_xlabel(r"$\theta_2$", fontdict = {"size": int(config.getint("FontSize"))})
@@ -197,7 +197,7 @@ def differencePlots(hierarchicalModel, modelConfig, filePrefix, rope, config):
 
     pm.plot_posterior(trace[muVar][:, 0] - trace[muVar][:, 1],
                       # varnames=var,
-                      alpha_level=0.05,
+                      # alpha_level=0.05,
                       rope=rope,
                       point_estimate='mode',
                       ax=axes[0],
@@ -209,7 +209,7 @@ def differencePlots(hierarchicalModel, modelConfig, filePrefix, rope, config):
 
     pm.plot_posterior(trace[sigmaVar][:, 0] - trace[sigmaVar][:, 1],
                       # varnames=var,
-                      alpha_level=0.05,
+                      # alpha_level=0.05,
                       rope=(-0.1, 0.1),  # TODO: calculate ROPE
                       point_estimate='mode',
                       ax=axes[1],
@@ -222,7 +222,7 @@ def differencePlots(hierarchicalModel, modelConfig, filePrefix, rope, config):
     es = (trace[muVar][:, 0] - trace[muVar][:, 1])/np.sqrt((trace[sigmaVar][:, 0]**2+trace[sigmaVar][:, 1]**2)/2)
     pm.plot_posterior(es,
                       # varnames=var,
-                      alpha_level=0.05,
+                      # alpha_level=0.05,
                       rope=(-0.1, 0.1),  # TODO: calculate ROPE
                       point_estimate='mode',
                       ax=axes[2],
