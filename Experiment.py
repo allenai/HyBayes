@@ -210,7 +210,7 @@ class Experiment:
                plotsConfig=None):
     with hierarchicalModel.pymcModel:
       hierarchicalModel.trace = pm.sample(model=hierarchicalModel.pymcModel,
-                                        draws=draws, chaines=chains, cores=cores, tune=tune, njobs=1)
+                                        draws=draws, chains=chains, cores=cores, tune=tune)
     logger.info(f"Effective Sample Size (ESS) = {pm.diagnostics.effective_n(hierarchicalModel.trace)}")
     if modelConfig.getboolean("SaveTrace"):
       traceFolderName = f"{filePrefix}_trace"
