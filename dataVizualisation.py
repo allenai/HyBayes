@@ -178,7 +178,7 @@ def oneParameterPlot(hierarchicalModel, var, filePrefix, rope, improvements = Fa
   logger.info(f"{distFileName} is saved!")
   plt.clf()
 
-def differencePlots(hierarchicalModel, modelConfig, filePrefix, rope, config):
+def difference_plots(hierarchicalModel, modelConfig, filePrefix, rope, config):
   trace = hierarchicalModel.trace
   muVar = hierarchicalModel.MuParameter
   sigmaVar = hierarchicalModel.SigmaParameter

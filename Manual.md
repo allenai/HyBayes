@@ -15,6 +15,11 @@ Before running the code, make sure you have all the requirements by running the 
 pip install -r requirements.txt
 ``` 
 
+If you're using MacOS, install GraphViz via `brew` command: 
+```
+> brew install graphviz
+```
+
 ## Preparing Artificial Data
 For purposes of this manual, we make some artificial data. If you already have your data (as observations) from your experiments, you can skip this step.
 
