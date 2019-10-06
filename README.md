@@ -1,9 +1,14 @@
 # User Manual for BayesianEstimationInNLP
-A Bayesian hypothesis assessment framework, tailored to comparing the performances of algorithm pairs.
+A Bayesian hypothesis assessment framework, tailored to comparing pairs of experiments. This package is preliminary implementation statistical analyses described in [PAPER LINK](?). This can also be seen as a complimentary to  [testSignificanceNLP](https://github.com/rtmdrr/testSignificanceNLP) package which contains popular Frequentist tests. 
+
+We focus on the setup where the performances of two algorithms, applied on a certain dataset, are provided based on an evaluation measure. The comparison is done by studying the posterior probabilities (rather than binary commonly-used binary decisions in other tests.)
+
+For further discussion of the approaches implemented here (and their comparison to other techniques), refer to [PAPER LINK](?). 
+
 
 ## Getting started
-For running this code, you will need python (at least 3.6) and the probabilistic programming package `pymc3/3.6`.
-Before running the code, make sure you have all the requirements by running the following line:
+For running this code, you will need Python (version >=3.6) and `pymc3/3.6`, a probabilistic programming package.
+Before running the code, make sure that you have all the requirements by running the following line:
 ```bash
 pip install -r requirements.txt
 ``` 
@@ -84,3 +89,10 @@ It also highly recommended that the files in this directory be made available fo
     - https://graphviz.readthedocs.io/en/stable/manual.html
     - https://github.com/pymc-devs/pymc3/blob/master/pymc3/model_graph.py
 - **posterior_hierarchicalGraph.txt** : 
+
+
+## Citation: 
+If you used this package in your research feel free to cite the following paper: 
+```
+TODO
+```
