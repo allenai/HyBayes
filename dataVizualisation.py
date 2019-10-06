@@ -132,17 +132,17 @@ def oneParameterPlot(hierarchicalModel, var, filePrefix, rope, improvements = Fa
   #
   #
   #
-  CI = (0.0136, 0.057)
-  CIline = None
-  for i in range(len(lines)):
-    lin: matplotlib.lines.Line2D = lines[i]
-    if lin.get_markerfacecolor() == "k":
-      CIline = copy.copy(lin)
-      yy = 0.5 * CIline.get_ydata()[0]
-      CIline.set_ydata((yy, yy))
-      CIline.set_xdata(CI)
-      CIline.set_color("b")
-      ax1.add_line(CIline)
+  # CI = (0.0136, 0.057)
+  # CIline = None
+  # for i in range(len(lines)):
+    # lin: matplotlib.lines.Line2D = lines[i]
+    # if lin.get_markerfacecolor() == "k":
+    #   CIline = copy.copy(lin)
+    #   yy = 0.5 * CIline.get_ydata()[0]
+    #   CIline.set_ydata((yy, yy))
+    #   CIline.set_xdata(CI)
+    #   CIline.set_color("b")
+    #   ax1.add_line(CIline)
 
 
   pm.plot_posterior(trace[var][:, 0],
