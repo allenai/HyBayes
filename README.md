@@ -68,8 +68,8 @@ Analyze = True
 
 ## Running the Analysis 
 Let's assume that you have followed the above instructions and:  
- - (1) included the performances observations (of from two approaches) in two separate files,  
- - (2) you have  and indicate the information in a config file. 
+ - (1) you have included the performances observations in two separate files,  
+ - (2) and you have prepared a config file. 
 
 To run the analysis, you pass the name of the config file as argument: 
 ```bash
