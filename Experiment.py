@@ -381,7 +381,7 @@ class Experiment:
             # logger.debug(priorRopeProb)
             # logger.debug(postRopeProb)
             # bfsv = postRopeProbFrac[0] * priorRopeProbFrac[1] / (postRopeProbFrac[1] * priorRopeProbFrac[0])
-            # TODO `bfsv` stanfs for?
+            # TODO `bfsv` stands for?
             bfsv = post_rope_prob / prior_rope_prob
             bf = bfsv * (1 - prior_rope_prob) / (1 - post_rope_prob)
             row = {

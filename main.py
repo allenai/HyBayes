@@ -4,7 +4,7 @@ import numpy as np
 from Experiment import Experiment
 import logging
 import time
-from dataVizualisation import preAnalysisPlots
+from dataVizualisation import pre_analysis_plots
 from shutil import copyfile
 mpl.use('Agg')
 
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     config.write(open(destConfigFileName, 'w'))
     logger.info(f"Copying the Config file of this run to {destConfigFileName}.")
 
-    preAnalysisPlots(y=y, config=config)
+    pre_analysis_plots(y=y, config=config)
 
     experiment = Experiment(y=y, config=config)
     experiment.run()
