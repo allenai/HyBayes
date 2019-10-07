@@ -11,7 +11,7 @@ For further discussion of the approaches implemented here (and their comparison 
 
 ## Getting started
 ### Installation
-For running this code, you will need Python (version >=3.6) and `pymc3/3.6`, a probabilistic programming package.
+For running this code, you will need Python (version >=3.6).
 You have two options for installation: 
  - If you don't want to modify any code, you can just install the package and use it in commandline: 
 ```
