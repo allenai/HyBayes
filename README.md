@@ -32,7 +32,7 @@ If you're using MacOS, install GraphViz via `brew` command:
 ```
 
 ### Preparing configuration file
-To use this package for analyzing your data, you need to prepare the a configuration file that indicates the information 
+To use this package for analyzing your data, you need to prepare a configuration file that indicates the information 
 needed for the analysis, including the type of plots and files you want to be stored.
 
 The following snippet shows the general structure of a configuration file. The main sections are `Files`, `Plots`, `Model`, 
