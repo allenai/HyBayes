@@ -8,17 +8,6 @@ Both these approaches help a researcher claim superiority of one algorithm over 
 
 If you used this package in your research feel free to cite: [XX our paper]
 
-## Getting started
-For running this code, you will need python at least 3.6 and the probabilistic programming package `pymc3/3.6`.
-Before running the code, make sure you have all the requirements by running the following line:
-```bash
-pip install -r requirements.txt
-``` 
-
-If you're using MacOS, install GraphViz via `brew` command: 
-```
-> brew install graphviz
-```
 
 ## Preparing Artificial Data
 For purposes of this manual, we make some artificial data. If you already have your data (as observations) from your experiments, you can skip this step.
