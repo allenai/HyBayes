@@ -76,7 +76,8 @@ To run the analysis, you pass the name of the config file as argument:
 python main.py --config myConfigFile.ini --verbose
 ```
 
-When the flag `--verbose` is on, the more detailed information of the steps of the analysis will be printed in standard output. This flag does not affect the log file that is stored along side other outputs.
+When the flag `--verbose` is on, the details of the analysis will be printed in standard output. 
+This flag does not affect the log file that is stored along side other outputs.
 
 And here is the general usage template which can be accessed using `--help` flag at any time:
 ```bash
