@@ -67,7 +67,7 @@ Analyze = True
 ```
 
 ## Running the Analysis 
-Let's assume assume that you have followed the above instructions and:  
+Let's assume that you have followed the above instructions and:  
  - (1) included the performances observations (of from two approaches) in two separate files,  
  - (2) you have  and indicate the information in a config file. 
 
