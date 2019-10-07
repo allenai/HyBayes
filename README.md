@@ -38,7 +38,7 @@ needed for the analysis, including the type of plots and files you want to be st
 The following snippet shows the general structure of a configuration file. The main sections are `Files`, `Plots`, `Model`, 
 `Prior`, and `Posterior`. You can find examples of complete configurations in [`configs`](configs) folder.
 
-The first section of the configuration file is called `Files` and it indicates the details of the files which contain 
+The first section of the configuration file is `Files` and it indicates the details of the files which contain 
 your experimental result. All the experiments use single column observation files (i.e., `NumberOfColumns = 1`) except 
 when the observations are assumed to follow Binomial distribution ([read more here]() **<-- correct the link**).
 Second and third lines indicate the names and the location of two files (which inlucde the result of your experiments). 
