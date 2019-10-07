@@ -179,8 +179,8 @@ def one_parameter_plot(hierarchicalModel, var, filePrefix, rope, improvements=Fa
 
 def difference_plots(hierarchicalModel, modelConfig, filePrefix, rope, config):
     trace = hierarchicalModel.trace
-    muVar = hierarchicalModel.MuParameter
-    sigmaVar = hierarchicalModel.SigmaParameter
+    muVar = hierarchicalModel.mu_parameter
+    sigmaVar = hierarchicalModel.sigma_parameter
     if modelConfig.getboolean("MeanPlot"):
         one_parameter_plot(hierarchicalModel, muVar, filePrefix, rope,
                            modelConfig.getboolean("PlotImprovements"),

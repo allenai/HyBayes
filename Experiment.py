@@ -244,8 +244,8 @@ class Experiment:
                   progressbar=True,
                   model_config=None,
                   plots_config=None):
-        with hierarchical_model.pymcModel:
-            hierarchical_model.trace = pm.sample(model=hierarchical_model.pymcModel,
+        with hierarchical_model.pymc_model:
+            hierarchical_model.trace = pm.sample(model=hierarchical_model.pymc_model,
                                                  draws=draws, chains=chains, cores=cores, tune=tune)
         logger.info(f"Effective Sample Size (ESS) = {pm.diagnostics.effective_n(hierarchical_model.trace)}")
         if model_config.getboolean("SaveTrace"):
@@ -257,7 +257,7 @@ class Experiment:
                 traceFolderName = f"{traceFolderName}_{ind}"
             pm.save_trace(hierarchical_model.trace, directory=traceFolderName)
             with open(os.path.join(traceFolderName, "pickeledTrace.pkl"), 'wb') as buff:
-                pickle.dump({'model': hierarchical_model.pymcModel, 'trace': hierarchical_model.trace}, buff)
+                pickle.dump({'model': hierarchical_model.pymc_model, 'trace': hierarchical_model.trace}, buff)
             logger.info(f"{traceFolderName} is saved!")
         # TODO drop these?
         # Plot autocor
@@ -269,7 +269,7 @@ class Experiment:
             logger.info(f"{diag_file_name} is saved!")
             plt.clf()
 
-        if hierarchical_model.nGroups == 2:
+        if hierarchical_model.n_groups == 2:
             difference_plots(hierarchicalModel=hierarchical_model,
                              modelConfig=model_config,
                              filePrefix=file_prefix,
@@ -309,7 +309,7 @@ class Experiment:
     def run(self):
         y = self.y
         prior_model = HierarchicalModel(y=y)
-        logger.info(f"nGroups: {prior_model.n_groups}")
+        logger.info(f"n_groups: {prior_model.n_groups}")
         for x in prior_model.stats_y:
             logger.info(x)
         self.add_model(prior_model)
@@ -319,7 +319,6 @@ class Experiment:
                 self.config_prior.getboolean("SaveHierarchicalTXT"),
                 self.config_prior.getboolean("SaveHierarchicalPNG"),
                 extension=self.extension,
-                config=self.config_plots,
             )
 
             logger.info("Sampling From Prior ...")
@@ -342,7 +341,6 @@ class Experiment:
                 self.config_post.getboolean("SaveHierarchicalTXT"),
                 self.config_post.getboolean("SaveHierarchicalPNG"),
                 extension=self.extension,
-                config=self.config_plots,
             )
 
             logger.info("Sampling From Posterior ...")
@@ -406,16 +404,16 @@ class Experiment:
 
     # TODO PPC stands for?
     def draw_ppc(self, trace, model):
-        # print(model.pymcModel.observed_RVs)
-        # print(len(model.pymcModel.observed_RVs))
-        # print(model.pymcModel.observed_RVs[0])
-        # print(type(model.pymcModel.observed_RVs[0]))
-        # print(type(model.pymcModel.observed_RVs))
-        # print(model.pymcModel.mu)
-        ppc = pm.sample_posterior_predictive(trace, samples=500, model=model.pymcModel,
-                                             vars=[model.pymcModel.mu,
-                                                   model.pymcModel.nu,
-                                                   model.pymcModel.sigma])
+        # print(model.pymc_model.observed_RVs)
+        # print(len(model.pymc_model.observed_RVs))
+        # print(model.pymc_model.observed_RVs[0])
+        # print(type(model.pymc_model.observed_RVs[0]))
+        # print(type(model.pymc_model.observed_RVs))
+        # print(model.pymc_model.mu)
+        ppc = pm.sample_posterior_predictive(trace, samples=500, model=model.pymc_model,
+                                             vars=[model.pymc_model.mu,
+                                                   model.pymc_model.nu,
+                                                   model.pymc_model.sigma])
 
         _, ax = plt.subplots(figsize=(12, 6))
         # print(type(ppc['y_0']))
