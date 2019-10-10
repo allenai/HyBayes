@@ -165,10 +165,10 @@ def write_config(config, file_name):
 
 
 if __name__ == '__main__':
-    write_config(make_binary_config(read_template_config()), "new_binary.ini")
-    write_config(make_binomial_config(read_template_config()), "new_binomial.ini")
-    write_config(make_count_config(read_template_config()), "new_count.ini")
-    write_config(make_metric_config(read_template_config()), "new_metric.ini")
-    write_config(make_ordinal_config(read_template_config()), "new_ordinal.ini")
+    write_config(make_binary_config(read_template_config()), "config_binary.ini")
+    write_config(make_binomial_config(read_template_config()), "config_binomial.ini")
+    write_config(make_count_config(read_template_config()), "config_count.ini")
+    write_config(make_metric_config(read_template_config()), "config_metric.ini")
+    write_config(make_ordinal_config(read_template_config()), "config_ordinal.ini")
 
 
