@@ -8,6 +8,12 @@ import pickle
 import pymc3 as pm
 import theano.tensor as tt
 
+from models.beta_bern_model import add_beta_bern_model
+from models.beta_binomial_model import add_beta_binomial_model
+from models.metric_model import add_exp_uniform_normal_t_model
+from models.count_model import add_count_model
+from models.ordinal_model import add_ordinal_model
+
 from visualization import difference_plots
 from scipy import stats
 from theano.compile.ops import as_op
@@ -48,168 +54,18 @@ class HierarchicalModel:
         denominator = mu_diff.size
         return numerator, denominator
 
-    def add_ordinal_model(self, min_level=0, max_level=2):
-        '''
-        Adding a model that estimates decisions on "ordinal" data. In particular, "ordinal" data
-        is a categorical where the variables have *ordered categories*, however the distances
-        between the categories is not known. Each of the categories are represented by "levels"
-        (the range of [min_level, max_level].)
-        '''
-        mean_y = np.mean([self.stats_y[i].mean for i in range(self.n_groups)])
-        sd_y = np.mean([self.stats_y[i].variance for i in range(self.n_groups)]) ** (0.5)
-        logger.debug(f"sd_y={sd_y}")
-        logger.debug(f"mean_y={mean_y}")
-        n_y_levels = max_level - min_level + 1
-
-        thresh = np.arange(n_y_levels, dtype=np.float) + min_level + 0.5
-        thresh_obs = np.ma.asarray(thresh)
-        thresh_obs[1:-1] = np.ma.masked
-
-        @as_op(itypes=[tt.dvector, tt.dvector, tt.dvector], otypes=[tt.dmatrix])
-        def outcome_probabilities(theta, mu, sigma):
-            out = np.empty((n_y_levels, self.n_groups), dtype=np.float)
-            normal_dist = stats.norm(loc=mu, scale=sigma)
-            out[0, :] = normal_dist.cdf(theta[0])
-            for i in range(1, n_y_levels - 1):
-                out[i, :] = np.max([[0, 0], normal_dist.cdf(theta[i]) - normal_dist.cdf(theta[i - 1])], axis=0)
-            out[-1, :] = 1 - normal_dist.cdf(theta[-2])
-            return out
-
-        with pm.Model() as self.pymc_model:
-            theta = pm.Normal('theta', mu=thresh, tau=np.repeat(.5 ** 2, len(thresh)),
-                              shape=len(thresh), observed=thresh_obs)
-            mu = pm.Normal('mu', mu=n_y_levels / 2.0, tau=1.0 / (n_y_levels ** 2), shape=self.n_groups)
-            sigma = pm.Uniform('sigma', n_y_levels / 1000.0, n_y_levels * 10.0, shape=self.n_groups)
-
-            levelProbs = pm.Deterministic("levelProbs", outcome_probabilities(theta, mu, sigma))
-
-        observations = []
-        self.mu_parameter = "mu"
-        self.sigma_parameter = "sigma"
-
-        def add_observations():
-            with self.pymc_model:
-                for i in range(self.n_groups):
-                    observations.append(pm.Categorical(f'y_{i}', levelProbs[:, i], observed=self.y[i]))
-
-        self.add_observations_function = add_observations
-
-    def add_count_model(self):
-        '''
-        Adding a model that estimates decisions on "count" data. In particular, "count" variables
-        are observations that take only the non-negative integer values {0, 1, 2, 3, ...}, and they
-        arise from counting rather than ranking.
-        '''
-        mean_y = np.mean([self.stats_y[i].mean for i in range(self.n_groups)])
-        sd_y = np.mean([self.stats_y[i].variance for i in range(self.n_groups)]) ** (0.5)
-        logger.debug(f"sd_y={sd_y}")
-        with pm.Model() as self.pymc_model:
-            log_mu = pm.Normal("logMu", mu=np.log(mean_y), sd=sd_y, shape=self.n_groups)
-            alpha = pm.Exponential("alpha", 1 / 30, shape=self.n_groups)
-
-            mu = pm.Deterministic("mu", tt.exp(log_mu))
-            sigma = pm.Deterministic("sigma", tt.sqrt(mu + alpha * mu ** 2))
-            skewness = pm.Deterministic("skewness", 2 / tt.sqrt(alpha))  # double check
-            observations = []
-            self.mu_parameter = "mu"
-            self.sigma_parameter = "sigma"
-            self.skewness = "skewness"
-
-            def add_observations():
-                with self.pymc_model:
-                    for i in range(self.n_groups):
-                        observations.append(pm.NegativeBinomial(f'y_{i}', mu=mu[i], alpha=alpha[i], observed=self.y[i]))
-
-            self.add_observations_function = add_observations
-
-    def add_beta_bern_model(self, a=1, b=1):
-        '''
-        A model for binary observations via a Bernoulli variable, and a Beta prior.
-        :param a: the first parameter of the Beta prior
-        :param b: the second parameter of the Beta prior
-        '''
-        with pm.Model() as self.pymc_model:
-            theta = pm.Beta("theta", a, b, shape=self.n_groups)
-            observations = []
-            self.mu_parameter = "theta"
-
-            def add_observations():
-                with self.pymc_model:
-                    for i in range(self.n_groups):
-                        observations.append(pm.Bernoulli(f'y_{i}', theta[i], observed=self.y[i]))
-
-            self.add_observations_function = add_observations
-
-    def add_beta_binomial_model(self, a=1, b=1):
-        '''
-        A model for binomial observations (number of successes in a sequence of n independent experiments)
-        via a Binomial variable, and a Beta prior.
-        :param a:
-        :param b:
-        :return:
-        '''
-        with pm.Model() as self.pymc_model:
-            theta = pm.Beta("theta", a, b, shape=self.n_groups)
-            observations = []
-            self.mu_parameter = "theta"
-
-            def add_observations():
-                with self.pymc_model:
-                    for i in range(self.n_groups):
-                        observations.append(
-                            pm.Binomial(f'y_{i}', n=self.y[i][:, 0], p=theta[i], observed=self.y[i][:, 1]))
-
-            self.add_observations_function = add_observations
-
-    # TODO has to be tested with sample data, to make sure that it works properly.
-    def add_inv_logit_normal_model(self):
-        raise NotImplementedError("work in progress . . . ")
-        with pm.Model() as self.pymc_model:
-            mu = pm.Normal('mu', mu=0, sd=2)
-            theta = pm.invlogit("p", mu)
-            observations = []
-
-            def addObservations():
-                with self.pymc_model:
-                    for i in range(self.n_groups):
-                        observations.append(pm.Bernoulli(f'y_{i}', theta[i], observed=y[i]))
-
-            self.add_observations_function = addObservations
-
-    def add_exp_uniform_normal_t_model(self):
-        '''
-        A student-t model with normal, uniform, exp priors for mu, sigma, nu parameters, respectively.
-        '''
-        mean_y = np.mean([self.stats_y[i].mean for i in range(self.n_groups)])
-        sd_y = np.mean([self.stats_y[i].variance for i in range(self.n_groups)]) ** (0.5)
-        with pm.Model() as self.pymc_model:
-            nu = pm.Exponential("nu", 1 / 30)  # mean = sd = 30
-            sigma = pm.Uniform("sigma", sd_y / 100, sd_y * 100, shape=self.n_groups)
-            mu = pm.Normal("mu", mean_y, (100 * sd_y), shape=self.n_groups)
-            observations = []
-            self.mu_parameter = "mu"
-            self.sigma_parameter = "sigma"
-            self.outlierness_parameter = "nu"
-
-            def add_observations():
-                with self.pymc_model:
-                    for i in range(self.n_groups):
-                        observations.append(pm.StudentT(f'y_{i}', nu=nu, mu=mu[i], sd=sigma[i], observed=self.y[i]))
-
-            self.add_observations_function = add_observations
-
-    def get_GraphViz_object(self, filePrefix: str, saveDot: bool = True, savePng: bool = True, extension="png"):
+    def get_GraphViz_object(self, file_prefix: str, save_dot: bool = True, save_png: bool = True, extension="png"):
         '''
         Returns the GraphViz object corresponding to the underlying hierarchical model.
         '''
         graph = pm.model_to_graphviz(self.pymc_model)
         graph.format = extension
-        if saveDot:
-            txtFileName = f"{filePrefix}_hierarchicalGraph.txt"
+        if save_dot:
+            txtFileName = f"{file_prefix}_hierarchicalGraph.txt"
             graph.save(txtFileName)
             logger.info(f"Graph's source saved to {txtFileName}")
-        if savePng:
-            pngFileName = f"{filePrefix}_hierarchicalGraph"
+        if save_png:
+            pngFileName = f"{file_prefix}_hierarchicalGraph"
             graph.render(pngFileName, view=False, cleanup=True)
             logger.info(f"Graph picture saved to {pngFileName}")
         return graph
@@ -285,20 +141,20 @@ class Experiment:
         model_name = self.config_model.get("Variable_type")
         if model_name == "Binary":
             if self.config_model.get("Prior_model") == "Beta":
-                model_object.add_beta_bern_model()
+                add_beta_bern_model(model_object)
             else:
                 logger.error(f'The given prior model {self.config_model.get("Prior_model")} is not recognized')
         elif model_name == "Metric":
             if self.config_model.getboolean("UnitInterval"):
-                model_object.add_inv_logit_normal_model()
+                add_inv_logit_normal_model(model_object)
             else:
-                model_object.add_exp_uniform_normal_t_model()
+                add_exp_uniform_normal_t_model(model_object)
         elif model_name == "Count":
-            model_object.add_count_model()
+            add_count_model(model_object)
         elif model_name == "Ordinal":
-            model_object.add_ordinal_model()
+            add_ordinal_model(model_object)
         elif model_name == "Binomial":
-            model_object.add_beta_binomial_model()
+            add_beta_binomial_model(model_object)
         else:
             error = False
         if error:

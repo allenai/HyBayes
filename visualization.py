@@ -41,23 +41,23 @@ def pre_analysis_plots(y, config):
         countDf = pd.concat(dfs)
 
     # Plotting:
-  if config["Model"].get("Variable_type") in ["Contingency", ]:
-    mat = y[0]
-    # print(np.sum(mat, axis=1))
-    mat = mat / np.sum(mat, axis=1)[:, np.newaxis]
-    if config["Plots"].get("Histogram_plot"):
-      plt.hist(mat[:,1]-mat[:,2])
-      fileName = f"{config['Files'].get('OutputPrefix')}_Histogram_plot.{config['Plots'].get('Extension')}"
-      plt.savefig(fileName)
-      logger.info(f"Histogram Plot is saved to {fileName}.")
-      plt.clf()
-    if config["Plots"].get("Avg_confusion_heat_map"):
-      avgTable = np.average(mat, axis=0).reshape(2, 2)
-      sns.heatmap(avgTable, annot=True)
-      fileName = f"{config['Files'].get('Output_prefix')}_Heat_map_plot.{config['Plots'].get('Extension')}"
-      plt.savefig(fileName)
-      logger.info(f"Histogram Plot is saved to {fileName}.")
-      plt.clf()
+    if config["Model"].get("Variable_type") in ["Contingency", ]:
+      mat = y[0]
+      # print(np.sum(mat, axis=1))
+      mat = mat / np.sum(mat, axis=1)[:, np.newaxis]
+      if config["Plots"].get("Histogram_plot"):
+        plt.hist(mat[:,1]-mat[:,2])
+        fileName = f"{config['Files'].get('OutputPrefix')}_Histogram_plot.{config['Plots'].get('Extension')}"
+        plt.savefig(fileName)
+        logger.info(f"Histogram Plot is saved to {fileName}.")
+        plt.clf()
+      if config["Plots"].get("Avg_confusion_heat_map"):
+        avgTable = np.average(mat, axis=0).reshape(2, 2)
+        sns.heatmap(avgTable, annot=True)
+        fileName = f"{config['Files'].get('Output_prefix')}_Heat_map_plot.{config['Plots'].get('Extension')}"
+        plt.savefig(fileName)
+        logger.info(f"Histogram Plot is saved to {fileName}.")
+        plt.clf()
 
 
 
