@@ -40,6 +40,7 @@ if __name__ == '__main__':
   fho.setLevel(logging.DEBUG)
   logger.addHandler(fho)
   config = configparser.ConfigParser()
+  logger.info(f"Reading config file: {args.config}")
   config.read(args.config)
 
   try:

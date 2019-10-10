@@ -3,8 +3,9 @@ data:
 run:
 	python main.py --config configs/config_nop.ini --verbose
 all: clear data
-	for f in configs/*; do\
-	  python main.py --config $$f ;\
+
+	for f in config_binary.ini config_binomial.ini config_count.ini config_metric.ini config_nop.ini config_ordinal.ini; do\
+	  python main.py --config configs/$$f --verbose;\
 	done
 clear:
 	rm -rf artificial_data
