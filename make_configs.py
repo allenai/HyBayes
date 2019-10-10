@@ -6,9 +6,13 @@ config_folder_name = "configs"
 config_template_file_name = "config_template.ini"
 artificial_data_folder_name = "artificial_data"
 
+def read_template_config():
+    config = configparser.ConfigParser()
+    config.read(os.path.join(config_folder_name, config_template_file_name))
+    return config
 
 def make_metric_config(config: configparser.ConfigParser):
-    config = copy.deepcopy(config)
+    config = copy.copy(config)
     config["Files"]["Number_of_columns"] = "1"
     config["Files"]["Number_of_files"] = "2"
     config["Files"]["File1"] = f"{artificial_data_folder_name}/Positive_real_data_0.csv"
@@ -28,12 +32,15 @@ def make_metric_config(config: configparser.ConfigParser):
         config[plot_stage]["Mean_plot"] = "True"
         config[plot_stage]["Mean_plot_kind"] = "hist"
         config[plot_stage]["Show_Mean_plot"] = "False"
+        config[plot_stage]["Effective_sample_size_plot"] = "True"
+        config[plot_stage]["Effective_sample_size_plot_kind"] = "hist"
+        config[plot_stage]["Show_Effective_sample_size_plot"] = "False"
 
     return config
 
 
 def make_count_config(config: configparser.ConfigParser):
-    config = copy.deepcopy(config)
+    config = copy.copy(config)
     config["Files"]["Number_of_columns"] = "1"
     config["Files"]["Number_of_files"] = "2"
     config["Files"]["File1"] = f"{artificial_data_folder_name}/Count_data_0.csv"
@@ -63,7 +70,7 @@ def make_count_config(config: configparser.ConfigParser):
 
 
 def make_ordinal_config(config: configparser.ConfigParser):
-    config = copy.deepcopy(config)
+    config = copy.copy(config)
     config["Files"]["Number_of_columns"] = "1"
     config["Files"]["Number_of_files"] = "2"
     config["Files"]["File1"] = f"{artificial_data_folder_name}/Ordinal_data_0.csv"
@@ -95,7 +102,7 @@ def make_ordinal_config(config: configparser.ConfigParser):
 
 
 def make_binary_config(config: configparser.ConfigParser):
-    config = copy.deepcopy(config)
+    config = copy.copy(config)
     config["Files"]["Number_of_columns"] = "1"
     config["Files"]["Number_of_files"] = "2"
     config["Files"]["File1"] = f"{artificial_data_folder_name}/Binary_data_0.csv"
@@ -123,7 +130,7 @@ def make_binary_config(config: configparser.ConfigParser):
 
 
 def make_binomial_config(config: configparser.ConfigParser):
-    config = copy.deepcopy(config)
+    config = copy.copy(config)
     config["Files"]["Number_of_columns"] = "1"
     config["Files"]["Number_of_files"] = "2"
     config["Files"]["File1"] = f"{artificial_data_folder_name}/Binomial_data_0.csv"
@@ -158,14 +165,10 @@ def write_config(config, file_name):
 
 
 if __name__ == '__main__':
-    config = configparser.ConfigParser()
-    config.read(os.path.join(config_folder_name, config_template_file_name))
-    print(f"Reading config file: {config_template_file_name}")
-
-    write_config(make_binary_config(config), "new_binary.ini")
-    write_config(make_binomial_config(config), "new_binomial.ini")
-    write_config(make_count_config(config), "new_count.ini")
-    write_config(make_metric_config(config), "new_metric.ini")
-    write_config(make_ordinal_config(config), "new_ordinal.ini")
+    write_config(make_binary_config(read_template_config()), "new_binary.ini")
+    write_config(make_binomial_config(read_template_config()), "new_binomial.ini")
+    write_config(make_count_config(read_template_config()), "new_count.ini")
+    write_config(make_metric_config(read_template_config()), "new_metric.ini")
+    write_config(make_ordinal_config(read_template_config()), "new_ordinal.ini")
 
 
