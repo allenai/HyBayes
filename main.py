@@ -4,23 +4,23 @@ import numpy as np
 from Experiment import Experiment
 import logging
 import time
-from dataVizualisation import pre_analysis_plots
+from visualization import pre_analysis_plots
 from shutil import copyfile
+import os
+from utils import *
 mpl.use('Agg')
 
-loggingTotalFileName = f"logs/allLogs.log"
-logging.basicConfig(filename=loggingTotalFileName, filemode="a", level=logging.DEBUG)
-logger = logging.getLogger('root')
-
-parser = argparse.ArgumentParser(description="Run Bayesian Stat")
-# parser.add_argument("-c", "--config", help="address of Config file", default="configs/configBinomial.ini")
-# parser.add_argument("-c", "--config", help="address of Config file", default="configs/configMetric.ini")
-# parser.add_argument("-c", "--config", help="address of Config file", default="configs/configCount.ini")
-parser.add_argument("-c", "--config", help="address of Config file", default="configs/configMetric.ini")
-parser.add_argument("-v", "--verbose", help="prints the report of the steps", action="store_true", default=False)
-args = parser.parse_args()
 
 if __name__ == '__main__':
+  logs_folder_made = mk_dir_if_not_exists("logs")
+  loggingTotalFileName = f"logs/allLogs.log"
+  logging.basicConfig(filename=loggingTotalFileName, filemode="a", level=logging.DEBUG)
+  logger = logging.getLogger('root')
+
+  parser = argparse.ArgumentParser(description="Run Bayesian Statistics Tailored towards analysing the experiment results specially in NLP area. Email @.com for comments.")
+  parser.add_argument("-c", "--config", help="address of Config file", default="configs/configMetric.ini")
+  parser.add_argument("-v", "--verbose", help="prints the report of the steps", action="store_true", default=False)
+  args = parser.parse_args()
   loggingOneFileName = f"{time.time()}.log"
   loggingOneFileAddress = f"logs/{loggingOneFileName}"
   print(f"Logs for this run will be stored at {loggingOneFileAddress}", flush=True)
@@ -40,8 +40,17 @@ if __name__ == '__main__':
   logger.addHandler(fho)
 
   try:
+    if logs_folder_made:
+      logger.log(f"logs folder is made!")
     config = configparser.ConfigParser()
     config.read(args.config)
+
+    output_prefix = config["Files"].get("OutputPrefix")
+    last_slash_index = output_prefix.rfind("/")
+
+    if last_slash_index != -1:
+      mk_dir_if_not_exists(output_prefix[:last_slash_index])
+
     nCol = config["Files"].getint("NumberOfColumns")
     y = list()
     fileNameList = [config["Files"].get(x) for x in ["File1", "File2"]]
@@ -50,6 +59,11 @@ if __name__ == '__main__':
       if nCol > 1:
         y[-1] = y[-1].reshape(-1, nCol)
       logger.info(f"File {fileName} is loaded.")
+
+
+
+
+
 
     destConfigFileName = config["Files"].get("OutputPrefix") + "_config.ini"
     config.write(open(destConfigFileName, 'w'))
@@ -65,7 +79,3 @@ if __name__ == '__main__':
     userLogFileName = f'{config["Files"].get("OutputPrefix")}_log.log'
     logger.info(f"Copying the log file of this run to {userLogFileName}.")
     copyfile(loggingOneFileAddress, userLogFileName)
-  # TODO: draw post on top of prior
-  # TODO: Ordinal:
-  # read MinLevel = 0, MaxLevel = 2 from config
-  # debug the savetrace for ordinal tt.op does not accept pickling

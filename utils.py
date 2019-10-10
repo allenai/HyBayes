@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 import matplotlib.lines as mlines
 import numpy as np
+import os
 
 # @as_op(itypes=[tt.fvector, tt.fvector, tt.fvector], otypes=[tt.fmatrix])
 # def outcome_probabilities(theta, mu, sigma):
@@ -44,7 +45,21 @@ def posterior_plot(varTrace, HDI=(0.2, 0.85), rope=(0.05, 0.11), CI=(0.4, 0.9), 
         ax.add_line(line)
 
 
+def mk_dir_if_not_exists(folder_address):
+    chain = folder_address.split("/")
+    folder_address = ""
+    changed = False
+    for newPart in chain:
+        folder_address = os.path.join(folder_address, newPart)
+        if not os.path.exists(folder_address):
+          os.mkdir(folder_address)
+          changed = True
+    return changed
+
+
 if __name__ == '__main__':
+    mk_dir_if_not_exists("test/xx")
+    exit(0)
     print("running utils")
     pklAddress = "experimentFiles2/BinomialQACompare_posterior_trace/pickeledTrace.pkl"
     with open(pklAddress, 'rb') as buff:

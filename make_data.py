@@ -1,7 +1,7 @@
 import os
 import numpy as np
+from utils import *
 
-folderName = "ArtificialData"
 
 
 def get_positive_input(n1=40, n2=30):
@@ -59,9 +59,9 @@ def get_binomial_input(n1=20, p1=0.44, n2=25, p2=0.52):
 
 
 if __name__ == '__main__':
-    for folder in [folderName, "logs", "experimentFiles"]:
-        if not os.path.exists(folder):
-            os.mkdir(folder)
+    folderName = "artificial_data"
+    mk_dir_if_not_exists(folderName)
+
     save_input(get_binary_input, fileNamePrefix="BinaryData")
     save_input(get_positive_input, fileNamePrefix="PositiveRealData")
     save_input(get_count_input, fileNamePrefix="CountData")

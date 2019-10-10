@@ -8,7 +8,7 @@ import pickle
 import pymc3 as pm
 import theano.tensor as tt
 
-from dataVizualisation import difference_plots
+from visualization import difference_plots
 from scipy import stats
 from theano.compile.ops import as_op
 
