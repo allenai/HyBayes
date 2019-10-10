@@ -1,7 +1,7 @@
 import argparse, configparser
 import matplotlib as mpl
 import numpy as np
-from Experiment import Experiment
+from experiment import Experiment
 import logging
 import time
 from visualization import pre_analysis_plots
