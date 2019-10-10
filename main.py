@@ -52,27 +52,27 @@ if __name__ == '__main__':
       mk_dir_if_not_exists(output_prefix[:last_slash_index])
 
     nCol = config["Files"].getint("NumberOfColumns")
+        nFile = config["Files"].getint("NumberOfFiles")
+    if nFile is None:
+      nFile = 2
+      
     y = list()
-    fileNameList = [config["Files"].get(x) for x in ["File1", "File2"]]
+    fileNameList = [config["Files"].get(x) for x in [f"File{ind}" for ind in range(1, nFile+1)]]
     for fileName in fileNameList:
       y.append(np.loadtxt(fileName))
       if nCol > 1:
         y[-1] = y[-1].reshape(-1, nCol)
       logger.info(f"File {fileName} is loaded.")
 
-
-
-
-
-
     destConfigFileName = config["Files"].get("OutputPrefix") + "_config.ini"
     config.write(open(destConfigFileName, 'w'))
     logger.info(f"Copying the Config file of this run to {destConfigFileName}.")
+    
+    if nFile > 0:
+      pre_analysis_plots(y=y, config=config)
 
-    pre_analysis_plots(y=y, config=config)
-
-    experiment = Experiment(y=y, config=config)
-    experiment.run()
+      experiment = Experiment(y=y, config=config)
+      experiment.run()
   except Exception as e: #TODO: make seperate messages for Exceptions (config file not found, import not working, theano...)
     logger.exception("An exception occurred. Halting the execution!")
   finally:
