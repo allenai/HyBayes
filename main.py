@@ -8,6 +8,7 @@ from visualization import pre_analysis_plots
 from shutil import copyfile
 import os
 from utils import *
+import traceback
 mpl.use('Agg')
 
 
@@ -38,12 +39,12 @@ if __name__ == '__main__':
   fho = logging.FileHandler(filename=loggingOneFileAddress, mode='w')
   fho.setLevel(logging.DEBUG)
   logger.addHandler(fho)
+  config = configparser.ConfigParser()
+  config.read(args.config)
 
   try:
     if logs_folder_made:
-      logger.log(f"logs folder is made!")
-    config = configparser.ConfigParser()
-    config.read(args.config)
+      logger.info(f"logs folder is made!")
 
     output_prefix = config["Files"].get("OutputPrefix")
     last_slash_index = output_prefix.rfind("/")
@@ -52,7 +53,7 @@ if __name__ == '__main__':
       mk_dir_if_not_exists(output_prefix[:last_slash_index])
 
     nCol = config["Files"].getint("NumberOfColumns")
-        nFile = config["Files"].getint("NumberOfFiles")
+    nFile = config["Files"].getint("NumberOfFiles")
     if nFile is None:
       nFile = 2
       
@@ -75,6 +76,7 @@ if __name__ == '__main__':
       experiment.run()
   except Exception as e: #TODO: make seperate messages for Exceptions (config file not found, import not working, theano...)
     logger.exception("An exception occurred. Halting the execution!")
+    traceback.print_exc()
   finally:
     userLogFileName = f'{config["Files"].get("OutputPrefix")}_log.log'
     logger.info(f"Copying the log file of this run to {userLogFileName}.")
