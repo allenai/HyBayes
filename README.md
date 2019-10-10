@@ -18,7 +18,7 @@ You have two options for installation:
  > pip install ????
 ```
 
- - Alternatively, you can clone this project (by running `git clone git@github.com:turkerfan/BayesianEstimationInNLP.git`.) 
+ - Alternatively, you can clone this project (by running `git clone https://github.com/turkerfan/BayesianEstimationInNLP.git`.) 
  Before running the code, make sure that you have all the requirements by 
  running the following line to install all the necessary dependencies: 
 ```bash
