@@ -62,8 +62,8 @@ if __name__ == '__main__':
     folder_name = "artificial_data"
     mk_dir_if_not_exists(folder_name)
 
-    save_input(get_binary_input, file_name_prefix="BinaryData")
-    save_input(get_positive_input, file_name_prefix="PositiveRealData")
-    save_input(get_count_input, file_name_prefix="CountData")
-    save_input(get_ordinal_input, file_name_prefix="OrdinalData")
-    save_input(get_binomial_input, file_name_prefix="BinomialData")
+    save_input(get_binary_input, file_name_prefix="Binary_data")
+    save_input(get_positive_input, file_name_prefix="Positive_real_data")
+    save_input(get_count_input, file_name_prefix="Count_data")
+    save_input(get_ordinal_input, file_name_prefix="Ordinal_data")
+    save_input(get_binomial_input, file_name_prefix="Binomial_data")
