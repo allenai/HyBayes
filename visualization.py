@@ -41,56 +41,77 @@ def pre_analysis_plots(y, config):
         countDf = pd.concat(dfs)
 
     # Plotting:
-    if config["Model"].get("Variable_type") in ["Metric", ] and config["Plots"].get("HistogramPlot"):
-        fig, axes = plt.subplots(1, 2, sharey='row')
-        for i in range(len(y)):
-            axes[i].hist(y[i], bins=20, color=colorList[i])
-            axes[i].set_title(f"Group {i}")
-        fileName = f"{config['Files'].get('Output_prefix')}_HistogramPlot.{config['Plots'].get('Extension')}"
-        plt.savefig(fileName)
-        logger.info(f"Histogram Plot is saved to {fileName}.")
-        plt.clf()
+  if config["Model"].get("Variable_type") in ["Contingency", ]:
+    mat = y[0]
+    # print(np.sum(mat, axis=1))
+    mat = mat / np.sum(mat, axis=1)[:, np.newaxis]
+    if config["Plots"].get("Histogram_plot"):
+      plt.hist(mat[:,1]-mat[:,2])
+      fileName = f"{config['Files'].get('OutputPrefix')}_Histogram_plot.{config['Plots'].get('Extension')}"
+      plt.savefig(fileName)
+      logger.info(f"Histogram Plot is saved to {fileName}.")
+      plt.clf()
+    if config["Plots"].get("Avg_confusion_heat_map"):
+      avgTable = np.average(mat, axis=0).reshape(2, 2)
+      sns.heatmap(avgTable, annot=True)
+      fileName = f"{config['Files'].get('Output_prefix')}_Heat_map_plot.{config['Plots'].get('Extension')}"
+      plt.savefig(fileName)
+      logger.info(f"Histogram Plot is saved to {fileName}.")
+      plt.clf()
 
-    if config["Model"].get("Variable_type") in ["Binary", ] and config["Plots"].get("BarPlot"):
-        for i in range(len(y)):
-            nOnes = np.count_nonzero(y[i])
-            proportions.append(nOnes / y[i].shape[0])
-        plt.bar([0, 1], proportions, color=colorList)
-        plt.xticks([0, 1], ["Group 0", "Group 1"])
-        plt.ylabel("Portion of value 1")
-        fileName = f"{config['Files'].get('Output_prefix')}_barPlot.{config['Plots'].get('Extension')}"
-        plt.savefig(fileName)
-        logger.info(f"Bar Plot is saved to {fileName}.")
-        plt.clf()
 
-    if config["Model"].get("Variable_type") in ["Binomial", ] and config["Plots"].get("HistogramPlot"):
-        fig, axes = plt.subplots(1, 2, sharey='row')
-        for i in range(len(y)):
-            a = y[i][:, 1] / (y[i][:, 0] + y[i][:, 1])
-            axes[i].hist(a, bins=20, color=colorList[i])
-            axes[i].set_title(f"Group {i}")
-        fileName = f"{config['Files'].get('Output_prefix')}_HistogramPlot.{config['Plots'].get('Extension')}"
-        plt.savefig(fileName)
-        logger.info(f"Histogram Plot is saved to {fileName}.")
-        plt.clf()
 
-    if config["Model"].get("Variable_type") in ["Count", "Ordinal", "Binary", "Metric"]:
-        if config["Plots"].getboolean("CountPlot"):
-            sns_count_plot = sns.countplot(x=countDf["value"], hue=countDf["Group"])
-            fileName = f"{config['Files'].get('Output_prefix')}_countPlot.{config['Plots'].get('Extension')}"
-            plt.savefig(fileName)
-            logger.info(f"Count Plot is saved to {fileName}.")
-            plt.clf()
 
-        if config["Plots"].getboolean("ScatterPlot"):
-            plt.ylim(-0.9, 1.9)
-            plt.yticks([0, 1], ["Group 0", "Group 1", ])
-            colors = [colorList[x] for x in countDf["Group"]]
-            plt.scatter(countDf["value"], countDf["Group"], color=colors)
-            fileName = f"{config['Files'].get('Output_prefix')}_scatterPlot.{config['Plots'].get('Extension')}"
-            plt.savefig(fileName)
-            logger.info(f"Scatter Plot is saved to {fileName}.")
-            plt.clf()
+  if config["Model"].get("Variable_type") in ["Metric", ] and config["Plots"].get("Histogram_plot"):
+    fig, axes = plt.subplots(1, 2, sharey='row')
+    for i in range(len(y)):
+      axes[i].hist(y[i], bins=20, color=colorList[i])
+      axes[i].set_title(f"Group {i}")
+    fileName = f"{config['Files'].get('Output_prefix')}_HistogramPlot.{config['Plots'].get('Extension')}"
+    plt.savefig(fileName)
+    logger.info(f"Histogram Plot is saved to {fileName}.")
+    plt.clf()
+
+  if config["Model"].get("Variable_type") in ["Binary",] and config["Plots"].get("Bar_plot"):
+    for i in range(len(y)):
+      nOnes = np.count_nonzero(y[i])
+      proportions.append(nOnes/y[i].shape[0])
+    plt.bar([0, 1], proportions, color = colorList)
+    plt.xticks([0, 1], ["Group 0", "Group 1"])
+    plt.ylabel("Portion of value 1")
+    fileName = f"{config['Files'].get('Output_prefix')}_barPlot.{config['Plots'].get('Extension')}"
+    plt.savefig(fileName)
+    logger.info(f"Bar Plot is saved to {fileName}.")
+    plt.clf()
+
+  if config["Model"].get("Variable_type") in ["Binomial",] and config["Plots"].get("Histogram_plot"):
+    fig, axes = plt.subplots(1, 2, sharey='row')
+    for i in range(len(y)):
+      a = y[i][:, 1] / (y[i][:, 0] + y[i][:, 1])
+      axes[i].hist(a, bins=20, color=colorList[i])
+      axes[i].set_title(f"Group {i}")
+    fileName = f"{config['Files'].get('Output_prefix')}_HistogramPlot.{config['Plots'].get('Extension')}"
+    plt.savefig(fileName)
+    logger.info(f"Histogram Plot is saved to {fileName}.")
+    plt.clf()
+
+  if config["Model"].get("Variable_type") in ["Count", "Ordinal", "Binary", "Metric"]:
+    if config["Plots"].getboolean("Count_plot"):
+      sns_count_plot = sns.countplot(x=countDf["value"], hue=countDf["Group"])
+      fileName = f"{config['Files'].get('Output_prefix')}_countPlot.{config['Plots'].get('Extension')}"
+      plt.savefig(fileName)
+      logger.info(f"Count Plot is saved to {fileName}.")
+      plt.clf()
+
+    if config["Plots"].getboolean("ScatterPlot"):
+      plt.ylim(-0.9, 1.9)
+      plt.yticks([0, 1], ["Group 0", "Group 1", ])
+      colors = [colorList[x] for x in countDf["Group"]]
+      plt.scatter(countDf["value"], countDf["Group"], color=colors)
+      fileName = f"{config['Files'].get('Output_prefix')}_scatter_plot.{config['Plots'].get('Extension')}"
+      plt.savefig(fileName)
+      logger.info(f"Scatter Plot is saved to {fileName}.")
+      plt.clf()
 
 
 def one_parameter_plot(hierarchicalModel, var, filePrefix, rope, improvements=False,
