@@ -46,14 +46,14 @@ if __name__ == '__main__':
     if logs_folder_made:
       logger.info(f"logs folder is made!")
 
-    output_prefix = config["Files"].get("OutputPrefix")
+    output_prefix = config["Files"].get("Output_prefix")
     last_slash_index = output_prefix.rfind("/")
 
     if last_slash_index != -1:
       mk_dir_if_not_exists(output_prefix[:last_slash_index])
 
-    nCol = config["Files"].getint("NumberOfColumns")
-    nFile = config["Files"].getint("NumberOfFiles")
+    nCol = config["Files"].getint("Number_of_columns")
+    nFile = config["Files"].getint("Number_of_files")
     if nFile is None:
       nFile = 2
       
@@ -65,7 +65,7 @@ if __name__ == '__main__':
         y[-1] = y[-1].reshape(-1, nCol)
       logger.info(f"File {fileName} is loaded.")
 
-    destConfigFileName = config["Files"].get("OutputPrefix") + "_config.ini"
+    destConfigFileName = config["Files"].get("Output_prefix") + "_config.ini"
     config.write(open(destConfigFileName, 'w'))
     logger.info(f"Copying the Config file of this run to {destConfigFileName}.")
     
@@ -78,6 +78,6 @@ if __name__ == '__main__':
     logger.exception("An exception occurred. Halting the execution!")
     traceback.print_exc()
   finally:
-    userLogFileName = f'{config["Files"].get("OutputPrefix")}_log.log'
+    userLogFileName = f'{config["Files"].get("Output_prefix")}_log.log'
     logger.info(f"Copying the log file of this run to {userLogFileName}.")
     copyfile(loggingOneFileAddress, userLogFileName)

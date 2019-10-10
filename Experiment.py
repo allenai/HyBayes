@@ -41,7 +41,7 @@ class HierarchicalModel:
 
     def estimate_interval_prob(self, interval_begin, interval_end):
         """
-        Estimating probability of an interval, used in calculation of BayesFactor  
+        Estimating probability of an interval, used in calculation of Bayes_factor  
         """
         mu_diff = self.trace[self.mu_parameter][:, 0] - self.trace[self.mu_parameter][:, 1]
         numerator = np.logical_and(mu_diff > interval_begin, mu_diff < interval_end).sum()
@@ -226,7 +226,7 @@ class Experiment:
         self.y = y
         self.run_prior = config["Prior"].getboolean("Analyze")
         self.run_post = config["Posterior"].getboolean("Analyze")
-        self.file_prefix = config["Files"].get("OutputPrefix")
+        self.file_prefix = config["Files"].get("Output_prefix")
         self.config_model = config["Model"]
         self.config_prior = config["Prior"]
         self.config_post = config["Posterior"]
@@ -248,7 +248,7 @@ class Experiment:
             hierarchical_model.trace = pm.sample(model=hierarchical_model.pymc_model,
                                                  draws=draws, chains=chains, cores=cores, tune=tune)
         logger.info(f"Effective Sample Size (ESS) = {pm.diagnostics.effective_n(hierarchical_model.trace)}")
-        if model_config.getboolean("SaveTrace"):
+        if model_config.getboolean("Save_trace"):
             traceFolderName = f"{file_prefix}_trace"
             if os.path.exists(traceFolderName):
                 ind = 0
@@ -262,7 +262,7 @@ class Experiment:
         # TODO drop these?
         # Plot autocor
         # pm.autocorrplot()
-        if model_config.getboolean("DiagnosticPlots"):
+        if model_config.getboolean("Diagnostic_plots"):
             pm.traceplot(hierarchical_model.trace)
             diag_file_name = f"{file_prefix}_diagnostics.{self.extension}"
             plt.savefig(diag_file_name)
@@ -282,12 +282,12 @@ class Experiment:
         :param model_object: the default model
         '''
         error = False
-        model_name = self.config_model.get("VariableType")
+        model_name = self.config_model.get("Variable_type")
         if model_name == "Binary":
-            if self.config_model.get("PriorModel") == "Beta":
+            if self.config_model.get("Prior_model") == "Beta":
                 model_object.add_beta_bern_model()
             else:
-                logger.error(f'The given prior model {self.config_model.get("PriorModel")} is not recognized')
+                logger.error(f'The given prior model {self.config_model.get("Prior_model")} is not recognized')
         elif model_name == "Metric":
             if self.config_model.getboolean("UnitInterval"):
                 model_object.add_inv_logit_normal_model()
@@ -316,8 +316,8 @@ class Experiment:
         if self.run_prior:
             prior_model.get_GraphViz_object(
                 self.file_prefix + "_prior",
-                self.config_prior.getboolean("SaveHierarchicalTXT"),
-                self.config_prior.getboolean("SaveHierarchicalPNG"),
+                self.config_prior.getboolean("Save_hierarchical_TXT"),
+                self.config_prior.getboolean("Save_hierarchical_PNG"),
                 extension=self.extension,
             )
 
@@ -338,8 +338,8 @@ class Experiment:
             post_model.add_observations_function()
             post_model.get_GraphViz_object(
                 self.file_prefix + "_posterior",
-                self.config_post.getboolean("SaveHierarchicalTXT"),
-                self.config_post.getboolean("SaveHierarchicalPNG"),
+                self.config_post.getboolean("Save_hierarchical_TXT"),
+                self.config_post.getboolean("Save_hierarchical_PNG"),
                 extension=self.extension,
             )
 
@@ -354,9 +354,9 @@ class Experiment:
                 model_config=self.config_post,
                 plots_config=self.config_plots,
             )
-            if self.run_prior and self.run_post and self.config_model.getboolean("BayesFactor"):
+            if self.run_prior and self.run_post and self.config_model.getboolean("Bayes_factor"):
                 bayes_factor_data_frame = self.bayes_factor_analysis(prior_model, post_model, initRope=self.rope)
-                bayes_factor_file_name = self.file_prefix + "_BayesFactor.csv"
+                bayes_factor_file_name = self.file_prefix + "_Bayes_factor.csv"
                 bayes_factor_data_frame.to_csv(bayes_factor_file_name)
                 logger.info(f"Bayes Factor DataFrame is saved at {bayes_factor_file_name}")
             # if self.postPredict: #TODO impose data
@@ -368,7 +368,7 @@ class Experiment:
                        "prioNSample", "postNSample"]
         df = pd.DataFrame(columns=column_names)
         rope = np.array(initRope)
-        n = 100 if self.config_model.getboolean("TrySmallerROPEs") else 1
+        n = 100 if self.config_model.getboolean("Try_smaller_ROPEs") else 1
         for i in range(n):
             prior_rope_prob_frac = priorModel.estimate_interval_prob(rope[0], rope[1])
             post_rope_prob_frac = postModel.estimate_interval_prob(rope[0], rope[1])
