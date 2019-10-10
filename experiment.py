@@ -258,8 +258,13 @@ class Experiment:
         logger.info(df["BF"])
         return df
 
-    # TODO PPC stands for?
     def draw_ppc(self, trace, model):
+        """
+        Makes Posterior Predictive Checks (PPC). Posterior predictive checks are, in simple words, "simulating replicated data under the fitted model and then comparing these to the observed data" (Gelman and Hill, 2007, p. 158). So, you use posterior predictive to "look for systematic discrepancies between real and simulated data" (Gelman et al. 2004, p. 169).
+        :param trace:
+        :param model:
+        :return:
+        """
         # print(model.pymc_model.observed_RVs)
         # print(len(model.pymc_model.observed_RVs))
         # print(model.pymc_model.observed_RVs[0])
@@ -294,8 +299,3 @@ class Experiment:
         plt.savefig("ppc.png")
         plt.clf()
 
-
-if __name__ == '__main__':
-    print("Not this file")
-    # exp1 = Experiment(runPrior=True, runPost=True, filePrefix="newOutput/normalTest")# old
-    # exp1.run()

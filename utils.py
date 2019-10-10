@@ -17,14 +17,14 @@ import os
 #     out[4,:] = 1 - n.cdf(theta[3])
 #     return out
 
-lightBlueColor = np.array((219, 232, 255)) / 255
+light_blue_color = np.array((219, 232, 255)) / 255
 KruscheColor = '#87ceeb'
 
 
-def posterior_plot(varTrace, HDI=(0.2, 0.85), rope=(0.05, 0.11), CI=(0.4, 0.9), meanVal=0.3, modeVal=0.2,
-                   color=lightBlueColor):
+def posterior_plot(var_trace, HDI=(0.2, 0.85), rope=(0.05, 0.11), CI=(0.4, 0.9), mean_val=0.3, mode_val=0.2,
+                   color=light_blue_color):
     ax = plt.gca()
-    ax.hist(varTrace, bins=40, color=lightBlueColor, density=True, )
+    ax.hist(var_trace, bins=40, color=light_blue_color, density=True, )
     yHDI = 0.08
     yrope = 0.03
     yCI = 0.03
@@ -33,15 +33,15 @@ def posterior_plot(varTrace, HDI=(0.2, 0.85), rope=(0.05, 0.11), CI=(0.4, 0.9), 
           (CI, yCI, "95% CI", "green", 8, 0.6), ]
 
     ind = 0
-    for interval, y, text, textColor, lineWidth, alpha in ll:
+    for interval, y, text, text_color, line_width, alpha in ll:
         ax.text(1.25, 0.9 - 0.1 * ind,
                 text + " " + str(interval),
                 fontsize=15,
                 # horizontalalignment='center',
                 transform=ax.transAxes,
-                color=textColor)
+                color=text_color)
         ind += 1
-        line = mlines.Line2D(interval, [y, y], color=textColor, linewidth=lineWidth, alpha=alpha)
+        line = mlines.Line2D(interval, [y, y], color=text_color, linewidth=line_width, alpha=alpha)
         ax.add_line(line)
 
 
@@ -56,45 +56,3 @@ def mk_dir_if_not_exists(folder_address):
           changed = True
     return changed
 
-
-if __name__ == '__main__':
-    mk_dir_if_not_exists("test/xx")
-    exit(0)
-    print("running utils")
-    pklAddress = "experimentFiles2/BinomialQACompare_posterior_trace/pickeledTrace.pkl"
-    with open(pklAddress, 'rb') as buff:
-        data = pickle.load(buff)
-
-    basic_model, trace = data['model'], data['trace']
-    ax = plt.gca()
-    fig = plt.figure()
-    newAx = pm.plot_posterior(trace["theta"][0] - trace["theta"][1], text_size=20, rope=(-0.01, 0.01), ax=ax)
-    listOfChildren = ax.get_children()
-    texts = list(filter(lambda x: isinstance(x, matplotlib.text.Text), listOfChildren))
-    lines = list(filter(lambda x: isinstance(x, matplotlib.lines.Line2D), listOfChildren))
-    # texts[2].set_visible(False)
-    # texts[2].set_text("HDI")
-    # print(dir(texts[2]))
-    # print(texts[2].x)
-    # ax.text(texts[2])
-    # trace = pm.load_trace(r".\experimentFiles\BinomialQACompare_posterior_trace")
-    # print(trace)
-    #
-    # posteriorPlot(trace["theta"][0]-trace["theta"][1])
-    # ax.remove(texts[2])
-    # ci = (0.0136, 0.057)
-    for i in range(len(lines)):
-        print(lines[i].get_xdata())
-        print(lines[i].get_ydata())
-        print(lines[i].get_markerfacecolor())
-        print()
-
-    # ax.add_line(matplotlib.lines.Line2D((ci[0], ci[1]), (0.2, 0.2)))
-    # mlines.Line2D(interval, [y, y], color=textColor, linewidth=lineWidth, alpha=alpha)
-    # ax.axhline(y=2*lines[i].get_ydata()[0], xmin=0.1, xmax=0.4, )
-    # yy =2*lines[i].get_ydata()[0]
-    # newLine = copy.copy(lines[0])
-    # newLine.set_ydata((yy, yy))
-    # newLine.set_xdata(ci)
-    # ax.add_line(newLine)
-    # plt.show()

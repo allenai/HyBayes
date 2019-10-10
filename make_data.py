@@ -21,11 +21,11 @@ def get_binary_input(n1=25, a1=12, n2=28, a2=20):
     return [x1, x2]
 
 
-def save_input(inpFunc, fileNamePrefix):
-    y = inpFunc()
+def save_input(input_function, file_name_prefix):
+    y = input_function()
     form = "%d" if y[0].dtype == np.int else "%f"
     for i in range(2):
-        np.savetxt(f"./{folderName}/{fileNamePrefix}_{i}.csv", y[i], fmt=form)
+        np.savetxt(f"./{folder_name}/{file_name_prefix}_{i}.csv", y[i], fmt=form)
 
 
 def get_count_input(n1=67, lambda1=11.1, n2=76, lambda2=9.9):
@@ -59,11 +59,11 @@ def get_binomial_input(n1=20, p1=0.44, n2=25, p2=0.52):
 
 
 if __name__ == '__main__':
-    folderName = "artificial_data"
-    mk_dir_if_not_exists(folderName)
+    folder_name = "artificial_data"
+    mk_dir_if_not_exists(folder_name)
 
-    save_input(get_binary_input, fileNamePrefix="BinaryData")
-    save_input(get_positive_input, fileNamePrefix="PositiveRealData")
-    save_input(get_count_input, fileNamePrefix="CountData")
-    save_input(get_ordinal_input, fileNamePrefix="OrdinalData")
-    save_input(get_binomial_input, fileNamePrefix="BinomialData")
+    save_input(get_binary_input, file_name_prefix="BinaryData")
+    save_input(get_positive_input, file_name_prefix="PositiveRealData")
+    save_input(get_count_input, file_name_prefix="CountData")
+    save_input(get_ordinal_input, file_name_prefix="OrdinalData")
+    save_input(get_binomial_input, file_name_prefix="BinomialData")
