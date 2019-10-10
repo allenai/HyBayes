@@ -126,9 +126,9 @@ class Experiment:
             plt.clf()
 
         if hierarchical_model.n_groups == 2:
-            difference_plots(hierarchicalModel=hierarchical_model,
-                             modelConfig=model_config,
-                             filePrefix=file_prefix,
+            difference_plots(hierarchical_model=hierarchical_model,
+                             model_config=model_config,
+                             file_prefix=file_prefix,
                              rope=self.rope,
                              config=self.config_plots)
 

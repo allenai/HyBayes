@@ -28,8 +28,8 @@ def pre_analysis_plots(y, config):
     """
     # for binomial make histogram of y[.][:,1]/y[.][:,0]
     # Preparation
-    countDf = None
-    histDf = None
+    count_df = None
+    hist_df = None
     proportions = []
     dfs = []
     if config["Model"].get("Variable_type") in ["Count", "Ordinal", "Binary", "Metric"]:
@@ -38,95 +38,107 @@ def pre_analysis_plots(y, config):
             dfs[-1].value = y[i]
             dfs[-1].Group = i  # or class or category
             dfs[-1] = dfs[-1].astype(np.int)
-        countDf = pd.concat(dfs)
+        count_df = pd.concat(dfs)
 
     # Plotting:
     if config["Model"].get("Variable_type") in ["Contingency", ]:
-      mat = y[0]
-      # print(np.sum(mat, axis=1))
-      mat = mat / np.sum(mat, axis=1)[:, np.newaxis]
-      if config["Plots"].get("Histogram_plot"):
-        plt.hist(mat[:,1]-mat[:,2])
-        fileName = f"{config['Files'].get('OutputPrefix')}_Histogram_plot.{config['Plots'].get('Extension')}"
+        mat = y[0]
+        # print(np.sum(mat, axis=1))
+        mat = mat / np.sum(mat, axis=1)[:, np.newaxis]
+        if config["Plots"].get("Histogram_plot"):
+            plt.hist(mat[:,1]-mat[:,2])
+            fileName = f"{config['Files'].get('OutputPrefix')}_Histogram_plot.{config['Plots'].get('Extension')}"
+            plt.savefig(fileName)
+            logger.info(f"Histogram Plot is saved to {fileName}.")
+            plt.clf()
+        if config["Plots"].get("Avg_confusion_heat_map"):
+            avgTable = np.average(mat, axis=0).reshape(2, 2)
+            sns.heatmap(avgTable, annot=True)
+            fileName = f"{config['Files'].get('Output_prefix')}_Heat_map_plot.{config['Plots'].get('Extension')}"
+            plt.savefig(fileName)
+            logger.info(f"Histogram Plot is saved to {fileName}.")
+            plt.clf()
+
+
+
+
+    if config["Model"].get("Variable_type") in ["Metric", ] and config["Plots"].get("Histogram_plot"):
+        fig, axes = plt.subplots(1, 2, sharey='row')
+        for i in range(len(y)):
+            axes[i].hist(y[i], bins=20, color=colorList[i])
+            axes[i].set_title(f"Group {i}")
+        fileName = f"{config['Files'].get('Output_prefix')}_HistogramPlot.{config['Plots'].get('Extension')}"
         plt.savefig(fileName)
         logger.info(f"Histogram Plot is saved to {fileName}.")
         plt.clf()
-      if config["Plots"].get("Avg_confusion_heat_map"):
-        avgTable = np.average(mat, axis=0).reshape(2, 2)
-        sns.heatmap(avgTable, annot=True)
-        fileName = f"{config['Files'].get('Output_prefix')}_Heat_map_plot.{config['Plots'].get('Extension')}"
+
+    if config["Model"].get("Variable_type") in ["Binary",] and config["Plots"].get("Bar_plot"):
+        for i in range(len(y)):
+            nOnes = np.count_nonzero(y[i])
+            proportions.append(nOnes/y[i].shape[0])
+        plt.bar([0, 1], proportions, color = colorList)
+        plt.xticks([0, 1], ["Group 0", "Group 1"])
+        plt.ylabel("Portion of value 1")
+        fileName = f"{config['Files'].get('Output_prefix')}_barPlot.{config['Plots'].get('Extension')}"
+        plt.savefig(fileName)
+        logger.info(f"Bar Plot is saved to {fileName}.")
+        plt.clf()
+
+    if config["Model"].get("Variable_type") in ["Binomial",] and config["Plots"].get("Histogram_plot"):
+        fig, axes = plt.subplots(1, 2, sharey='row')
+        for i in range(len(y)):
+            a = y[i][:, 1] / (y[i][:, 0] + y[i][:, 1])
+            axes[i].hist(a, bins=20, color=colorList[i])
+            axes[i].set_title(f"Group {i}")
+        fileName = f"{config['Files'].get('Output_prefix')}_HistogramPlot.{config['Plots'].get('Extension')}"
         plt.savefig(fileName)
         logger.info(f"Histogram Plot is saved to {fileName}.")
         plt.clf()
 
+    if config["Model"].get("Variable_type") in ["Count", "Ordinal", "Binary", "Metric"]:
+        if config["Plots"].getboolean("Count_plot"):
+            sns_count_plot = sns.countplot(x=count_df["value"], hue=count_df["Group"])
+            fileName = f"{config['Files'].get('Output_prefix')}_countPlot.{config['Plots'].get('Extension')}"
+            plt.savefig(fileName)
+            logger.info(f"Count Plot is saved to {fileName}.")
+            plt.clf()
+
+        if config["Plots"].getboolean("ScatterPlot"):
+            plt.ylim(-0.9, 1.9)
+            plt.yticks([0, 1], ["Group 0", "Group 1", ])
+            colors = [colorList[x] for x in count_df["Group"]]
+            plt.scatter(count_df["value"], count_df["Group"], color=colors)
+            fileName = f"{config['Files'].get('Output_prefix')}_scatter_plot.{config['Plots'].get('Extension')}"
+            plt.savefig(fileName)
+            logger.info(f"Scatter Plot is saved to {fileName}.")
+            plt.clf()
 
 
-
-  if config["Model"].get("Variable_type") in ["Metric", ] and config["Plots"].get("Histogram_plot"):
-    fig, axes = plt.subplots(1, 2, sharey='row')
-    for i in range(len(y)):
-      axes[i].hist(y[i], bins=20, color=colorList[i])
-      axes[i].set_title(f"Group {i}")
-    fileName = f"{config['Files'].get('Output_prefix')}_HistogramPlot.{config['Plots'].get('Extension')}"
-    plt.savefig(fileName)
-    logger.info(f"Histogram Plot is saved to {fileName}.")
-    plt.clf()
-
-  if config["Model"].get("Variable_type") in ["Binary",] and config["Plots"].get("Bar_plot"):
-    for i in range(len(y)):
-      nOnes = np.count_nonzero(y[i])
-      proportions.append(nOnes/y[i].shape[0])
-    plt.bar([0, 1], proportions, color = colorList)
-    plt.xticks([0, 1], ["Group 0", "Group 1"])
-    plt.ylabel("Portion of value 1")
-    fileName = f"{config['Files'].get('Output_prefix')}_barPlot.{config['Plots'].get('Extension')}"
-    plt.savefig(fileName)
-    logger.info(f"Bar Plot is saved to {fileName}.")
-    plt.clf()
-
-  if config["Model"].get("Variable_type") in ["Binomial",] and config["Plots"].get("Histogram_plot"):
-    fig, axes = plt.subplots(1, 2, sharey='row')
-    for i in range(len(y)):
-      a = y[i][:, 1] / (y[i][:, 0] + y[i][:, 1])
-      axes[i].hist(a, bins=20, color=colorList[i])
-      axes[i].set_title(f"Group {i}")
-    fileName = f"{config['Files'].get('Output_prefix')}_HistogramPlot.{config['Plots'].get('Extension')}"
-    plt.savefig(fileName)
-    logger.info(f"Histogram Plot is saved to {fileName}.")
-    plt.clf()
-
-  if config["Model"].get("Variable_type") in ["Count", "Ordinal", "Binary", "Metric"]:
-    if config["Plots"].getboolean("Count_plot"):
-      sns_count_plot = sns.countplot(x=countDf["value"], hue=countDf["Group"])
-      fileName = f"{config['Files'].get('Output_prefix')}_countPlot.{config['Plots'].get('Extension')}"
-      plt.savefig(fileName)
-      logger.info(f"Count Plot is saved to {fileName}.")
-      plt.clf()
-
-    if config["Plots"].getboolean("ScatterPlot"):
-      plt.ylim(-0.9, 1.9)
-      plt.yticks([0, 1], ["Group 0", "Group 1", ])
-      colors = [colorList[x] for x in countDf["Group"]]
-      plt.scatter(countDf["value"], countDf["Group"], color=colors)
-      fileName = f"{config['Files'].get('Output_prefix')}_scatter_plot.{config['Plots'].get('Extension')}"
-      plt.savefig(fileName)
-      logger.info(f"Scatter Plot is saved to {fileName}.")
-      plt.clf()
-
-
-def one_parameter_plot(hierarchicalModel, var, filePrefix, rope, improvements=False,
+def one_parameter_plot(hierarchical_model, var, file_prefix, rope, improvements=False,
                        config=None):
+    """
+    Draws three plots corresponding to one parameter in the model.
+    There will be one plot for each group in the bottom row and one difference plot at the top row.
+    :param hierarchical_model: the model object to get the samples(trace)
+    :param var: the variable of interest to plot
+    :param file_prefix: the string used for all the files
+    :param rope: the value of ROPE used in plot
+    :param improvements: Not used
+    :param config: Several configuration properties e.g., file extension.
+    :return:
+    """
     extension = config.get("Extension")
-    trace = hierarchicalModel.trace
+    trace = hierarchical_model.trace
     plt.figure(figsize=(17, 17))
     gs = gridspec.GridSpec(3, 4)
     ax1 = plt.subplot(gs[:2, :4])
     ax2 = plt.subplot(gs[2, :2])
     ax3 = plt.subplot(gs[2, 2:])
     diff = trace[var][:, 0] - trace[var][:, 1]
-    diffVarName = f"{var}_1-{var}_2"
-    trace.add_values({diffVarName: diff})
+    diff_var_name = f"{var}_1-{var}_2"
+    trace.add_values({diff_var_name: diff})
     # print(trace.varnames, diffVarName)
+    # TODO check the interface to give varname and text_size
     pm.plot_posterior(diff,
                       figsize=(4, 4),
                       # varnames=diffVarName,
@@ -144,6 +156,8 @@ def one_parameter_plot(hierarchicalModel, var, filePrefix, rope, improvements=Fa
     listOfChildren = ax1.get_children()
     texts = list(filter(lambda x: isinstance(x, matplotlib.text.Text), listOfChildren))
     lines = list(filter(lambda x: isinstance(x, matplotlib.lines.Line2D), listOfChildren))
+    # TODO: optional CI
+
     #   for tx in texts:
     #     if "HPD" in tx.get_text():
     #       tx.set_text("HDI,")
@@ -172,7 +186,7 @@ def one_parameter_plot(hierarchicalModel, var, filePrefix, rope, improvements=Fa
                       ax=ax2,
                       color=color,
                       round_to=3,
-                      # ref_val=hierarchicalModel.statsY[0].mean,
+                      # ref_val=hierarchical_model.statsY[0].mean,
                       # text_size=config.getint("Font_size"),
                       )
     ax2.set_xlabel(r"$\theta_1$", fontdict={"size": int(config.getint("Font_size"))})
@@ -185,34 +199,35 @@ def one_parameter_plot(hierarchicalModel, var, filePrefix, rope, improvements=Fa
                       color=color,
                       round_to=3,
                       # text_size=config.getint("Font_size"),
-                      # ref_val=hierarchicalModel.statsY[1].mean,
+                      # ref_val=hierarchical_model.statsY[1].mean,
                       )
+    # todo use name from varname
     ax3.set_xlabel(r"$\theta_2$", fontdict={"size": int(config.getint("Font_size"))})
     if config.getboolean("HPDtoHDI"):
         for ax in [ax1, ax2, ax3]:
             fix_hdp_labels(list(filter(lambda x: isinstance(x, matplotlib.text.Text), ax.get_children())))
 
-    distFileName = f"{filePrefix}_{var}.{extension}"
-    plt.savefig(distFileName)
-    logger.info(f"{distFileName} is saved!")
+    dist_file_name = f"{file_prefix}_{var}.{extension}"
+    plt.savefig(dist_file_name)
+    logger.info(f"{dist_file_name} is saved!")
     plt.clf()
 
 
-def difference_plots(hierarchicalModel, modelConfig, filePrefix, rope, config):
-    trace = hierarchicalModel.trace
-    muVar = hierarchicalModel.mu_parameter
-    sigmaVar = hierarchicalModel.sigma_parameter
-    if modelConfig.getboolean("Mean_plot"):
-        one_parameter_plot(hierarchicalModel, muVar, filePrefix, rope,
-                           modelConfig.getboolean("Plot_improvements"),
+def difference_plots(hierarchical_model, model_config, file_prefix, rope, config):
+    trace = hierarchical_model.trace
+    muVar = hierarchical_model.mu_parameter
+    sigma_var = hierarchical_model.sigma_parameter
+    if model_config.getboolean("Mean_plot"):
+        one_parameter_plot(hierarchical_model, muVar, file_prefix, rope,
+                           model_config.getboolean("Plot_improvements"),
                            config,
                            )
 
-    if modelConfig.getboolean("SD_plot"):
-        one_parameter_plot(hierarchicalModel, sigmaVar, filePrefix, rope,
-                           modelConfig.getboolean("Plot_improvements"), config)
+    if model_config.getboolean("SD_plot"):
+        one_parameter_plot(hierarchical_model, sigma_var, file_prefix, rope,
+                           model_config.getboolean("Plot_improvements"), config)
 
-    if modelConfig.getboolean("Compare_all_plot"):
+    if model_config.getboolean("Compare_all_plot"):
         fig, axes = plt.subplots(3, 1, figsize=(20, 60))
 
         pm.plot_posterior(trace[muVar][:, 0] - trace[muVar][:, 1],
@@ -227,7 +242,7 @@ def difference_plots(hierarchicalModel, modelConfig, filePrefix, rope, config):
                           )
         axes[0].set_title("Mu difference")
 
-        pm.plot_posterior(trace[sigmaVar][:, 0] - trace[sigmaVar][:, 1],
+        pm.plot_posterior(trace[sigma_var][:, 0] - trace[sigma_var][:, 1],
                           # varnames=var,
                           # alpha_level=0.05,
                           rope=(-0.1, 0.1),  # TODO: calculate ROPE
@@ -240,7 +255,7 @@ def difference_plots(hierarchicalModel, modelConfig, filePrefix, rope, config):
         axes[1].set_title("Sigma difference")
 
         es = (trace[muVar][:, 0] - trace[muVar][:, 1]) / np.sqrt(
-            (trace[sigmaVar][:, 0] ** 2 + trace[sigmaVar][:, 1] ** 2) / 2)
+            (trace[sigma_var][:, 0] ** 2 + trace[sigma_var][:, 1] ** 2) / 2)
         pm.plot_posterior(es,
                           # varnames=var,
                           # alpha_level=0.05,
@@ -252,7 +267,7 @@ def difference_plots(hierarchicalModel, modelConfig, filePrefix, rope, config):
                           ref_val=0,
                           )
         axes[2].set_title("Effect size")
-        distFileName = f"{filePrefix}_allComp.{config.get('Extension')}"
+        distFileName = f"{file_prefix}_allComp.{config.get('Extension')}"
         plt.savefig(distFileName)
         logger.info(f"{distFileName} is saved!")
         plt.clf()
