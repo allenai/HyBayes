@@ -6,10 +6,12 @@ config_folder_name = "configs"
 config_template_file_name = "config_template.ini"
 artificial_data_folder_name = "artificial_data"
 
+
 def read_template_config():
     config = configparser.ConfigParser()
     config.read(os.path.join(config_folder_name, config_template_file_name))
     return config
+
 
 def make_metric_config(config: configparser.ConfigParser):
     config = copy.copy(config)
@@ -117,7 +119,6 @@ def make_binary_config(config: configparser.ConfigParser):
     config["Model"]["Beta_a"] = "1"
     config["Model"]["Beta_b"] = "1"
 
-
     for plot_stage in ["Prior", "Posterior"]:
         config[plot_stage]["Effect_size_plot "] = "True"
         config[plot_stage]["Effect_size_plot t_kind"] = "hist"
@@ -144,7 +145,6 @@ def make_binomial_config(config: configparser.ConfigParser):
     config["Model"]["Beta_a"] = "1"
     config["Model"]["Beta_b"] = "1"
 
-
     for plot_stage in ["Prior", "Posterior"]:
         config[plot_stage]["Effect_size_plot "] = "True"
         config[plot_stage]["Effect_size_plot t_kind"] = "hist"
@@ -154,7 +154,6 @@ def make_binomial_config(config: configparser.ConfigParser):
         config[plot_stage]["Show_Mean_plot"] = "False"
 
     return config
-
 
 
 def write_config(config, file_name):
