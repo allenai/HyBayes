@@ -28,14 +28,13 @@ def bayes_factor_analysis(config_bayes_factor, prior_model, post_model, init_rop
     column_names = ["ROPE", "priorProb", "postProb",
                     "BF", "BF_Savage_Dickey",
                     "prioNSample", "postNSample"]
-    logger.debug(init_rope)
+
     df = pd.DataFrame(columns=column_names)
     rope = np.array(init_rope)
     n = config_bayes_factor.getint("number_of_smaller_ropes")
     if n is None:
         n = 1
     for i in range(n):
-        logger.debug(rope)
         prior_rope_prob_frac = estimate_interval_prob(prior_model.trace, prior_model.mu_parameter, rope[0], rope[1])
         post_rope_prob_frac = estimate_interval_prob(post_model.trace, post_model.mu_parameter, rope[0], rope[1])
         if prior_rope_prob_frac[0] <= 0 or post_rope_prob_frac[0] <= 0:
