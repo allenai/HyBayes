@@ -9,7 +9,7 @@ from shutil import copyfile
 import os
 from utils import *
 import traceback
-mpl.use('Agg')
+
 
 
 if __name__ == '__main__':
@@ -43,6 +43,15 @@ if __name__ == '__main__':
   logger.info(f"Reading config file: {args.config}")
   config.read(args.config)
 
+  # If all show_ configs are off, the interactive mode for mpl will be closed.
+  interactive_mode = False
+  for plot_config in [config["Prior"], config["Posterior"]]:
+    for key in plot_config.keys():
+      if "show_" in key and plot_config[key]:
+        interactive_mode = True
+  logger.debug(interactive_mode)
+  if not interactive_mode:
+    mpl.use('Agg')
   try:
     if logs_folder_made:
       logger.info(f"logs folder is made!")

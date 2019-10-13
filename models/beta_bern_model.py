@@ -7,6 +7,7 @@ logger = logging.getLogger('root')
 def add_beta_bern_model(hierarchical_model, a=1, b=1):
   '''
   A model for binary observations via a Bernoulli variable, and a Beta prior.
+  :param hierarchical_model:
   :param a: the first parameter of the Beta prior
   :param b: the second parameter of the Beta prior
   '''

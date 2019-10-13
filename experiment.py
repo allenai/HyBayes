@@ -17,8 +17,18 @@ from models.ordinal_model import add_ordinal_model
 from visualization import difference_plots
 from scipy import stats
 from theano.compile.ops import as_op
-
+from Bayes_factor_analysis import bayes_factor_analysis
 logger = logging.getLogger('root')
+
+
+def get_rope(config, parameter):
+    """
+    Read ROPE (corresponding to the parameter) information from config
+    :param config:
+    :param parameter:
+    :return:
+    """
+    return config.getfloat(f"{parameter}_ROPE_begin"), config.getfloat(f"{parameter}_ROPE_end")
 
 
 class HierarchicalModel:
@@ -44,15 +54,6 @@ class HierarchicalModel:
 
     def __str__(self) -> str:
         return f"{self.n_groups}_{super().__str__()}"
-
-    def estimate_interval_prob(self, interval_begin, interval_end):
-        """
-        Estimating probability of an interval, used in calculation of Bayes_factor  
-        """
-        mu_diff = self.trace[self.mu_parameter][:, 0] - self.trace[self.mu_parameter][:, 1]
-        numerator = np.logical_and(mu_diff > interval_begin, mu_diff < interval_end).sum()
-        denominator = mu_diff.size
-        return numerator, denominator
 
     def get_GraphViz_object(self, file_prefix: str, save_dot: bool = True, save_png: bool = True, extension="png"):
         '''
@@ -87,7 +88,7 @@ class Experiment:
         self.config_prior = config["Prior"]
         self.config_post = config["Posterior"]
         self.config_plots = config["Plots"]
-        self.rope = (self.config_model.getfloat("ROPE0"), self.config_model.getfloat("ROPE1"))
+        self.config_Bayes_factor = config["Bayes_factor"]
         self.extension = self.config_plots.get("Extension")
 
     def __str__(self) -> str:
@@ -129,7 +130,7 @@ class Experiment:
             difference_plots(hierarchical_model=hierarchical_model,
                              model_config=model_config,
                              file_prefix=file_prefix,
-                             rope=self.rope,
+                             rope=get_rope(model_config, hierarchical_model.mu_parameter),
                              config=self.config_plots)
 
     def add_model(self, model_object):
@@ -165,8 +166,10 @@ class Experiment:
     def run(self):
         y = self.y
         prior_model = HierarchicalModel(y=y)
+        logger.info("Summary of statistics for the given data")
         logger.info(f"n_groups: {prior_model.n_groups}")
-        for x in prior_model.stats_y:
+        for ind, x in enumerate(prior_model.stats_y):
+            logger.info(f"Group index = {ind}:")
             logger.info(x)
         self.add_model(prior_model)
         if self.run_prior:
@@ -210,53 +213,24 @@ class Experiment:
                 model_config=self.config_post,
                 plots_config=self.config_plots,
             )
-            if self.run_prior and self.run_post and self.config_model.getboolean("Bayes_factor"):
-                bayes_factor_data_frame = self.bayes_factor_analysis(prior_model, post_model, initRope=self.rope)
-                bayes_factor_file_name = self.file_prefix + "_Bayes_factor.csv"
-                bayes_factor_data_frame.to_csv(bayes_factor_file_name)
-                logger.info(f"Bayes Factor DataFrame is saved at {bayes_factor_file_name}")
+            if self.config_Bayes_factor.get("analyze"):
+
+                if self.run_prior and self.run_post:
+                    rope = get_rope(self.config_Bayes_factor, prior_model.mu_parameter)
+                    if None in rope:
+                        rope = get_rope(self.config_model, prior_model.mu_parameter)
+                    if None in rope:
+                        # TODO infer the rope from input data if not given in config
+                        rope = (-0.1, 0.1)
+                    bayes_factor_data_frame = bayes_factor_analysis(self.config_Bayes_factor, prior_model, post_model, init_rope=rope)
+                    bayes_factor_file_name = self.file_prefix + "_Bayes_factor.csv"
+                    bayes_factor_data_frame.to_csv(bayes_factor_file_name)
+                    logger.info(f"Bayes Factor DataFrame is saved at {bayes_factor_file_name}")
+                else:
+                    logger.info("For running Bayes factor analysis, "
+                                "flags for both prior and posterior analysis should be on.")
             # if self.postPredict: #TODO impose data
             #   self.drawPPC(trace, model=postModel)
-
-    def bayes_factor_analysis(self, priorModel, postModel, initRope=(-0.1, 0.1)):
-        column_names = ["ROPE", "priorProb", "postProb",
-                       "BF", "BF_Savage_Dickey",
-                       "prioNSample", "postNSample"]
-        df = pd.DataFrame(columns=column_names)
-        rope = np.array(initRope)
-        n = 100 if self.config_model.getboolean("Try_smaller_ROPEs") else 1
-        for i in range(n):
-            prior_rope_prob_frac = priorModel.estimate_interval_prob(rope[0], rope[1])
-            post_rope_prob_frac = postModel.estimate_interval_prob(rope[0], rope[1])
-            if prior_rope_prob_frac[0] <= 0 or post_rope_prob_frac[0] <= 0:
-                break
-            prior_rope_prob = prior_rope_prob_frac[0] / prior_rope_prob_frac[1]
-            post_rope_prob = post_rope_prob_frac[0] / post_rope_prob_frac[1]
-            # logger.debug(priorRopeProb)
-            # logger.debug(postRopeProb)
-            # bfsv = postRopeProbFrac[0] * priorRopeProbFrac[1] / (postRopeProbFrac[1] * priorRopeProbFrac[0])
-            # TODO `bfsv` stands for?
-            bfsv = post_rope_prob / prior_rope_prob
-            bf = bfsv * (1 - prior_rope_prob) / (1 - post_rope_prob)
-            row = {
-                column_names[0]: rope,
-                column_names[1]: prior_rope_prob,
-                column_names[2]: post_rope_prob,
-                column_names[3]: bfsv,
-                column_names[4]: bf,
-                column_names[5]: prior_rope_prob_frac[0],
-                column_names[6]: post_rope_prob_frac[0],
-            }
-            logger.debug(row)
-            df = df.append(row, ignore_index=True)
-            # logger.info(f"For ROPE={rope}:")
-            # logger.info(f"  ROPE probibility in prior= {priorRopeProb}")
-            # logger.info(f"  ROPE probibility in posteirour= {postRopeProb}")
-            # logger.info(f"    Bayes Factor = {bf}")
-            # logger.info(f"    Bayes Factor = {bf}")
-            rope = rope / 1.2
-        logger.info(df["BF"])
-        return df
 
     def draw_ppc(self, trace, model):
         """
