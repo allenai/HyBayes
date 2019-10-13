@@ -47,7 +47,7 @@ if __name__ == '__main__':
     interactive_mode = False
     for plot_config in [config["Prior"], config["Posterior"]]:
         for key in plot_config.keys():
-            if "show_" in key and plot_config[key]:
+            if "show_" in key and plot_config.getboolean(key):
                 interactive_mode = True
     logger.debug(interactive_mode)
     if not interactive_mode:
