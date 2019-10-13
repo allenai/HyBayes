@@ -213,7 +213,7 @@ class Experiment:
                 model_config=self.config_post,
                 plots_config=self.config_plots,
             )
-            if self.config_Bayes_factor.get("analyze"):
+            if self.config_Bayes_factor.getboolean("analyze"):
 
                 if self.run_prior and self.run_post:
                     rope = get_rope(self.config_Bayes_factor, prior_model.mu_parameter)
