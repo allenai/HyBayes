@@ -13,6 +13,8 @@ These models capture a lot of common assumption on observed data. Note that if y
 
 For this model, you can indicate the "HistogramPlot" and "scatterPlot" to view a visualisation of the input. For our contrived data, we get the Figures 1 and 2.
 
+![Temp plot](Metric_posterior_mu.pdf)
+
 ![Histogram plot](outputsForManual/Metric/Metric_HistogramPlot.png)
 
 ![Scatter plot](outputsForManual/Metric/Metric_scatterPlot.png)
