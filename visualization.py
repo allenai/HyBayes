@@ -266,7 +266,9 @@ def compare_all_parameters_plot(hierarchical_model, config_plot, vars, file_pref
         vars.remove("effect_size")
 
     logger.info(f"Parameters included in compare_all_plot: {vars}")
-    fig, axes = plt.subplots(len(vars), 1, figsize=(20, 60))
+    fig, axes = plt.subplots(len(vars), 1, figsize=(30, len(vars)*30), squeeze = False)
+    axes = axes.reshape(-1)
+
     for ind, var in enumerate(vars):
         if var is "effect_size":
             array = (trace[mu_var][:, 0] - trace[mu_var][:, 1]) / np.sqrt(
