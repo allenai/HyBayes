@@ -15,7 +15,7 @@ For purposes of this manual, we make some artificial data. If you already have y
 Use the following command to  generate the artificial data: 
 
 ```bash
-python makeData.py
+python make_data.py
 ```
 
 ## Prepare configuration file
