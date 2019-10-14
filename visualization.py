@@ -183,6 +183,7 @@ def one_parameter_plot(hierarchical_model, var, file_prefix, config_plot=None, s
                           ax=ax,
                           color=color,
                           )
+        ax.set_xlabel(f"{var}_{ind}")
     # ax2.set_xlabel(r"$\theta_1$", fontdict={"size": int(config.getint("Font_size"))})
     # todo use name from varname
     # ax3.set_xlabel(r"$\theta_2$", fontdict={"size": int(config.getint("Font_size"))})
@@ -247,8 +248,6 @@ def compare_all_parameters_plot(hierarchical_model, config_plot, vars, file_pref
     :param file_prefix:
     :return:
     """
-    logger.debug("line 251, vis")
-    logger.debug(vars)
     extension = config_plot.get("Extension")
     plot_kind = config_plot.get("Kind")
     text_ratio = config_plot.getfloat("text_size_ratio")
@@ -266,20 +265,17 @@ def compare_all_parameters_plot(hierarchical_model, config_plot, vars, file_pref
     if "effect_size" in vars and (mu_var is None or sigma_var is None):
         vars.remove("effect_size")
 
+    logger.info(f"Parameters included in compare_all_plot: {vars}")
     fig, axes = plt.subplots(len(vars), 1, figsize=(20, 60))
     for ind, var in enumerate(vars):
         if var is "effect_size":
-            diff = (trace[mu_var][:, 0] - trace[mu_var][:, 1]) / np.sqrt(
+            array = (trace[mu_var][:, 0] - trace[mu_var][:, 1]) / np.sqrt(
                 (trace[sigma_var][:, 0] ** 2 + trace[sigma_var][:, 1] ** 2) / 2)
-            # trace.add_values({"effect_size": es})
-            axes[ind].set_title(f"Effect size")
         elif var in trace.varnames:
-            diff = trace[var]
-            axes[ind].set_title(f"{var}")
+            array = trace[var]
         else:
-            diff = trace[var][:, 0] - trace[var][:, 1]
-            axes[ind].set_title(f"{var} difference")
-        pm.plot_posterior(diff,
+            array = trace[var][:, 0] - trace[var][:, 1]
+        pm.plot_posterior(array,
                           textsize=text_ratio,
                           credible_interval=credible_interval,
                           round_to=round_to,
@@ -289,6 +285,13 @@ def compare_all_parameters_plot(hierarchical_model, config_plot, vars, file_pref
                           ax=axes[ind],
                           color=color,
                           )
+        if var is "effect_size":
+            axes[ind].set_title(f"Effect size")
+        elif var in trace.varnames:
+            axes[ind].set_title(f"{var}")
+        else:
+            axes[ind].set_title(f"{var} difference")
+
     dist_file_name = f"{file_prefix}_compare_all_parameters.{extension}"
     plt.savefig(dist_file_name)
     logger.info(f"{dist_file_name} is saved!")
