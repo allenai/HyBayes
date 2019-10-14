@@ -9,9 +9,17 @@ import numpy as np
 from matplotlib import gridspec
 
 logger = logging.getLogger('root')
-color = '#87ceeb'  # TODO: this can become a parameter
 color_list = [plt.cm.get_cmap("tab10").colors[0], plt.cm.get_cmap("tab10").colors[1]]
 
+
+def get_rope(config, parameter):
+    """
+    Read ROPE (corresponding to the parameter) information from config
+    :param config:
+    :param parameter:
+    :return:
+    """
+    return config.getfloat(f"{parameter}_ROPE_begin"), config.getfloat(f"{parameter}_ROPE_end")
 
 def fix_hdp_labels(texts):
     for tx in texts:
@@ -79,7 +87,8 @@ def pre_analysis_plots(y, config):
         plt.bar([0, 1], proportions, color = color_list)
         plt.xticks([0, 1], ["Group 0", "Group 1"])
         plt.ylabel("Portion of value 1")
-        file_name = f"{config['Files'].get('Output_prefix')}_barPlot.{config['Plots'].get('Extension')}"
+        file_name = f"{config['Files'].get('Output_prefix')}_bar_plot.{config['Plots'].get('Extension')}"
+        file_name = f"{config['Files'].get('Output_prefix')}_bar_plot.{config['Plots'].get('Extension')}"
         plt.savefig(file_name)
         logger.info(f"Bar Plot is saved to {file_name}.")
         plt.clf()
@@ -90,7 +99,7 @@ def pre_analysis_plots(y, config):
             a = y[i][:, 1] / (y[i][:, 0] + y[i][:, 1])
             axes[i].hist(a, bins=20, color=color_list[i])
             axes[i].set_title(f"Group {i}")
-        file_name = f"{config['Files'].get('Output_prefix')}_HistogramPlot.{config['Plots'].get('Extension')}"
+        file_name = f"{config['Files'].get('Output_prefix')}_histogram_plot.{config['Plots'].get('Extension')}"
         plt.savefig(file_name)
         logger.info(f"Histogram Plot is saved to {file_name}.")
         plt.clf()
@@ -98,7 +107,7 @@ def pre_analysis_plots(y, config):
     if config["Model"].get("Variable_type") in ["Count", "Ordinal", "Binary", "Metric"]:
         if config["Plots"].getboolean("Count_plot"):
             sns_count_plot = sns.countplot(x=count_df["value"], hue=count_df["Group"])
-            file_name = f"{config['Files'].get('Output_prefix')}_countPlot.{config['Plots'].get('Extension')}"
+            file_name = f"{config['Files'].get('Output_prefix')}_count_plot.{config['Plots'].get('Extension')}"
             plt.savefig(file_name)
             logger.info(f"Count Plot is saved to {file_name}.")
             plt.clf()
@@ -114,20 +123,28 @@ def pre_analysis_plots(y, config):
             plt.clf()
 
 
-def one_parameter_plot(hierarchical_model, var, file_prefix, rope, improvements=False,
-                       config=None):
+def one_parameter_plot(hierarchical_model, var, file_prefix, config_plot=None, show= False, rope=(-0.1, 0.1)):
     """
     Draws three plots corresponding to one parameter in the model.
     There will be one plot for each group in the bottom row and one difference plot at the top row.
+    :param show: whether to matplotlib shows the plot in an interactive mode.
     :param hierarchical_model: the model object to get the samples(trace)
     :param var: the variable of interest to plot
     :param file_prefix: the string used for all the files
     :param rope: the value of ROPE used in plot
-    :param improvements: Not used
-    :param config: Several configuration properties e.g., file extension.
+    :param config_plot: Several configuration properties e.g., file extension.
     :return:
     """
-    extension = config.get("Extension")
+    extension = config_plot.get("Extension")
+    plot_kind = config_plot.get("Kind")
+    text_ratio = config_plot.getfloat("text_size_ratio")
+    point_estimate = config_plot.get("point_estimate")
+    round_to = config_plot.getint("round_to")
+    credible_interval = config_plot.getfloat("credible_interval")
+    color = "#" + config_plot.get("color")
+    # How best to put defaults
+    #  color = '#87ceeb'
+
     trace = hierarchical_model.trace
     plt.figure(figsize=(17, 17))
     gs = gridspec.GridSpec(3, 4)
@@ -137,138 +154,139 @@ def one_parameter_plot(hierarchical_model, var, file_prefix, rope, improvements=
     diff = trace[var][:, 0] - trace[var][:, 1]
     diff_var_name = f"{var}_1-{var}_2"
     trace.add_values({diff_var_name: diff})
-    # print(trace.varnames, diffVarName)
-    # TODO check the interface to give varname and text_size
-    pm.plot_posterior(diff,
+    pm.plot_posterior(trace,
+                      var_names=[diff_var_name, ],
                       figsize=(4, 4),
-                      # varnames=diffVarName,
-                      # alpha_level=0.05,
+                      textsize=text_ratio,
+                      credible_interval = credible_interval,
+                      round_to=round_to,
+                      point_estimate=point_estimate,
                       rope=rope,
-                      point_estimate='mode',
-                      ax=ax1,
-                      color=color,
-                      round_to=3,
                       ref_val=0,
-                      # text_size=config.getint("Font_size"),
+                      kind=plot_kind,
+                      ax=ax1,
+                      color=color, # todo from config
                       )
-    ax1.set_xlabel(r"$\theta_1-\theta_2$", fontdict={"size": int(config.getint("Font_size") * 0.5)})
+    # ax1.set_xlabel(r"$\theta_1-\theta_2$", fontdict={"size": int(config.getint("Font_size") * 0.5)})
 
-    list_of_children = ax1.get_children()
-    texts = list(filter(lambda x: isinstance(x, matplotlib.text.Text), list_of_children))
-    lines = list(filter(lambda x: isinstance(x, matplotlib.lines.Line2D), list_of_children))
-    # TODO: optional CI
-
-    #   for tx in texts:
-    #     if "HPD" in tx.get_text():
-    #       tx.set_text("HDI,")
-    #       ax1.text(1.1*tx._x, tx._y, "CI", fontsize = 20, color="b")
-    #
-    #
-    #
-    #
-    # CI = (0.0136, 0.057)
-    # CIline = None
-    # for i in range(len(lines)):
-    # lin: matplotlib.lines.Line2D = lines[i]
-    # if lin.get_markerfacecolor() == "k":
-    #   CIline = copy.copy(lin)
-    #   yy = 0.5 * CIline.get_ydata()[0]
-    #   CIline.set_ydata((yy, yy))
-    #   CIline.set_xdata(CI)
-    #   CIline.set_color("b")
-    #   ax1.add_line(CIline)
-
-    pm.plot_posterior(trace[var][:, 0],
-                      figsize=(4, 4),
-                      # varnames=var,
-                      # alpha_level=0.05,
-                      point_estimate='mode',
-                      ax=ax2,
-                      color=color,
-                      round_to=3,
-                      # ref_val=hierarchical_model.statsY[0].mean,
-                      # text_size=config.getint("Font_size"),
-                      )
-    ax2.set_xlabel(r"$\theta_1$", fontdict={"size": int(config.getint("Font_size"))})
-    pm.plot_posterior(trace[var][:, 1],
-                      figsize=(4, 4),
-                      # varnames=var,
-                      # alpha_level=0.05,
-                      point_estimate='mode',
-                      ax=ax3,
-                      color=color,
-                      round_to=3,
-                      # text_size=config.getint("Font_size"),
-                      # ref_val=hierarchical_model.statsY[1].mean,
-                      )
+    # list_of_children = ax1.get_children()
+    # texts = list(filter(lambda x: isinstance(x, matplotlib.text.Text), list_of_children))
+    # lines = list(filter(lambda x: isinstance(x, matplotlib.lines.Line2D), list_of_children))
+    for ind, ax in enumerate([ax2, ax3]):
+        pm.plot_posterior(trace[var][:, ind],
+                          # varnames=var,
+                          figsize=(4, 4),
+                          textsize=text_ratio,
+                          credible_interval = credible_interval,
+                          round_to=round_to,
+                          point_estimate=point_estimate,
+                          # no rope, ref_val
+                          kind = plot_kind,
+                          ax=ax,
+                          color=color,
+                          )
+    # ax2.set_xlabel(r"$\theta_1$", fontdict={"size": int(config.getint("Font_size"))})
     # todo use name from varname
-    ax3.set_xlabel(r"$\theta_2$", fontdict={"size": int(config.getint("Font_size"))})
-    if config.getboolean("HPDtoHDI"):
+    # ax3.set_xlabel(r"$\theta_2$", fontdict={"size": int(config.getint("Font_size"))})
+    if config_plot.getboolean("HPDtoHDI"):
         for ax in [ax1, ax2, ax3]:
             fix_hdp_labels(list(filter(lambda x: isinstance(x, matplotlib.text.Text), ax.get_children())))
 
     dist_file_name = f"{file_prefix}_{var}.{extension}"
     plt.savefig(dist_file_name)
     logger.info(f"{dist_file_name} is saved!")
+    if show:
+        plt.show()
     plt.clf()
 
 
-def difference_plots(hierarchical_model, model_config, file_prefix, rope, config):
+def difference_plots(hierarchical_model, corresponding_config, file_prefix, config_plot, config_model):
+    """
+    Handles the plot requests indicated in the config object
+    :param config_model:
+    :param hierarchical_model:
+    :param corresponding_config: Configuration of the either prior or post that is running here.
+    :param file_prefix:
+    :param config_plot:
+    :return:
+    """
     trace = hierarchical_model.trace
-    muVar = hierarchical_model.mu_parameter
+    mu_var = hierarchical_model.mu_parameter
     sigma_var = hierarchical_model.sigma_parameter
-    if model_config.getboolean("Mean_plot"):
-        one_parameter_plot(hierarchical_model, muVar, file_prefix, rope,
-                           model_config.getboolean("Plot_improvements"),
-                           config,
-                           )
 
-    if model_config.getboolean("SD_plot"):
-        one_parameter_plot(hierarchical_model, sigma_var, file_prefix, rope,
-                           model_config.getboolean("Plot_improvements"), config)
+    if corresponding_config.getboolean("mean_plot"):
+        logger.info(f"Plots corresponding to the mean will be under parameter name: {mu_var}")
+        corresponding_config[f"{mu_var}_plot"] = "True"
+        corresponding_config[f"show_{mu_var}_plot"] = str(corresponding_config.getboolean("Show_mean_plot"))
 
-    if model_config.getboolean("Compare_all_plot"):
-        fig, axes = plt.subplots(3, 1, figsize=(20, 60))
+    if corresponding_config.getboolean("SD_plot") and sigma_var is not None:
+        logger.info(f"Plots corresponding to the standard deviation will be under parameter name:{sigma_var}")
+        corresponding_config[f"{sigma_var}_plot"] = "True"
+        corresponding_config[f"show_{sigma_var}_plot"] = str(corresponding_config.getboolean("Show_SD_plot"))
 
-        pm.plot_posterior(trace[muVar][:, 0] - trace[muVar][:, 1],
-                          # varnames=var,
-                          # alpha_level=0.05,
-                          rope=rope,
-                          point_estimate='mode',
-                          ax=axes[0],
-                          color=color,
-                          round_to=3,
+    parameters_to_plot = []
+    for var in trace.varnames:
+        var = var.split("_")[0]
+        if var not in parameters_to_plot and corresponding_config.getboolean(f"{var}_plot"):
+            parameters_to_plot.append(var)
+    logger.debug(parameters_to_plot)
+
+    for param in parameters_to_plot:
+        one_parameter_plot(hierarchical_model, param, file_prefix, config_plot,
+                           corresponding_config.getboolean(f"Show_{param}_plot"), get_rope(config_model, param))
+    if mu_var is not None and sigma_var is not None and\
+            corresponding_config.getboolean("Compare_all_parameters_plot"):
+        compare_all_parameters_plot(hierarchical_model, config_plot,
+                                    [mu_var, sigma_var, "effect_size", "nu"],
+                                    file_prefix)
+
+
+def compare_all_parameters_plot(hierarchical_model, config_plot, vars, file_prefix):
+    """
+    Draws a difference plot for all variables in vars.
+    :param hierarchical_model:
+    :param config_plot:
+    :param vars: on top of parameters in model. This accepts "effect_size" too.
+    :param file_prefix:
+    :return:
+    """
+    logger.debug(vars)
+    extension = config_plot.get("Extension")
+    plot_kind = config_plot.get("Kind")
+    text_ratio = config_plot.getfloat("text_size_ratio")
+    point_estimate = config_plot.get("point_estimate")
+    round_to = config_plot.getint("round_to")
+    credible_interval = config_plot.getfloat("credible_interval")
+    color = "#" + config_plot.get("color")
+    # How best to put defaults
+    #  color = '#87ceeb'
+
+    trace = hierarchical_model.trace
+    vars = [var for var in vars if var is not None and var in trace.varnames]
+    mu_var = hierarchical_model.mu_parameter
+    sigma_var = hierarchical_model.sigma_parameter
+
+    fig, axes = plt.subplots(len(vars), 1, figsize=(20, 60))
+    for ind, var in enumerate(vars):
+        if var is "effect_size":
+            diff = (trace[mu_var][:, 0] - trace[mu_var][:, 1]) / np.sqrt(
+                (trace[sigma_var][:, 0] ** 2 + trace[sigma_var][:, 1] ** 2) / 2)
+            # trace.add_values({"effect_size": es})
+            axes[ind].set_title(f"Effect size")
+        else:
+            diff = trace[var][:, 0] - trace[var][:, 1]
+            axes[ind].set_title(f"{var} difference")
+        pm.plot_posterior(diff,
+                          textsize=text_ratio,
+                          credible_interval=credible_interval,
+                          round_to=round_to,
+                          point_estimate=point_estimate,
                           ref_val=0,
-                          )
-        axes[0].set_title("Mu difference")
-
-        pm.plot_posterior(trace[sigma_var][:, 0] - trace[sigma_var][:, 1],
-                          # varnames=var,
-                          # alpha_level=0.05,
-                          rope=(-0.1, 0.1),  # TODO: calculate ROPE
-                          point_estimate='mode',
-                          ax=axes[1],
+                          kind=plot_kind,
+                          ax=axes[ind],
                           color=color,
-                          round_to=3,
-                          ref_val=0,
                           )
-        axes[1].set_title("Sigma difference")
-
-        es = (trace[muVar][:, 0] - trace[muVar][:, 1]) / np.sqrt(
-            (trace[sigma_var][:, 0] ** 2 + trace[sigma_var][:, 1] ** 2) / 2)
-        pm.plot_posterior(es,
-                          # varnames=var,
-                          # alpha_level=0.05,
-                          rope=(-0.1, 0.1),  # TODO: calculate ROPE
-                          point_estimate='mode',
-                          ax=axes[2],
-                          color=color,
-                          round_to=3,
-                          ref_val=0,
-                          )
-        axes[2].set_title("Effect size")
-        dist_file_name = f"{file_prefix}_allComp.{config.get('Extension')}"
-        plt.savefig(dist_file_name)
-        logger.info(f"{dist_file_name} is saved!")
-        plt.clf()
-
+    dist_file_name = f"{file_prefix}_allComp.{extension}"
+    plt.savefig(dist_file_name)
+    logger.info(f"{dist_file_name} is saved!")
+    plt.clf()

@@ -29,13 +29,10 @@ def make_metric_config(config: configparser.ConfigParser):
 
     for plot_stage in ["Prior", "Posterior"]:
         config[plot_stage]["SD_plot"] = "True"
-        config[plot_stage]["SD_plot_kind"] = "hist"
         config[plot_stage]["Show_SD_plot"] = "False"
         config[plot_stage]["Mean_plot"] = "True"
-        config[plot_stage]["Mean_plot_kind"] = "hist"
         config[plot_stage]["Show_Mean_plot"] = "False"
         config[plot_stage]["Effective_sample_size_plot"] = "True"
-        config[plot_stage]["Effective_sample_size_plot_kind"] = "hist"
         config[plot_stage]["Show_Effective_sample_size_plot"] = "False"
 
     return config
@@ -56,17 +53,17 @@ def make_count_config(config: configparser.ConfigParser):
     # config["Model"]["Zero_inflation"] = "False" # Zero_inflation is not implemented yet
 
     for plot_stage in ["Prior", "Posterior"]:
-        config[plot_stage]["SD_plot"] = "True"
-        config[plot_stage]["SD_plot_kind"] = "hist"
-        config[plot_stage]["Show_SD_plot"] = "False"
+        config[plot_stage]["sigma_plot"] = "True"
+        config[plot_stage]["Show_sigma_plot"] = "False"
 
-        config[plot_stage]["Mean_plot"] = "True"
-        config[plot_stage]["Mean_plot_kind"] = "hist"
-        config[plot_stage]["Show_Mean_plot"] = "False"
+        config[plot_stage]["mu_plot"] = "True"
+        config[plot_stage]["Show_mu_plot"] = "False"
 
-        config[plot_stage]["Effect_size_plot "] = "True"
-        config[plot_stage]["Effect_size_plot_kind"] = "hist"
-        config[plot_stage]["Show_Effect_size_plot"] = "False"
+        config[plot_stage]["alpha_plot"] = "True"
+        config[plot_stage]["Show_alpha_plot"] = "False"
+
+        config[plot_stage]["skewness_plot"] = "True"
+        config[plot_stage]["Show_skewness_plot"] = "False"
 
     return config
 
@@ -88,17 +85,11 @@ def make_ordinal_config(config: configparser.ConfigParser):
     # config["Model"]["Zero_inflation"] = "False" # Zero_inflation is not implemented yet
 
     for plot_stage in ["Prior", "Posterior"]:
-        config[plot_stage]["SD_plot"] = "True"
-        config[plot_stage]["SD_plot_kind"] = "hist"
-        config[plot_stage]["Show_SD_plot"] = "False"
+        config[plot_stage]["sigma_plot"] = "True"
+        config[plot_stage]["Show_sigma_plot"] = "False"
 
-        config[plot_stage]["Mean_plot"] = "True"
-        config[plot_stage]["Mean_plot_kind"] = "hist"
-        config[plot_stage]["Show_Mean_plot"] = "False"
-
-        config[plot_stage]["Effect_size_plot "] = "True"
-        config[plot_stage]["Effect_size_plot_kind"] = "hist"
-        config[plot_stage]["Show_Effect_size_plot"] = "False"
+        config[plot_stage]["mu_plot"] = "True"
+        config[plot_stage]["Show_mu_plot"] = "False"
 
     return config
 
@@ -120,11 +111,7 @@ def make_binary_config(config: configparser.ConfigParser):
     config["Model"]["Beta_b"] = "1"
 
     for plot_stage in ["Prior", "Posterior"]:
-        config[plot_stage]["Effect_size_plot "] = "True"
-        config[plot_stage]["Effect_size_plot t_kind"] = "hist"
-        config[plot_stage]["Show_Effect_size_plot "] = "False"
         config[plot_stage]["Mean_plot"] = "True"
-        config[plot_stage]["Mean_plot_kind"] = "hist"
         config[plot_stage]["Show_Mean_plot"] = "False"
 
     return config

@@ -18,6 +18,7 @@ from visualization import difference_plots
 from scipy import stats
 from theano.compile.ops import as_op
 from Bayes_factor_analysis import bayes_factor_analysis
+
 logger = logging.getLogger('root')
 
 
@@ -48,7 +49,6 @@ class HierarchicalModel:
         self.add_observations_function = None
         self.mu_parameter = None
         self.sigma_parameter = None
-        self.outlierness_parameter = None
         self.skewness = None
         self.trace = None
 
@@ -62,11 +62,11 @@ class HierarchicalModel:
         graph = pm.model_to_graphviz(self.pymc_model)
         graph.format = extension
         if save_dot:
-            txtFileName = f"{file_prefix}_hierarchicalGraph.txt"
+            txtFileName = f"{file_prefix}_hierarchical_graph.txt"
             graph.save(txtFileName)
             logger.info(f"Graph's source saved to {txtFileName}")
         if save_png:
-            pngFileName = f"{file_prefix}_hierarchicalGraph"
+            pngFileName = f"{file_prefix}_hierarchical_graph"
             graph.render(pngFileName, view=False, cleanup=True)
             logger.info(f"Graph picture saved to {pngFileName}")
         return graph
@@ -94,18 +94,25 @@ class Experiment:
     def __str__(self) -> str:
         return super().__str__()
 
-    # TODO two inputs are not used
-    def run_model(self, hierarchical_model,
+    def run_model(self, hierarchical_model, corresponding_config,
                   file_prefix="experiment",
-                  draws=500, chains=None, cores=None, tune=500,
-                  progressbar=True,
-                  model_config=None,
-                  plots_config=None):
+                  draws=500, chains=None, cores=None, tune=500):
+        """
+        :param hierarchical_model:
+        :param corresponding_config: either config_prior or config_post
+                                    Note that the config is still accessible by self.*
+        :param file_prefix:
+        :param draws:
+        :param chains:
+        :param cores:
+        :param tune:
+        :return:
+        """
         with hierarchical_model.pymc_model:
             hierarchical_model.trace = pm.sample(model=hierarchical_model.pymc_model,
                                                  draws=draws, chains=chains, cores=cores, tune=tune)
         logger.info(f"Effective Sample Size (ESS) = {pm.diagnostics.effective_n(hierarchical_model.trace)}")
-        if model_config.getboolean("Save_trace"):
+        if corresponding_config.getboolean("Save_trace"):
             traceFolderName = f"{file_prefix}_trace"
             if os.path.exists(traceFolderName):
                 ind = 0
@@ -116,10 +123,8 @@ class Experiment:
             with open(os.path.join(traceFolderName, "pickeledTrace.pkl"), 'wb') as buff:
                 pickle.dump({'model': hierarchical_model.pymc_model, 'trace': hierarchical_model.trace}, buff)
             logger.info(f"{traceFolderName} is saved!")
-        # TODO drop these?
-        # Plot autocor
-        # pm.autocorrplot()
-        if model_config.getboolean("Diagnostic_plots"):
+
+        if corresponding_config.getboolean("Diagnostic_plots"):
             pm.traceplot(hierarchical_model.trace)
             diag_file_name = f"{file_prefix}_diagnostics.{self.extension}"
             plt.savefig(diag_file_name)
@@ -128,10 +133,10 @@ class Experiment:
 
         if hierarchical_model.n_groups == 2:
             difference_plots(hierarchical_model=hierarchical_model,
-                             model_config=model_config,
+                             corresponding_config=corresponding_config,
                              file_prefix=file_prefix,
-                             rope=get_rope(model_config, hierarchical_model.mu_parameter),
-                             config=self.config_plots)
+                             config_plot=self.config_plots,
+                             config_model=self.config_model)
 
     def add_model(self, model_object):
         '''
@@ -171,6 +176,7 @@ class Experiment:
         for ind, x in enumerate(prior_model.stats_y):
             logger.info(f"Group index = {ind}:")
             logger.info(x)
+
         self.add_model(prior_model)
         if self.run_prior:
             prior_model.get_GraphViz_object(
@@ -181,15 +187,15 @@ class Experiment:
             )
 
             logger.info("Sampling From Prior ...")
+
             self.run_model(
                 prior_model,
+                corresponding_config=self.config_prior,
                 file_prefix=self.file_prefix + "_prior",
                 draws=self.config_prior.getint("Draws"),
                 chains=self.config_prior.getint("Chains"),
                 cores=1,
                 tune=self.config_prior.getint("Tune"),
-                model_config=self.config_prior,
-                plots_config=self.config_plots,
             )
 
         if self.run_post:
@@ -205,13 +211,12 @@ class Experiment:
             logger.info("Sampling From Posterior ...")
             self.run_model(
                 post_model,
+                corresponding_config=self.config_post,
                 file_prefix=self.file_prefix + "_posterior",
                 draws=self.config_post.getint("Draws"),
                 chains=self.config_post.getint("Chains"),
                 cores=1,
                 tune=self.config_post.getint("Tune"),
-                model_config=self.config_post,
-                plots_config=self.config_plots,
             )
             if self.config_Bayes_factor.getboolean("analyze"):
 

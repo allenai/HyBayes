@@ -10,8 +10,6 @@ import os
 from utils import *
 import traceback
 
-
-
 if __name__ == '__main__':
     logs_folder_made = mk_dir_if_not_exists("logs")
     logging_total_file_name = f"logs/allLogs.log"
