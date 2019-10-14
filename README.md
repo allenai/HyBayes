@@ -14,7 +14,7 @@ For further discussion of the approaches implemented here (and their comparison 
 For running this code, you will need Python (version >=3.6).
 You have two options for installation: 
  - If you don't want to modify any code, you can just install the package and use it in commandline: 
-```
+```bash
  > pip install ????
 ```
 
@@ -27,8 +27,8 @@ You have two options for installation:
 
 
 If you're using MacOS, install GraphViz via `brew` command: 
-```
-> brew install graphviz
+```bash
+ > brew install graphviz
 ```
 
 ### Preparing configuration file
@@ -73,7 +73,7 @@ Let's assume that you have followed the above instructions and:
 
 To run the analysis, you pass the name of the config file as argument: 
 ```bash
-python main.py --config myConfigFile.ini --verbose
+ > python main.py --config myConfigFile.ini --verbose
 ```
 
 When the flag `--verbose` is on, the details of the analysis will be printed in standard output. 
@@ -96,12 +96,12 @@ optional arguments:
 ### A Quick Example 
 To demonstrate everything with a quick example, run the following command to generate toy data: 
 ```bash
-python makeData.py
+ > python makeData.py
 ```
 
 And then execute the analysis on that: 
 ```bash
-python main.py --config configs/configBinary.ini --verbose
+ > python main.py --config configs/configBinary.ini --verbose
 ```
 
 ## Further Reading
