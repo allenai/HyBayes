@@ -1,15 +1,25 @@
-import os
+import argparse
 import configparser
 import copy
+import os
 
 config_folder_name = "configs"
 config_template_file_name = "config_template.ini"
 artificial_data_folder_name = "artificial_data"
 
 
-def read_template_config():
+def read_template_config(quick=False):
     config = configparser.ConfigParser()
     config.read(os.path.join(config_folder_name, config_template_file_name))
+    if quick:
+        plot_stage = "Prior"
+        config[plot_stage]["analyze"] = "False"
+
+        plot_stage = "Posterior"
+        config[plot_stage]["draws"] = "100"
+        config[plot_stage]["chains"] = "2"
+        config[plot_stage]["tune"] = "10"
+
     return config
 
 
@@ -133,11 +143,7 @@ def make_binomial_config(config: configparser.ConfigParser):
     config["Model"]["Beta_b"] = "1"
 
     for plot_stage in ["Prior", "Posterior"]:
-        config[plot_stage]["Effect_size_plot "] = "True"
-        config[plot_stage]["Effect_size_plot t_kind"] = "hist"
-        config[plot_stage]["Show_Effect_size_plot "] = "False"
         config[plot_stage]["Mean_plot"] = "True"
-        config[plot_stage]["Mean_plot_kind"] = "hist"
         config[plot_stage]["Show_Mean_plot"] = "False"
 
     return config
@@ -151,10 +157,16 @@ def write_config(config, file_name):
 
 
 if __name__ == '__main__':
-    write_config(make_binary_config(read_template_config()), "config_binary.ini")
-    write_config(make_binomial_config(read_template_config()), "config_binomial.ini")
-    write_config(make_count_config(read_template_config()), "config_count.ini")
-    write_config(make_metric_config(read_template_config()), "config_metric.ini")
-    write_config(make_ordinal_config(read_template_config()), "config_ordinal.ini")
+    parser = argparse.ArgumentParser(
+        description="Make example config files for running artificial files")
+    parser.add_argument("-q", "--quick", help="With this flag the configs only include posterior and with low values"
+                                              " for draw, cains, and tune", action="store_true", default=False)
+    args = parser.parse_args()
+
+    write_config(make_binary_config(read_template_config(args.quick)), "config_binary.ini")
+    write_config(make_binomial_config(read_template_config(args.quick)), "config_binomial.ini")
+    write_config(make_count_config(read_template_config(args.quick)), "config_count.ini")
+    write_config(make_metric_config(read_template_config(args.quick)), "config_metric.ini")
+    write_config(make_ordinal_config(read_template_config(args.quick)), "config_ordinal.ini")
 
 

@@ -21,6 +21,7 @@ def get_rope(config, parameter):
     """
     return config.getfloat(f"{parameter}_ROPE_begin"), config.getfloat(f"{parameter}_ROPE_end")
 
+
 def fix_hdp_labels(texts):
     for tx in texts:
         if "HPD" in tx.get_text():
@@ -60,15 +61,12 @@ def pre_analysis_plots(y, config):
             logger.info(f"Histogram Plot is saved to {file_name}.")
             plt.clf()
         if config["Plots"].get("Avg_confusion_heat_map"):
-            avgTable = np.average(mat, axis=0).reshape(2, 2)
-            sns.heatmap(avgTable, annot=True)
+            avg_table = np.average(mat, axis=0).reshape(2, 2)
+            sns.heatmap(avg_table, annot=True)
             file_name = f"{config['Files'].get('Output_prefix')}_Heat_map_plot.{config['Plots'].get('Extension')}"
             plt.savefig(file_name)
             logger.info(f"Histogram Plot is saved to {file_name}.")
             plt.clf()
-
-
-
 
     if config["Model"].get("Variable_type") in ["Metric", ] and config["Plots"].get("Histogram_plot"):
         fig, axes = plt.subplots(1, 2, sharey='row')
@@ -82,8 +80,8 @@ def pre_analysis_plots(y, config):
 
     if config["Model"].get("Variable_type") in ["Binary",] and config["Plots"].get("Bar_plot"):
         for i in range(len(y)):
-            nOnes = np.count_nonzero(y[i])
-            proportions.append(nOnes/y[i].shape[0])
+            n_ones = np.count_nonzero(y[i])
+            proportions.append(n_ones/y[i].shape[0])
         plt.bar([0, 1], proportions, color = color_list)
         plt.xticks([0, 1], ["Group 0", "Group 1"])
         plt.ylabel("Portion of value 1")
@@ -234,8 +232,7 @@ def difference_plots(hierarchical_model, corresponding_config, file_prefix, conf
     for param in parameters_to_plot:
         one_parameter_plot(hierarchical_model, param, file_prefix, config_plot,
                            corresponding_config.getboolean(f"Show_{param}_plot"), get_rope(config_model, param))
-    if mu_var is not None and sigma_var is not None and\
-            corresponding_config.getboolean("Compare_all_parameters_plot"):
+    if corresponding_config.getboolean("Compare_all_parameters_plot"):
         compare_all_parameters_plot(hierarchical_model, config_plot,
                                     [mu_var, sigma_var, "effect_size", "nu"],
                                     file_prefix)
@@ -250,6 +247,7 @@ def compare_all_parameters_plot(hierarchical_model, config_plot, vars, file_pref
     :param file_prefix:
     :return:
     """
+    logger.debug("line 251, vis")
     logger.debug(vars)
     extension = config_plot.get("Extension")
     plot_kind = config_plot.get("Kind")
@@ -262,9 +260,11 @@ def compare_all_parameters_plot(hierarchical_model, config_plot, vars, file_pref
     #  color = '#87ceeb'
 
     trace = hierarchical_model.trace
-    vars = [var for var in vars if var is not None and var in trace.varnames]
     mu_var = hierarchical_model.mu_parameter
     sigma_var = hierarchical_model.sigma_parameter
+    vars = [var for var in vars if var is not None and var in trace.varnames]
+    if "effect_size" in vars and (mu_var is None or sigma_var is None):
+        vars.remove("effect_size")
 
     fig, axes = plt.subplots(len(vars), 1, figsize=(20, 60))
     for ind, var in enumerate(vars):
@@ -273,6 +273,9 @@ def compare_all_parameters_plot(hierarchical_model, config_plot, vars, file_pref
                 (trace[sigma_var][:, 0] ** 2 + trace[sigma_var][:, 1] ** 2) / 2)
             # trace.add_values({"effect_size": es})
             axes[ind].set_title(f"Effect size")
+        elif var in trace.varnames:
+            diff = trace[var]
+            axes[ind].set_title(f"{var}")
         else:
             diff = trace[var][:, 0] - trace[var][:, 1]
             axes[ind].set_title(f"{var} difference")
@@ -286,7 +289,7 @@ def compare_all_parameters_plot(hierarchical_model, config_plot, vars, file_pref
                           ax=axes[ind],
                           color=color,
                           )
-    dist_file_name = f"{file_prefix}_allComp.{extension}"
+    dist_file_name = f"{file_prefix}_compare_all_parameters.{extension}"
     plt.savefig(dist_file_name)
     logger.info(f"{dist_file_name} is saved!")
     plt.clf()
