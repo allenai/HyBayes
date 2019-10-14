@@ -44,7 +44,7 @@ Analyze = True
 ...
 
 [Posterior]
-Analyze = True
+Analyze = False
 ...
 ```
 
