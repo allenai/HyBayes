@@ -75,7 +75,7 @@ def pre_analysis_plots(y, config):
         for i in range(len(y)):
             axes[i].hist(y[i], bins=20, color=color_list[i])
             axes[i].set_title(f"Group {i}")
-        file_name = f"{config['Files'].get('Output_prefix')}_HistogramPlot.{config['Plots'].get('Extension')}"
+        file_name = f"{config['Files'].get('Output_prefix')}_Histogram_plot.{config['Plots'].get('Extension')}"
         plt.savefig(file_name)
         logger.info(f"Histogram Plot is saved to {file_name}.")
         plt.clf()
