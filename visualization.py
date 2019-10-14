@@ -183,7 +183,8 @@ def one_parameter_plot(hierarchical_model, var, file_prefix, config_plot=None, s
                           ax=ax,
                           color=color,
                           )
-        ax.set_xlabel(f"{var}_{ind}")
+        ax.set_title("")
+        ax.set_xlabel(f"{var}_{ind + 1}", fontdict={"size": text_ratio})
     # ax2.set_xlabel(r"$\theta_1$", fontdict={"size": int(config.getint("Font_size"))})
     # todo use name from varname
     # ax3.set_xlabel(r"$\theta_2$", fontdict={"size": int(config.getint("Font_size"))})
@@ -273,9 +274,11 @@ def compare_all_parameters_plot(hierarchical_model, config_plot, vars, file_pref
         if var is "effect_size":
             array = (trace[mu_var][:, 0] - trace[mu_var][:, 1]) / np.sqrt(
                 (trace[sigma_var][:, 0] ** 2 + trace[sigma_var][:, 1] ** 2) / 2)
-        elif var in trace.varnames:
+        elif var in trace.varnames and len(trace[var].shape) == 1:
+            print(var, "line 278")
             array = trace[var]
         else:
+            print(var, "line 281")
             array = trace[var][:, 0] - trace[var][:, 1]
         pm.plot_posterior(array,
                           textsize=text_ratio,
@@ -288,11 +291,11 @@ def compare_all_parameters_plot(hierarchical_model, config_plot, vars, file_pref
                           color=color,
                           )
         if var is "effect_size":
-            axes[ind].set_title(f"Effect size")
-        elif var in trace.varnames:
-            axes[ind].set_title(f"{var}")
+            axes[ind].set_title(f"Effect size", fontdict={"size": text_ratio})
+        elif var in trace.varnames and len(trace[var].shape) == 1:
+            axes[ind].set_title(f"{var}", fontdict={"size": text_ratio})
         else:
-            axes[ind].set_title(f"{var} difference")
+            axes[ind].set_title(f"{var} difference", fontdict={"size": text_ratio})
 
     dist_file_name = f"{file_prefix}_compare_all_parameters.{extension}"
     plt.savefig(dist_file_name)
