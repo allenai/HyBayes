@@ -22,7 +22,7 @@ You have two options for installation:
  Before running the code, make sure that you have all the requirements by 
  running the following line to install all the necessary dependencies: 
 ```bash
-pip install -r requirements.txt
+ > pip install -r requirements.txt
 ``` 
 
 
