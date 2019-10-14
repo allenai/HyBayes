@@ -266,7 +266,9 @@ def compare_all_parameters_plot(hierarchical_model, config_plot, vars, file_pref
     if "effect_size" in vars and (mu_var is None or sigma_var is None):
         vars.remove("effect_size")
 
-    fig, axes = plt.subplots(len(vars), 1, figsize=(20, 60))
+    fig, axes = plt.subplots(len(vars), 1, figsize=(20, 60), squeeze = False)
+    axes = axes.reshape(-1)
+
     for ind, var in enumerate(vars):
         if var is "effect_size":
             diff = (trace[mu_var][:, 0] - trace[mu_var][:, 1]) / np.sqrt(
