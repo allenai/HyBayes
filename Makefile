@@ -1,6 +1,6 @@
 data:
 	python make_data.py
-	python make_configs.py --quick
+	python make_configs.py
 
 run:
 	python main.py --config configs/config_nop.ini --verbose
