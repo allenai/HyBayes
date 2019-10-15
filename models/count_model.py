@@ -14,7 +14,8 @@ def add_count_model(hierarchical_model):
   arise from counting rather than ranking.
   Credits of the implementation of this model in pymc3 belongs to
   http://nbviewer.jupyter.org/github/JWarmenhoven/DBDA-python/blob/master/Notebooks/Chapter%2024.ipynb
-  For a discussion on this model and implementation on R refer to (Kursche book chapter 24).
+  For a discussion on this model and implementation on R refer to Chapter 24 in the book
+    'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015).
   '''
   mean_y = np.mean([hierarchical_model.stats_y[i].mean for i in range(hierarchical_model.n_groups)])
   sd_y = np.mean([hierarchical_model.stats_y[i].variance for i in range(hierarchical_model.n_groups)]) ** (0.5)
