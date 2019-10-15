@@ -1,4 +1,4 @@
-# User Manual for BayesianEstimationInNLP
+# User Manual for HyPyThesis
 
 (TODO: Shorten this introduction)
 A Bayesian hypothesis assessment framework, tailored to comparing the performances of algorithm pairs. This package is preliminary implementation statistical analyses described in [OUR Paper].
@@ -98,12 +98,12 @@ It also highly recommended that the files in this directory be made available fo
 - **prior_trace** : A directory where all the samples taken using pymc3 engine for the [prior] distribution is stored for further analysis. See [posterior_trace] for more info.
 - **config.ini** : The user's desired configuration file is also copied alongside other output files, for reproducibility and ease of future references.
 - **log.log** : The log of the analysis is stored in this file for debugging purposes.
-- **posterior_hierarchicalGraph.png** : A pictorial representation of the hierarchical model used in the analysis. This file is made using the  'model_to_graphviz' in 'pymc3' directly. To understand the notation refer to their docs.
+- **posterior_hierarchical_graph.png** : A pictorial representation of the hierarchical model used in the analysis. This file is made using the  'model_to_graphviz' in 'pymc3' directly. To understand the notation refer to their docs.
     - https://graphviz.readthedocs.io/en/stable/manual.html
     - https://github.com/pymc-devs/pymc3/blob/master/pymc3/model_graph.py
-- **posterior_hierarchicalGraph.txt** : A textual representation of the hierarchical model corresponding to [posterior_hierarchicalGraph.png].
+- **posterior_hierarchical_graph.txt** : A textual representation of the hierarchical model corresponding to [posterior_hierarchical_graph.png].
 - **posterior_diagnostics.png** and **prior_diagnostics.png** : The diagnostics plots drawn using [https://docs.pymc.io/api/diagnostics.html]. It is recommended to include these plots in the supplementary material section of the paper to convince the reader that the sampling process was successful.
-- **countPlot.png**, **barPlot**, **histogramPlot**, or **scatterPlot**: These plots some basic visualizations of the raw data. Often these plots help match the result of Bayesian analysis to the given data.  
+- **count_plot.png**, **bar_plot**, **histogram_plot**, or **scatter_plot**: These plots some basic visualizations of the raw data. Often these plots help match the result of Bayesian analysis to the given data.  
 - 
  
 
@@ -124,7 +124,7 @@ For this model, you can indicate the "Histogram_plot" and "scatter_plot" to view
 
 ![Histogram plot](example_analysis/outputs/Metric_Histogram_plot.png)
 
-![Scatter plot](example_analysis/outputs/Metric_scatterPlot.png)
+![Scatter plot](example_analysis/outputs/Metric_scatter_plot.png)
 
 #### Model
 To indicate this model in the config file, it is enough to set the arguments "Variable_type" to "Metric" in the "[Model]" section of the config file.
@@ -135,7 +135,7 @@ By indicating this model, the observation of two groups are assumed to follow tw
 In a higher level, each mu is assumed to follow a wide normal distribution with identical parameters. Each sigma follows a wide uniform distribution and the shared parameter nu follows an exponential distribution. 
 
 See a visualization of this model in Following Figure:
-![Hierarchical model.](outputsForManual/Metric/Metric_posterior_hierarchicalGraph.png)
+![Hierarchical model.](outputsForManual/Metric/Metric_posterior_hierarchical_graph.png)
 
 To check the effect of this model. One can see the Prior of distribution of each five parameters and their differences in the following Figure: 
 ![Mu Prior.](example_analysis/outputs/Metric_prior_mu.png)
@@ -171,7 +171,7 @@ Notice that different chains for each parameter as converged to one distribution
 
 
 ### Binary observations: Bernoulli distribution with Beta prior
-For this model, you can indicate the "countPlot" and "barPlot" to view a visualisation of the input. For our contrived data, we get the Figures 1 and 2.
+For this model, you can indicate the "count_plot" and "bar_plot" to view a visualisation of the input. For our contrived data, we get the Figures 1 and 2.
 
 ![Bar plot](example_analysis/outputs/Binary_bar_plot.png)
 
