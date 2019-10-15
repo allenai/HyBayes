@@ -7,6 +7,7 @@ import matplotlib
 import numpy as np
 
 from matplotlib import gridspec
+from utils import *
 
 logger = logging.getLogger('root')
 color_list = [plt.cm.get_cmap("tab10").colors[0], plt.cm.get_cmap("tab10").colors[1]]
@@ -142,17 +143,21 @@ def one_parameter_plot(hierarchical_model, var, file_prefix, config_plot=None, s
     color = "#" + config_plot.get("color")
     # How best to put defaults
     #  color = '#87ceeb'
-
+    printLine()
     trace = hierarchical_model.trace
     plt.figure(figsize=(17, 17))
     gs = gridspec.GridSpec(3, 4)
     ax1 = plt.subplot(gs[:2, :4])
     ax2 = plt.subplot(gs[2, :2])
     ax3 = plt.subplot(gs[2, 2:])
+    printLine()
     diff = trace[var][:, 0] - trace[var][:, 1]
+    printLine()
     diff_var_name = f"{var}_1-{var}_2"
     trace.add_values({diff_var_name: diff})
-    pm.plot_posterior(trace,
+    printLine()
+    logger.debug(diff_var_name)
+    pm.plot_posterior(trace,  # takes a lot for count variable I don't know why
                       var_names=[diff_var_name, ],
                       figsize=(4, 4),
                       textsize=text_ratio,
@@ -165,12 +170,14 @@ def one_parameter_plot(hierarchical_model, var, file_prefix, config_plot=None, s
                       ax=ax1,
                       color=color, # todo from config
                       )
+    printLine()
     # ax1.set_xlabel(r"$\theta_1-\theta_2$", fontdict={"size": int(config.getint("Font_size") * 0.5)})
 
     # list_of_children = ax1.get_children()
     # texts = list(filter(lambda x: isinstance(x, matplotlib.text.Text), list_of_children))
     # lines = list(filter(lambda x: isinstance(x, matplotlib.lines.Line2D), list_of_children))
     for ind, ax in enumerate([ax2, ax3]):
+        printLine()
         pm.plot_posterior(trace[var][:, ind],
                           # varnames=var,
                           figsize=(4, 4),
@@ -183,11 +190,13 @@ def one_parameter_plot(hierarchical_model, var, file_prefix, config_plot=None, s
                           ax=ax,
                           color=color,
                           )
+        printLine()
         ax.set_title("")
         ax.set_xlabel(f"{var}_{ind + 1}", fontdict={"size": text_ratio})
     # ax2.set_xlabel(r"$\theta_1$", fontdict={"size": int(config.getint("Font_size"))})
     # todo use name from varname
     # ax3.set_xlabel(r"$\theta_2$", fontdict={"size": int(config.getint("Font_size"))})
+    printLine()
     if config_plot.getboolean("HPDtoHDI"):
         for ax in [ax1, ax2, ax3]:
             fix_hdp_labels(list(filter(lambda x: isinstance(x, matplotlib.text.Text), ax.get_children())))
@@ -198,6 +207,7 @@ def one_parameter_plot(hierarchical_model, var, file_prefix, config_plot=None, s
     if show:
         plt.show()
     plt.clf()
+    printLine()
 
 
 def difference_plots(hierarchical_model, corresponding_config, file_prefix, config_plot, config_model):
@@ -213,7 +223,7 @@ def difference_plots(hierarchical_model, corresponding_config, file_prefix, conf
     trace = hierarchical_model.trace
     mu_var = hierarchical_model.mu_parameter
     sigma_var = hierarchical_model.sigma_parameter
-
+    printLine()
     if corresponding_config.getboolean("mean_plot"):
         logger.info(f"Plots corresponding to the mean will be under parameter name: {mu_var}")
         corresponding_config[f"{mu_var}_plot"] = "True"
@@ -229,11 +239,15 @@ def difference_plots(hierarchical_model, corresponding_config, file_prefix, conf
         var = var.split("_")[0]
         if var not in parameters_to_plot and corresponding_config.getboolean(f"{var}_plot"):
             parameters_to_plot.append(var)
+        printLine()
+    printLine()
     logger.debug(parameters_to_plot)
 
     for param in parameters_to_plot:
+        printLine()
         one_parameter_plot(hierarchical_model, param, file_prefix, config_plot,
                            corresponding_config.getboolean(f"Show_{param}_plot"), get_rope(config_model, param))
+        printLine()
     if corresponding_config.getboolean("Compare_all_parameters_plot"):
         compare_all_parameters_plot(hierarchical_model, config_plot,
                                     [mu_var, sigma_var, "effect_size", "nu"],
@@ -249,6 +263,7 @@ def compare_all_parameters_plot(hierarchical_model, config_plot, vars, file_pref
     :param file_prefix:
     :return:
     """
+    printLine()
     extension = config_plot.get("Extension")
     plot_kind = config_plot.get("Kind")
     text_ratio = config_plot.getfloat("text_size_ratio")
@@ -269,7 +284,7 @@ def compare_all_parameters_plot(hierarchical_model, config_plot, vars, file_pref
     logger.info(f"Parameters included in compare_all_plot: {vars}")
     fig, axes = plt.subplots(len(vars), 1, figsize=(30, len(vars)*30), squeeze = False)
     axes = axes.reshape(-1)
-
+    printLine()
     for ind, var in enumerate(vars):
         if var is "effect_size":
             array = (trace[mu_var][:, 0] - trace[mu_var][:, 1]) / np.sqrt(
@@ -301,3 +316,4 @@ def compare_all_parameters_plot(hierarchical_model, config_plot, vars, file_pref
     plt.savefig(dist_file_name)
     logger.info(f"{dist_file_name} is saved!")
     plt.clf()
+    printLine()

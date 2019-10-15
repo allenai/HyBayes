@@ -5,9 +5,14 @@ import logging
 logger = logging.getLogger('root')
 
 
-def estimate_interval_prob(trace, parameter, interval_begin, interval_end):
+def estimate_interval_prob(trace, parameter: str, interval_begin: float, interval_end: float):
     """
-    Estimating probability of an interval, used in calculation of Bayes_factor
+    Estimating probability of an interval, used in calculation of Bayes_factor for a specific parameter
+    :param trace: an object containing the samples, i.e., output of pymc3's sampling
+    :param parameter: (str) the parameter of interest for calculating Bayes Factor,
+                        most commonly mu or any centrality parameter.
+    :param interval_begin: (float)
+    :param interval_end: (float)
     """
     diff = trace[parameter][:, 0] - trace[parameter][:, 1]
     numerator = np.logical_and(diff > interval_begin, diff < interval_end).sum()
@@ -17,9 +22,10 @@ def estimate_interval_prob(trace, parameter, interval_begin, interval_end):
 
 def bayes_factor_analysis(config_bayes_factor, prior_model, post_model, init_rope=(-0.1, 0.1)):
     """
-    Returns the number of samples needed for calculating Bayes Factor. If Try_smaller_ROPEs flag is on, several values of ROPE
-    starting with init_rope otherwise only init_rope.
-    :param config_bayes_factor:
+    Returns the number of samples needed for calculating Bayes Factor in a pandas dataframe form.
+        If config_bayes_factor["number_of_smaller_ropes"] is greater than 1, several values of ROPE
+        will be considered starting with init_rope, otherwise only init_rope.
+    :param config_bayes_factor: config object with number_of_smaller_ropes, rope_begin, and rope_end.
     :param prior_model:
     :param post_model:
     :param init_rope:

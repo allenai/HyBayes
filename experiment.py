@@ -7,6 +7,7 @@ import pandas as pd
 import pickle
 import pymc3 as pm
 import theano.tensor as tt
+from utils import *
 
 from models.beta_bern_model import add_beta_bern_model
 from models.beta_binomial_model import add_beta_binomial_model
@@ -108,9 +109,11 @@ class Experiment:
         :param tune:
         :return:
         """
+        printLine()
         with hierarchical_model.pymc_model:
             hierarchical_model.trace = pm.sample(model=hierarchical_model.pymc_model,
                                                  draws=draws, chains=chains, cores=cores, tune=tune)
+        printLine()
         logger.info(f"Effective Sample Size (ESS) = {pm.diagnostics.effective_n(hierarchical_model.trace)}")
         if corresponding_config.getboolean("Save_trace"):
             traceFolderName = f"{file_prefix}_trace"
@@ -124,19 +127,21 @@ class Experiment:
                 pickle.dump({'model': hierarchical_model.pymc_model, 'trace': hierarchical_model.trace}, buff)
             logger.info(f"{traceFolderName} is saved!")
 
+        printLine()
         if corresponding_config.getboolean("Diagnostic_plots"):
             pm.traceplot(hierarchical_model.trace)
             diag_file_name = f"{file_prefix}_diagnostics.{self.extension}"
             plt.savefig(diag_file_name)
             logger.info(f"{diag_file_name} is saved!")
             plt.clf()
-
+        printLine()
         if hierarchical_model.n_groups == 2:
             difference_plots(hierarchical_model=hierarchical_model,
                              corresponding_config=corresponding_config,
                              file_prefix=file_prefix,
                              config_plot=self.config_plots,
                              config_model=self.config_model)
+        printLine()
 
     def add_model(self, model_object):
         '''
