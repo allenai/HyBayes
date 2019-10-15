@@ -12,6 +12,9 @@ def add_count_model(hierarchical_model):
   Adding a model that estimates decisions on "count" data. In particular, "count" variables
   are observations that take only the non-negative integer values {0, 1, 2, 3, ...}, and they
   arise from counting rather than ranking.
+  Credits of the implementation of this model in pymc3 belongs to
+  http://nbviewer.jupyter.org/github/JWarmenhoven/DBDA-python/blob/master/Notebooks/Chapter%2024.ipynb
+  For a discussion on this model and implementation on R refer to (Kursche book chapter 24).
   '''
   mean_y = np.mean([hierarchical_model.stats_y[i].mean for i in range(hierarchical_model.n_groups)])
   sd_y = np.mean([hierarchical_model.stats_y[i].variance for i in range(hierarchical_model.n_groups)]) ** (0.5)
