@@ -18,7 +18,7 @@ You have two options for installation:
  > pip install ????
 ```
 
- - Alternatively, you can clone this project (by running `git clone https://github.com/turkerfan/BayesianEstimationInNLP.git`.) 
+ - Alternatively, you can clone this project (by running `git clone https://github.com/turkerfan/BayesianEstimationInNLP.git`.) (NEW GIT)
  Before running the code, make sure that you have all the requirements by 
  running the following line to install all the necessary dependencies: 
 ```bash
@@ -35,26 +35,29 @@ If you're using MacOS, install GraphViz via `brew` command:
 To use this package for analyzing your data, you need to prepare a configuration file that indicates the information 
 needed for the analysis, including the type of plots and files you want to be stored.
 
-The following snippet shows the general structure of a configuration file. The main sections are `Files`, `Plots`, `Model`, 
-`Prior`, and `Posterior`. You can find examples of complete configurations in [`configs`](configs) folder.
+The following snippet shows the general structure of a configuration file. The main sections are `Files`, `Plots`, `Model`, `Bayes_factor`, `Prior`, and `Posterior`. You can find examples of complete configurations in [`configs`](configs) folder, after running `make_configs.py`.
 
-The first section of the configuration file is `Files` and it indicates the details of the files which contain 
-your experimental result. All the experiments use single column observation files (i.e., `NumberOfColumns = 1`) except 
-when the observations are assumed to follow Binomial distribution ([read more here]() **<-- correct the link**).
-Second and third lines indicate the names and the location of two files (which inlucde the result of your experiments). 
-The results of the analaysis will be stored in the address specified by `OutputPrefix`.   
+The first section of the configuration file is `Files` and it indicates the information for the files which contain 
+your experimental result. For most common usages of our package, you will provide 2 files with single column in each (that is first two lines. The results of the analaysis will be stored in the address specified by `output_prefix`.   
+The rest of the lines in this section indicate the names and the location of two (or any number of) files, which inlucde the result of your experiments. 
+
 ```bash
 [Files]
-NumberOfColumns = 1
-File1 = ArtificialData/BinaryData_0.csv
-File2 = ArtificialData/BinaryData_1.csv
-OutputPrefix = experimentFiles/Bern
+number_of_columns = 1
+number_of_files = 2
+output_prefix = metric_experiment_files/Metric
+file1 = artificial_data/Positive_real_data_0.csv
+file2 = artificial_data/Positive_real_data_1.csv
 
 [Plots]
 ...
 
 [Model]
-VariableType = Binary
+Variable_type = Metric
+...
+
+[Bayes_factor]
+analyze = False
 ...
 
 [Prior]
@@ -83,7 +86,8 @@ And here is the general usage template which can be accessed using `--help` flag
 ```bash
 usage: main.py [-h] [-c CONFIG] [-v]
 
-Run Bayesian Stat
+Run Bayesian Statistics Tailored towards analysing the experiment results
+specially in NLP area. Email @.com for comments.
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -93,15 +97,16 @@ optional arguments:
 
 ```
 
-### A Quick Example 
+### Examples 
 To demonstrate everything with a quick example, run the following command to generate toy data: 
 ```bash
- > python makeData.py
+ > python make_data.py
+ > python make_configs.py
 ```
 
-And then execute the analysis on that: 
+And then execute the analysis on any of the newly made config files. For example: 
 ```bash
- > python main.py --config configs/configBinary.ini --verbose
+ > python main.py --config configs/config_metric.ini --verbose
 ```
 
 ## Further Reading
