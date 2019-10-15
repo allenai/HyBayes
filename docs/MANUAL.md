@@ -218,7 +218,7 @@ The parameters affecting granularity of the analysis can be indicated in section
 ### Multiple Binary observations: Binomial distribution with Beta prior
 For this model, you can indicate the "Histogram_plot" to view a visualisation of the input. For our contrived data, we get the following Figure.
 
-![Histogram_plot](example_analysis/outputs/Binomialy_histogram_plot.png)
+![Histogram_plot](example_analysis/outputs/Binomial_histogram_plot.png)
 
 #### Model
 To indicate this model in the config file, it is enough to set the arguments "Variable_type" and "Prior_model" to "Binomial" and "Beta" in the "[Model]" section of the config file.
@@ -258,7 +258,7 @@ Notice that different chains for each parameter as converged to one distribution
 For this model, you can indicate the "Count_plot" and "scatter_plot" to view a visualisation of the input. For our contrived data, we get the following Figures.
 
 
-![Count plot](example_analysis/outputs/Count_Histogram_plot.png)
+![Count plot](example_analysis/outputs/Count_count_plot.png)
 
 ![Scatter plot](example_analysis/outputs/Count_scatter_plot.png)
 
@@ -311,7 +311,7 @@ Notice that different chains for each parameter as converged to one distribution
 For this model, you can indicate the "Count_plot" and "scatter_plot" to view a visualisation of the input. For our contrived data, we get the following Figures.
 
 
-![Count plot](example_analysis/outputs/Ordinal_Histogram_plot.png)
+![Count plot](example_analysis/outputs/Ordinal_histogram_plot.png)
 
 ![Scatter plot](example_analysis/outputs/Ordinal_scatter_plot.png)
 
