@@ -1,24 +1,20 @@
 import copy
+import configparser
 import logging
 import matplotlib.pyplot as plt
-import numpy as np
-import os
-import pandas as pd
 import pickle
 import pymc3 as pm
-import theano.tensor as tt
-from utils import *
 
 from models.beta_bern_model import add_beta_bern_model
 from models.beta_binomial_model import add_beta_binomial_model
-from models.metric_model import add_exp_uniform_normal_t_model
 from models.count_model import add_count_model
+from models.metric_model import add_exp_uniform_normal_t_model
 from models.ordinal_model import add_ordinal_model
 
+from Bayes_factor_analysis import bayes_factor_analysis
 from visualization import difference_plots
 from scipy import stats
-from theano.compile.ops import as_op
-from Bayes_factor_analysis import bayes_factor_analysis
+from utils import *
 
 logger = logging.getLogger('root')
 
@@ -56,10 +52,15 @@ class HierarchicalModel:
     def __str__(self) -> str:
         return f"{self.n_groups}_{super().__str__()}"
 
-    def get_GraphViz_object(self, file_prefix: str, save_dot: bool = True, save_png: bool = True, extension="png"):
-        '''
+    def get_GraphViz_object(self, file_prefix: str, save_dot: bool = True, save_png: bool = True,
+                            extension: str = "png"):
+        """
         Returns the GraphViz object corresponding to the underlying hierarchical model.
-        '''
+        :param file_prefix: a string with desired prefix to add to saved files. It can include a folder name too.
+        :param save_dot: a boolean indicating if text file need to be stored too
+        :param save_png: a boolean indicating if an pictorial file need to be stored too
+        :param extension: a string indicating the extension of pictorial file, e.g., "png"
+        """
         graph = pm.model_to_graphviz(self.pymc_model)
         graph.format = extension
         if save_dot:
@@ -75,11 +76,11 @@ class HierarchicalModel:
 
 class Experiment:
 
-    def __init__(self, y, config) -> None:
-        '''
-        :param y: observations
+    def __init__(self, y: list, config: configparser.ConfigParser) -> None:
+        """
+        :param y: observations a list of numpy arrays. len(y) is the number of experiment results to compare or groups
         :param config: configuration of the experiments.
-        '''
+        """
         super().__init__()
         self.y = y
         self.run_prior = config["Prior"].getboolean("Analyze")
@@ -102,11 +103,16 @@ class Experiment:
         :param hierarchical_model:
         :param corresponding_config: either config_prior or config_post
                                     Note that the config is still accessible by self.*
-        :param file_prefix:
-        :param draws:
-        :param chains:
-        :param cores:
-        :param tune:
+        :param file_prefix: a string with desired prefix to add to saved files. It can include a folder name too.
+                        e.g., "metric_experiment_results/metric"
+        :param draws: the length of sample in each chain after tuning steps
+            (refer to https://docs.pymc.io/api/inference.html for detailed information)
+        :param chains: the number of independent chains for sampling
+            (refer to https://docs.pymc.io/api/inference.html for detailed information)
+        :param cores: the number of cores to use. For now we use 1
+            (refer to https://docs.pymc.io/api/inference.html for detailed information)
+        :param tune: the number initial samples to discard as tuning steps.
+            (refer to https://docs.pymc.io/api/inference.html for detailed information)
         :return:
         """
         printLine()
@@ -123,7 +129,7 @@ class Experiment:
                     ind += 1
                 traceFolderName = f"{traceFolderName}_{ind}"
             pm.save_trace(hierarchical_model.trace, directory=traceFolderName)
-            with open(os.path.join(traceFolderName, "pickeledTrace.pkl"), 'wb') as buff:
+            with open(os.path.join(traceFolderName, "pickeled_trace.pkl"), 'wb') as buff:
                 pickle.dump({'model': hierarchical_model.pymc_model, 'trace': hierarchical_model.trace}, buff)
             logger.info(f"{traceFolderName} is saved!")
 
@@ -144,10 +150,10 @@ class Experiment:
         printLine()
 
     def add_model(self, model_object):
-        '''
+        """
         Constructing the appropriate model based on the specifications in the config file.
         :param model_object: the default model
-        '''
+        """
         error = False
         model_name = self.config_model.get("Variable_type")
         if model_name == "Binary":
@@ -157,7 +163,8 @@ class Experiment:
                 logger.error(f'The given prior model {self.config_model.get("Prior_model")} is not recognized')
         elif model_name == "Metric":
             if self.config_model.getboolean("UnitInterval"):
-                add_inv_logit_normal_model(model_object)
+                raise NotImplementedError("work in progress . . . ")
+                # add_inv_logit_normal_model(model_object)
             else:
                 add_exp_uniform_normal_t_model(model_object)
         elif model_name == "Count":
@@ -172,8 +179,12 @@ class Experiment:
             logger.error("The model in config file not found. Exiting the program!")
             exit(0)
 
-    # TODO add comments for this function
-    def run(self):
+    def run(self) -> None:
+        """
+        This is the main function called from experiment class.
+        It forms the HierarchicalModel, loads the appropriate model from models package
+        :return: None
+        """
         y = self.y
         prior_model = HierarchicalModel(y=y)
         logger.info("Summary of statistics for the given data")
@@ -232,14 +243,18 @@ class Experiment:
                     if None in rope:
                         # TODO infer the rope from input data if not given in config
                         rope = (-0.1, 0.1)
-                    bayes_factor_data_frame = bayes_factor_analysis(self.config_Bayes_factor, prior_model, post_model, init_rope=rope)
+                    bayes_factor_data_frame = bayes_factor_analysis(
+                        self.config_Bayes_factor,
+                        prior_model,
+                        post_model,
+                        init_rope=rope)
                     bayes_factor_file_name = self.file_prefix + "_Bayes_factor.csv"
                     bayes_factor_data_frame.to_csv(bayes_factor_file_name)
                     logger.info(f"Bayes Factor DataFrame is saved at {bayes_factor_file_name}")
                 else:
                     logger.info("For running Bayes factor analysis, "
                                 "flags for both prior and posterior analysis should be on.")
-            # if self.postPredict: #TODO impose data
+            # if self.postPredict: # TODO impose data plot
             #   self.drawPPC(trace, model=postModel)
 
     def draw_ppc(self, trace, model):
@@ -249,28 +264,17 @@ class Experiment:
         :param model:
         :return:
         """
-        # print(model.pymc_model.observed_RVs)
-        # print(len(model.pymc_model.observed_RVs))
-        # print(model.pymc_model.observed_RVs[0])
-        # print(type(model.pymc_model.observed_RVs[0]))
-        # print(type(model.pymc_model.observed_RVs))
-        # print(model.pymc_model.mu)
+        raise NotImplementedError("work in progress . . . ")
         ppc = pm.sample_posterior_predictive(trace, samples=500, model=model.pymc_model,
                                              vars=[model.pymc_model.mu,
                                                    model.pymc_model.nu,
                                                    model.pymc_model.sigma])
 
         _, ax = plt.subplots(figsize=(12, 6))
-        # print(type(ppc['y_0']))
-        # print(ppc['y_0'].shape)
-        # ax.hist([y0.mean() for y0 in ppc['y_0']], bins=19, alpha=0.5)
         ax.hist(self.y[0], bins=19, alpha=0.5, histtype='bar', color="red", rwidth=0.3)
-        # pm.densityplot(trace, varnames=["y_0",],ax=ax)
-        # ax.axvline(data.mean())
         MLmu = np.mean(ppc["mu"][0])
         MLsd = np.mean(ppc["sigma"][0])
         MLnu = np.mean(ppc["nu"])
-
         xp = np.linspace(MLmu - 4 * MLsd, MLmu + 4 * MLsd, 100)
         yp = MLsd * stats.t(nu=MLnu).pdf(xp) + MLmu
         ax.scatter(x=xp,

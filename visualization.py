@@ -1,10 +1,11 @@
+import configparser
 import logging
-import pandas as pd
-import pymc3 as pm
-import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib
 import numpy as np
+import pandas as pd
+import pymc3 as pm
+import seaborn as sns
 
 from matplotlib import gridspec
 from utils import *
@@ -13,33 +14,38 @@ logger = logging.getLogger('root')
 color_list = [plt.cm.get_cmap("tab10").colors[0], plt.cm.get_cmap("tab10").colors[1]]
 
 
-def get_rope(config, parameter):
+def get_rope(config: configparser.ConfigParser, parameter: str):
     """
     Read ROPE (corresponding to the parameter) information from config
     :param config:
     :param parameter:
-    :return:
+    :return: two floats indicating two ends of the ROPE
     """
     return config.getfloat(f"{parameter}_ROPE_begin"), config.getfloat(f"{parameter}_ROPE_end")
 
 
-def fix_hdp_labels(texts):
+def fix_hdp_labels(texts) -> None:
+    """
+    Goes over all texts in a matplotlib axis and changes 'HPD's to 'HDI's.
+    HPD: "Highest Posterior Density" which is a default name in Pymc3
+    HDI: "Highest Density Interval" which is a term we used in our paper
+    :param texts:
+    :return:
+    """
     for tx in texts:
         if "HPD" in tx.get_text():
             tx.set_text("HDI")
 
 
-def pre_analysis_plots(y, config):
+def pre_analysis_plots(y, config: configparser.ConfigParser):
     """
     Depending on the Variable_type (indicated in config), puts the raw data in a few informative plots
     :param y: A length-2 list of 1-d numpy arrays
-    :param config: configparser.ConfigParser that indicate Variable_type and desired output file info
+    :param config: a config object that indicate Variable_type and desired output file info
     :return None
     """
-    # for binomial make histogram of y[.][:,1]/y[.][:,0]
     # Preparation
     count_df = None
-    hist_df = None
     proportions = []
     dfs = []
     if config["Model"].get("Variable_type") in ["Count", "Ordinal", "Binary", "Metric"]:
@@ -171,11 +177,6 @@ def one_parameter_plot(hierarchical_model, var, file_prefix, config_plot=None, s
                       color=color, # todo from config
                       )
     printLine()
-    # ax1.set_xlabel(r"$\theta_1-\theta_2$", fontdict={"size": int(config.getint("Font_size") * 0.5)})
-
-    # list_of_children = ax1.get_children()
-    # texts = list(filter(lambda x: isinstance(x, matplotlib.text.Text), list_of_children))
-    # lines = list(filter(lambda x: isinstance(x, matplotlib.lines.Line2D), list_of_children))
     for ind, ax in enumerate([ax2, ax3]):
         printLine()
         pm.plot_posterior(trace[var][:, ind],
@@ -193,9 +194,6 @@ def one_parameter_plot(hierarchical_model, var, file_prefix, config_plot=None, s
         printLine()
         ax.set_title("")
         ax.set_xlabel(f"{var}_{ind + 1}", fontdict={"size": text_ratio})
-    # ax2.set_xlabel(r"$\theta_1$", fontdict={"size": int(config.getint("Font_size"))})
-    # todo use name from varname
-    # ax3.set_xlabel(r"$\theta_2$", fontdict={"size": int(config.getint("Font_size"))})
     printLine()
     if config_plot.getboolean("HPDtoHDI"):
         for ax in [ax1, ax2, ax3]:
@@ -277,23 +275,21 @@ def compare_all_parameters_plot(hierarchical_model, config_plot, vars, file_pref
     trace = hierarchical_model.trace
     mu_var = hierarchical_model.mu_parameter
     sigma_var = hierarchical_model.sigma_parameter
-    vars = [var for var in vars if var is not None and var in trace.varnames]
-    if "effect_size" in vars and (mu_var is None or sigma_var is None):
-        vars.remove("effect_size")
+    variables = [var for var in vars if var is not None and var in trace.varnames]
+    if "effect_size" in variables and (mu_var is None or sigma_var is None):
+        variables.remove("effect_size")
 
-    logger.info(f"Parameters included in compare_all_plot: {vars}")
-    fig, axes = plt.subplots(len(vars), 1, figsize=(30, len(vars)*30), squeeze = False)
+    logger.info(f"Parameters included in compare_all_plot: {variables}")
+    fig, axes = plt.subplots(len(variables), 1, figsize=(30, len(variables) * 30), squeeze = False)
     axes = axes.reshape(-1)
     printLine()
-    for ind, var in enumerate(vars):
+    for ind, var in enumerate(variables):
         if var is "effect_size":
             array = (trace[mu_var][:, 0] - trace[mu_var][:, 1]) / np.sqrt(
                 (trace[sigma_var][:, 0] ** 2 + trace[sigma_var][:, 1] ** 2) / 2)
         elif var in trace.varnames and len(trace[var].shape) == 1:
-            print(var, "line 278")
             array = trace[var]
         else:
-            print(var, "line 281")
             array = trace[var][:, 0] - trace[var][:, 1]
         pm.plot_posterior(array,
                           textsize=text_ratio,

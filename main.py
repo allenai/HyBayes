@@ -1,14 +1,13 @@
-import argparse, configparser
-import matplotlib as mpl
-import numpy as np
-from experiment import Experiment
+import argparse
+import configparser
 import logging
-import time
-from visualization import pre_analysis_plots
-from shutil import copyfile
-import os
-from utils import *
+import matplotlib as mpl
 import traceback
+
+from experiment import Experiment
+from shutil import copyfile
+from utils import *
+from visualization import pre_analysis_plots
 
 if __name__ == '__main__':
     logs_folder_made = mk_dir_if_not_exists("logs")
@@ -16,7 +15,9 @@ if __name__ == '__main__':
     logging.basicConfig(filename=logging_total_file_name, filemode="a", level=logging.DEBUG)
     logger = logging.getLogger('root')
 
-    parser = argparse.ArgumentParser(description="Run Bayesian Statistics Tailored towards analysing the experiment results specially in NLP area. Email @.com for comments.")
+    parser = argparse.ArgumentParser(description="Run Bayesian Statistics Tailored towards"
+                                                 "analysing the experiment results specially in NLP area."
+                                                 "Email @.com for comments.")
     parser.add_argument("-c", "--config", help="address of Config file", default="configs/configMetric.ini")
     parser.add_argument("-v", "--verbose", help="prints the report of the steps", action="store_true", default=False)
     args = parser.parse_args()
@@ -64,9 +65,9 @@ if __name__ == '__main__':
                 y[-1] = y[-1].reshape(-1, number_of_columns)
             logger.info(f"File {file_name} is loaded.")
 
-        dest_config_file_name = config["Files"].get("Output_prefix") + "_config.ini"
-        config.write(open(dest_config_file_name, 'w'))
-        logger.info(f"Copying the Config file of this run to {dest_config_file_name}.")
+        destination_config_file_name = config["Files"].get("Output_prefix") + "_config.ini"
+        config.write(open(destination_config_file_name, 'w'))
+        logger.info(f"Copying the Config file of this run to {destination_config_file_name}.")
 
         if number_of_file > 0:
             # If all show_ configs are off, the interactive mode for mpl will be closed.
@@ -81,7 +82,8 @@ if __name__ == '__main__':
             pre_analysis_plots(y=y, config=config)
             experiment = Experiment(y=y, config=config)
             experiment.run()
-    except Exception as e: #TODO: make seperate messages for Exceptions (config file not found, import not working, theano...)
+    except Exception as e:  # Too broad exception clause
+        # TODO: make separate messages for Exceptions (config file not found, import not working, theano...)
         logger.exception("An exception occurred. Halting the execution!")
         traceback.print_exc()
     finally:

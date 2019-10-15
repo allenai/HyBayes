@@ -8,7 +8,12 @@ config_template_file_name = "config_template.ini"
 artificial_data_folder_name = "artificial_data"
 
 
-def read_template_config(quick=False):
+def read_template_config(quick: bool = False) -> configparser.ConfigParser:
+    """
+    Returns config object with default values
+    :param quick: if True only posterior analysis with short sample length will be on.
+    :return:
+    """
     config = configparser.ConfigParser()
     config.read(os.path.join(config_folder_name, config_template_file_name))
     if quick:
@@ -23,7 +28,12 @@ def read_template_config(quick=False):
     return config
 
 
-def make_metric_config(config: configparser.ConfigParser):
+def make_metric_config(config: configparser.ConfigParser) -> configparser.ConfigParser:
+    """
+    Returns a config object corresponding to the metric observations in artificial data folder
+    :param config:
+    :return:
+    """
     config = copy.copy(config)
     config["Files"]["Number_of_columns"] = "1"
     config["Files"]["Number_of_files"] = "2"
@@ -48,7 +58,12 @@ def make_metric_config(config: configparser.ConfigParser):
     return config
 
 
-def make_count_config(config: configparser.ConfigParser):
+def make_count_config(config: configparser.ConfigParser) -> configparser.ConfigParser:
+    """
+    Returns a config object corresponding to the count observations in artificial data folder
+    :param config: a input config object with default values
+    :return:
+    """
     config = copy.copy(config)
     config["Files"]["Number_of_columns"] = "1"
     config["Files"]["Number_of_files"] = "2"
@@ -78,7 +93,12 @@ def make_count_config(config: configparser.ConfigParser):
     return config
 
 
-def make_ordinal_config(config: configparser.ConfigParser):
+def make_ordinal_config(config: configparser.ConfigParser) -> configparser.ConfigParser:
+    """
+    Returns a config object corresponding to the ordinal observations in artificial data folder
+    :param config: a input config object with default values
+    :return:
+    """
     config = copy.copy(config)
     config["Files"]["Number_of_columns"] = "1"
     config["Files"]["Number_of_files"] = "2"
@@ -104,7 +124,12 @@ def make_ordinal_config(config: configparser.ConfigParser):
     return config
 
 
-def make_binary_config(config: configparser.ConfigParser):
+def make_binary_config(config: configparser.ConfigParser) -> configparser.ConfigParser:
+    """
+    Returns a config object corresponding to the binary observations in artificial data folder
+    :param config: a input config object with default values
+    :return:
+    """
     config = copy.copy(config)
     config["Files"]["Number_of_columns"] = "1"
     config["Files"]["Number_of_files"] = "2"
@@ -127,7 +152,12 @@ def make_binary_config(config: configparser.ConfigParser):
     return config
 
 
-def make_binomial_config(config: configparser.ConfigParser):
+def make_binomial_config(config: configparser.ConfigParser) -> configparser.ConfigParser:
+    """
+    Returns a config object corresponding to the binomial observations in artificial data folder
+    :param config: a input config object with default values
+    :return:
+    """
     config = copy.copy(config)
     config["Files"]["Number_of_columns"] = "1"
     config["Files"]["Number_of_files"] = "2"
@@ -149,7 +179,13 @@ def make_binomial_config(config: configparser.ConfigParser):
     return config
 
 
-def write_config(config, file_name):
+def write_config(config: configparser.ConfigParser, file_name: str) -> None:
+    """
+    Stores the information in config object in file_name.
+    :param config:
+    :param file_name:
+    :return:
+    """
     address = os.path.join(config_folder_name, file_name)
     with open(address, "w") as write_file:
         config.write(write_file)

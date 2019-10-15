@@ -1,7 +1,7 @@
+import logging
 import numpy as np
 import pandas as pd
-from scipy import stats
-import logging
+
 logger = logging.getLogger('root')
 
 
@@ -50,7 +50,7 @@ def bayes_factor_analysis(config_bayes_factor, prior_model, post_model, init_rop
         # BF_Savage_Dickey = postRopeProbFrac[0] * priorRopeProbFrac[1] / (postRopeProbFrac[1] * priorRopeProbFrac[0])
 
         # Savage_Dickey estimate of Bayes Factor:
-        BF_Savage_Dickey = post_rope_prob / prior_rope_prob
+        BF_Savage_Dickey: float = post_rope_prob / prior_rope_prob
 
         # True value (modulo sampling) of Bayes Factor
         bf = BF_Savage_Dickey * (1 - prior_rope_prob) / (1 - post_rope_prob)
