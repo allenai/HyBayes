@@ -112,6 +112,10 @@ And then execute the analysis on any of the newly made config files. For example
 If you want to learn more about this package, please refer to the [extended manual](docs/MANUAL.md). 
 If you want to learn about the concepts discusssed here, refer to the paper below. 
 
+## License 
+This code is published under [Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode) license.  
+
+
 ## Citation 
 If you used this package in your research feel free to cite the following paper: 
 ```
