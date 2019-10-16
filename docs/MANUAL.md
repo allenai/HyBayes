@@ -105,6 +105,7 @@ Current versioin of the package provides 5 pre-implimented models:
 
 These models capture a lot of common assumption on observed data. Note that if you have specific information on your observation or other assumptions, it is highly recommended that you add your costum model. If you have model in mind that is a general model and other researchers (expecially within NLP community) are likely to need, feel free to ask us to add to the pakcage.
 
+***
 
 ### Metric observations: T-Student distribution with multiple choices for priors
 For this model, you can indicate the "Histogram_plot" and "scatter_plot" to view a visualization of the input. For our contrived data, we get the following figures:
@@ -126,7 +127,7 @@ By indicating this model, the observation of two groups are assumed to follow tw
 
 For a discussion on this model, including justfication and examples of usage refer to (Chapter 16 of) the book "Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan" (Second Edition) by John Kruschke (2015). 
 
-***
+#### Prior Plots 
 In a higher level, each mu is assumed to follow a wide normal distribution with identical parameters. Each sigma follows a wide uniform distribution and the shared parameter nu follows an exponential distribution. 
 
 See a visualization of this model in Following Figure:
@@ -180,6 +181,7 @@ Since this package is based on MCMC sampling methods for infering the posteriour
 
 Notice that different chains for each parameter as converged to one distribution.
 
+*** 
 
 ### Binary observations: Bernoulli distribution with Beta prior
 For this model, you can indicate the "count_plot" and "bar_plot" to view a visualization of the input. For our contrived data, we get the Figures 1 and 2.
@@ -292,6 +294,7 @@ Since this package is based on MCMC sampling methods for inferring the posterior
 
 Notice that different chains for each parameter as converged to one distribution.
 
+*** 
 
 ### Count observations: Negative Binomial distribution with Normal prior
 For this model, you can indicate the "Count_plot" and "scatter_plot" to view a visualization of the input. For our contrived data, we get the following figures:
