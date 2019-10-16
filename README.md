@@ -117,7 +117,7 @@ If you used this package in your research feel free to cite the following paper:
 ```
 @article{peng2019solving,
   title={??},
-  author={Sadeqi Azer, Erfan and Khashabi, Daniel and ashish Sabharwal, Ashish and Roth, Dan},
+  author={Sadeqi Azer, Erfan and Khashabi, Daniel and Sabharwal, Ashish and Roth, Dan},
   journal={??},
   year={2019}
 }
