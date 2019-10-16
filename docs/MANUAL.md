@@ -3,7 +3,7 @@
 ## Table of contents
 - [Introduction](#introduction)
 - [Installation](#installation)
-- [Preparing Artificial Data]()
+- [Preparing Synthetic Data](#Preparing-Synthetic-Data)
 - [Prepare Configuration File]()
 - [Running the analysis] ()
 - [Examples]()
@@ -13,9 +13,7 @@
 
 ## Introduction 
 The goal of this package is to facilitate the performance comparison of two algorithms, based on given observations.
-
-Although here, when making such comparison, we study the posterior probabilities instead of performing a significance test.   In the paper, we provide a comparison these two categories of approaches and advocate for including the Bayesian analysis (weather along with or in substitution to frequentest approaches).
-Both these approaches help a researcher claim superiority of one algorithm over another from different aspects.
+In [the paper](README.md#citation) we review four different approaches to assess a hypothesis (see the four different cells in the figure below). However, here we focus on two Bayesian approaches (a) inference with posterior probabilities (b) Bayes Factors. Both these approaches help a researcher claim superiority of one algorithm over another from different aspects.
 
 <p align="center">
     <img src="./algorithms.png">
@@ -24,34 +22,42 @@ Both these approaches help a researcher claim superiority of one algorithm over 
 ## Installation
 Checkout the main [README](../README.md#installation) file.
 
-## Preparing Artificial Data
-For purposes of this manual, we make some artificial data. If you already have your data (as observations) from your experiments, you can skip this step.
+## Preparing Synthetic Data
+For purposes of this manual, we make synthetic data. 
+If you already have your data (as observations) from your experiments, you can skip this step.
 
 Use the following command to  generate the artificial data: 
 
 ```bash
-python make_data.py
+ > python make_data.py
 ```
 
-## Prepare Configuration File
-To use this package to analyze your data, you need to prepare the a configuration file that indicates the information needed for the analysis, including the type of plots and files you want to be stored.
+## Preparing Configuration Files
+To analyze your data, you need to prepare the a configuration file that specifies the information needed for the analysis (e.g., the address to your observation files, the type of plots and files you want to be stored).
 
-The following shows the general framework of a configuration file. The main sections are Files, Plots, Model, Prior, and Posterior. You can find examples of complete configurations in 'configs' folder.
+The following snippet shows the general structure of a configuration file. The main sections are `Files`, `Plots`, `Model`, `Bayes_factor`, `Prior`, and `Posterior`. You can find examples of complete configurations in [`configs`](configs) folder, after running `make_configs.py`.
 
-Here we explain the first section 'Files': For now, all the experiments use one column observation files except when the observations are assumed to follow Binomial distribution.
-Second and third lines indicate the names and the addresses of two files. The last line indicates a prefix of the output file names. One can make a directory beforehand include in this prefix.  
+The first section of the configuration file is `Files` and it indicates the information for the files which contain 
+your experimental result. For most common usages of our package, you will provide 2 files with single column in each (that is first two lines. The results of the analaysis will be stored in the address specified by `output_prefix`.   
+The rest of the lines in this section indicate the names and the location of two (or any number of) files, which inlucde the result of your experiments. 
+
 ```bash
 [Files]
-NumberOfColumns = 1
-File1 = ArtificialData/BinaryData_0.csv
-File2 = ArtificialData/BinaryData_1.csv
-OutputPrefix = experimentFiles/Bern
+number_of_columns = 1
+number_of_files = 2
+output_prefix = metric_experiment_files/Metric
+file1 = artificial_data/Positive_real_data_0.csv
+file2 = artificial_data/Positive_real_data_1.csv
 
 [Plots]
 ...
 
 [Model]
-VariableType = Binary
+Variable_type = Metric
+...
+
+[Bayes_factor]
+analyze = False
 ...
 
 [Prior]
@@ -59,38 +65,20 @@ Analyze = True
 ...
 
 [Posterior]
-Analyze = False
+Analyze = True
 ...
 ```
 
+The parameters affecting granularity of the analysis can be indicated in `[Prior]` and `[Posteriour]` sections in the config file. 
 
-The parameters affecting granularity of the analysis can be indicated in sections "[Prior]" and "[Posteriour]" in the config file. Especially, the following three parameters are the most important ones:
-- "Tune": number of samples to throw away in the beginning. A value of at least 500 is recommended.
-- "Chains": number independent chains. Four chains seem to be sufficient to confirm successful convergence of the chains.
-- "Draws": This is the number of samples used to plot the distribution. The higher this value, the smooth the plot will look like. Also you can consult the Effective Sample Size (ESS) printed in the log.
+Many of the parameters specify the details of [the sampling algrithm](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo) (which is used to infer the posterior probabilities).  In particular, the following three parameters are the most important ones:
+- `Tune`: the number of samples to throw away in the beginning of the sampling. A value of, at least, 500 is recommended.
+- `Chains`: the number independent chains. At least four chains seem to be sufficient to confirm successful convergence of the chains.
+- `Draws`: the number of samples used to plot the distribution. The higher this value is, the smoother the plot will look like. You can also consult the Effective Sample Size (ESS) printed in the output logs.
 
 
 ## Running the analysis 
-We assume you have already put the observations of the performances two algorithms in two separate files and indicate the information in a config file. To run the analysis, you pass the name of the config file as argument. For example:
-```bash
-python main.py --config configs/configBinary.ini --verbose
-```
-
-When the flag '--verbose' is one, the more detailed information of the steps of the analysis will be printed in standard output. This flag does not affect the log file that is stored along side other outputs.
-
-And here is the general usage template which can be accessed using '--help' flag at any time:
-```bash
-usage: main.py [-h] [-c CONFIG] [-v]
-
-Run Bayesian Stat
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -c CONFIG, --config CONFIG
-                        address of Config file
-  -v, --verbose         prints the report of the steps
-
-``` 
+Checkout the main [README](../README.md#running-the-analysis) file.
 
 ## Output files
 Depending on the types of analyses the user asks, via configuration file, a subset of following files or folders might be stored as the output of the analysis. Note that all the files names below will come after a prefix for the whole analysis.
