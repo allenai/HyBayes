@@ -69,12 +69,12 @@ Analyze = True
 ...
 ```
 
+The parameters affecting granularity of the analysis can be indicated in `[Prior]` and `[Posteriour]` sections in the config file. 
 
-
-The parameters affecting granularity of the analysis can be indicated in sections "[Prior]" and "[Posteriour]" in the config file. Especially, the following three parameters are the most important ones:
-- "Tune": number of samples to throw away in the beginning. A value of at least 500 is recommended.
-- "Chains": number independent chains. Four chains seem to be sufficient to confirm successful convergence of the chains.
-- "Draws": This is the number of samples used to plot the distribution. The higher this value, the smooth the plot will look like. Also you can consult the Effective Sample Size (ESS) printed in the log.
+Many of the parameters specify the details of [the sampling algrithm](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo) (which is used to infer the posterior probabilities).  In particular, the following three parameters are the most important ones:
+- `Tune`: the number of samples to throw away in the beginning of the sampling. A value of, at least, 500 is recommended.
+- `Chains`: the number independent chains. At least four chains seem to be sufficient to confirm successful convergence of the chains.
+- `Draws`: the number of samples used to plot the distribution. The higher this value is, the smoother the plot will look like. You can also consult the Effective Sample Size (ESS) printed in the output logs.
 
 
 ## Running the analysis 
