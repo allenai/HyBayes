@@ -3,7 +3,7 @@
 ## Table of contents
 - [Introduction](#introduction)
 - [Installation](#installation)
-- [Preparing Synthetic Data](PreparingSyntheticData)
+- [Preparing Synthetic Data](#Preparing-Synthetic-Data)
 - [Prepare Configuration File]()
 - [Running the analysis] ()
 - [Examples]()
@@ -23,22 +23,24 @@ In [the paper](README.md#citation) we review four different approaches to assess
 Checkout the main [README](../README.md#installation) file.
 
 ## Preparing Synthetic Data
-For purposes of this manual, we make some artificial data. If you already have your data (as observations) from your experiments, you can skip this step.
+For purposes of this manual, we make synthetic data. 
+If you already have your data (as observations) from your experiments, you can skip this step.
 
 Use the following command to  generate the artificial data: 
 
 ```bash
-python make_data.py
+ > python make_data.py
 ```
 
-## Prepare Configuration File
+## Preparing Configuration Files
 To use this package to analyze your data, you need to prepare the a configuration file that indicates the information needed for the analysis, including the type of plots and files you want to be stored.
 
 The following shows the general framework of a configuration file. The main sections are Files, Plots, Model, Prior, and Posterior. You can find examples of complete configurations in 'configs' folder.
 
 Here we explain the first section 'Files': For now, all the experiments use one column observation files except when the observations are assumed to follow Binomial distribution.
 Second and third lines indicate the names and the addresses of two files. The last line indicates a prefix of the output file names. One can make a directory beforehand include in this prefix.  
-```bash
+
+```
 [Files]
 NumberOfColumns = 1
 File1 = ArtificialData/BinaryData_0.csv
@@ -71,7 +73,7 @@ The parameters affecting granularity of the analysis can be indicated in section
 ## Running the analysis 
 We assume you have already put the observations of the performances two algorithms in two separate files and indicate the information in a config file. To run the analysis, you pass the name of the config file as argument. For example:
 ```bash
-python main.py --config configs/configBinary.ini --verbose
+ > python main.py --config configs/configBinary.ini --verbose
 ```
 
 When the flag '--verbose' is one, the more detailed information of the steps of the analysis will be printed in standard output. This flag does not affect the log file that is stored along side other outputs.
@@ -87,7 +89,6 @@ optional arguments:
   -c CONFIG, --config CONFIG
                         address of Config file
   -v, --verbose         prints the report of the steps
-
 ``` 
 
 ## Output files
