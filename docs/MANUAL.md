@@ -89,7 +89,7 @@ For reproducablity of your results, it also highly recommended that you make the
 - **`prior_trace`** : A directory where all the samples (collected using `pymc3` engine) for the *prior* distribution is stored for further analysis. See `posterior_trace` for more info.
 - **`config.ini`** : The user's desired configuration file is also copied alongside other output files, for reproducibility and ease of future references.
 - **`log.log`** : The log of the analysis is stored in this file for debugging purposes.
-- **`posterior_hierarchical_graph.png`** : A pictorial representation of the hierarchical model used in the analysis. This file is created using the `model_to_graphviz` in `pymc3`. To understand the notation refer to their docs ([link 1](https://graphviz.readthedocs.io/en/stable/manual.html), [link2](https://github.com/pymc-devs/pymc3/blob/master/pymc3/model_graph.py)).
+- **`posterior_hierarchical_graph.png`** : A pictorial representation of the hierarchical model used in the analysis. This file is created using the `model_to_graphviz` in `pymc3`. To understand the notation refer to their docs ([link 1](https://graphviz.readthedocs.io/en/stable/manual.html), [link 2](https://github.com/pymc-devs/pymc3/blob/master/pymc3/model_graph.py)).
 - **`posterior_hierarchical_graph.txt`** : A textual representation of the hierarchical model corresponding to `posterior_hierarchical_graph.png`.
 - **`posterior_diagnostics.png`** and **`prior_diagnostics.png`** : The diagnostics plots drawn using [`pymc3`'s diagnostic](https://docs.pymc.io/api/diagnostics.html) tools. It is recommended to include these plots in the supplementary material section of the paper to convince the reader that the sampling process was successful.
 - **`count_plot.png`**, **`bar_plot`**, **`histogram_plot`**, or **`scatter_plot`**: These plots basic visualizations of the raw data. Often these plots help match the result of Bayesian analysis to the given data.  
@@ -109,37 +109,53 @@ These models capture a lot of common assumption on observed data. Note that if y
 ### Metric observations: T-Student distribution with multiple choices for priors
 For this model, you can indicate the "Histogram_plot" and "scatter_plot" to view a visualisation of the input. For our contrived data, we get the following figures:
 
+<p align="center">
+    <img src="./example_analysis/outputs/Metric_Histogram_plot.png" width="60%">
+</p>
 
-![Histogram plot](example_analysis/outputs/Metric_Histogram_plot.png)
+<p align="center">
+    <img src="./example_analysis/outputs/Metric_scatter_plot.png" width="60%">
+</p>
 
-![Scatter plot](example_analysis/outputs/Metric_scatter_plot.png)
 
 #### Model
 To indicate this model in the config file, it is enough to set the arguments "Variable_type" to "Metric" in the "[Model]" section of the config file.
 
 By indicating this model, the observation of two groups are assumed to follow two separate T-student distributions with parameters $$(mu, sigma)$$, corresponding to each group, and a share parameter nu. Each mu parameter is the indicator of overall performance of corresponding group, whereas sigma is how dispersed the value of the groups are and nu indicates how close the given distribution is to a normal distribution.  Thus the distribution of $$mu_1-mu_2$$ indicates how superior group one is over group two.
-For a discussion on this model, including justfication and examples of usage refer to (Chapter 16 in the book 'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015).). It is worth noting the implementation in pymc3 is inspired by the code given in [https://github.com/JWarmenhoven/DBDA-python].
+For a discussion on this model, including justfication and examples of usage refer to (Chapter 16 in the book 'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015).). It is worth noting the implementation in `pymc3` is inspired by the code given in [https://github.com/JWarmenhoven/DBDA-python].
 
 ***
 In a higher level, each mu is assumed to follow a wide normal distribution with identical parameters. Each sigma follows a wide uniform distribution and the shared parameter nu follows an exponential distribution. 
 
 See a visualization of this model in Following Figure:
-![Hierarchical model.](outputsForManual/Metric/Metric_posterior_hierarchical_graph.png)
+<p align="center">
+    <img src="./outputsForManual/Metric/Metric_posterior_hierarchical_graph.png" width="60%">
+</p>
+
 
 To check the effect of this model. One can see the Prior of distribution of each five parameters and their differences in the following Figure: 
-![Mu Prior.](example_analysis/outputs/Metric_prior_mu.png)
-![Sigma Prior.](example_analysis/outputs/Metric_prior_sigma.png)
+<p align="center">
+    <img src="./example_analysis/outputs/Metric_prior_mu.png" width="46%">
+    <img src="./example_analysis/outputs/Metric_prior_sigma.png" width="46%">
+</p>
 
 
 
 Notice that before taking the observed data into account, our prior knowledge, in this case, is formalized as any reasonable value for each mu is almost equally likely. Since the domain of mu is the whole R, we can not assume an exactly uniform prior on it.
 
-The package also combines the difference plots with the plot for nu in the following Figure:
-![All prior.](example_analysis/outputs/Metric_prior_compare_all_parameters.png)
+The package also combines the difference plots with the plot for nu in the following figure:
+
+<p align="center">
+    <img src="./example_analysis/outputs/Metric_prior_compare_all_parameters.png" width="50%">
+</p>
+
+
 #### Posterior Plots
 The main output of the analysis is the following Figure.
 
-![Mu Posterior.](example_analysis/outputs/Metric_posterior_mu.png)
+<p align="center">
+    <img src="./example_analysis/outputs/Metric_posterior_mu.png" width="60%">
+</p>
 
 
 The information that can be read from this plot includes:
@@ -147,14 +163,18 @@ The information that can be read from this plot includes:
 
 
 Similar to prior, we get more plots for the posterior too:
-![Sigma posterior.](example_analysis/outputs/Metric_posterior_sigma.png)
-![All posterior.](example_analysis/outputs/Metric_posterior_all_parameters.png)
+<p align="center">
+    <img src="./example_analysis/outputs/Metric_posterior_sigma.png" width="46%">
+    <img src="./example_analysis/outputs/Metric_posterior_all_parameters.png" width="46%">
+</p>
 
 #### Diagnostic Plots
 Since this package is based on MCMC sampling methods for infering the posteriour, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnastic plots produced by Pymc3:
 
-![Prior Diagnostic Plot.](example_analysis/outputs/Metric_prior_diagnostics.png)
-![Posterior Diagnostic Plot.](example_analysis/outputs/Metric_posterior_diagnostics.png)
+<p align="center">
+    <img src="./example_analysis/outputs/Metric_prior_diagnostics.png" width="90%">
+    <img src="./example_analysis/outputs/Metric_posterior_diagnostics.png" width="90%">
+</p>
 
 Notice that different chains for each parameter as converged to one distribution.
 
@@ -162,12 +182,13 @@ Notice that different chains for each parameter as converged to one distribution
 ### Binary observations: Bernoulli distribution with Beta prior
 For this model, you can indicate the "count_plot" and "bar_plot" to view a visualisation of the input. For our contrived data, we get the Figures 1 and 2.
 
-![Bar plot](example_analysis/outputs/Binary_bar_plot.png)
-
-![Count plot](example_analysis/outputs/Binary_count_plot.png)
+<p align="center">
+    <img src="./example_analysis/outputs/Binary_bar_plot.png" width="48%">
+    <img src="./example_analysis/outputs/Binary_count_plot.png" width="48%">
+</p>
 
 #### Model
-To indicate this model in the config file, it is enough to set the arguments "VariableType" and "PriorModel" to "Binary" and "Beta" in the "[Model]" section of the config file.
+To indicate this model in the config file, it is enough to set the arguments "VariableType" and "PriorModel" to "Binary" and "Beta" in the `[Model]` section of the config file.
 
 By indicating this model, the observations of two groups are assumed to be follow two separate Bernoulli distributions with parameters $$theta_1$$ and $$theta_2$$, corresponding to each group. Each parameter is the indicator of overall performance of corresponding group. Thus the distribution of $$theta_1-theta_2$$ indicates how superior group one is over group two. 
 
@@ -175,16 +196,24 @@ By indicating this model, the observations of two groups are assumed to be follo
 In a higher level, these two parameters are assumed to follow two Beta distribution with identical parameters. The parameters of this Beta distribution, i.e., priors of thetas, can be indicated with "Beta_a" and "Beta_b" in the "[Model]" section of the config file. Note setting both these parameters two one will result in a uniform prior.
 
 See a visualization of this model in Following Figure:
-![Hierarchical model.](example_analysis/outputs/Binary_posterior_hierarchical_graph.png)
+<p align="center">
+    <img src="./example_analysis/outputs/Binary_posterior_hierarchical_graph.png" width="60%">
+</p>
 
 To check the effect of this model. One can see the Prior of distribution of each theta and their difference in the following Figure: 
-![Theta prior.](example_analysis/outputs/Binary_prior_theta.png)
+<p align="center">
+    <img src="./example_analysis/outputs/Binary_prior_theta.png" width="60%">
+</p>
 
 Notice that before taking the observed data into account, our prior knowledge, in this case, is formalized as any value between zero and one for each theta is equally likely.
-#### Posterior Plots
-The main output of the analysis is the following Figure.
 
-![Posterior Theta.](example_analysis/outputs/Binary_posterior_theta.png)
+#### Posterior Plots
+The main output of the analysis is the following figure: 
+
+<p align="center">
+    <img src="./example_analysis/outputs/Binary_posterior_theta.png" width="60%">
+</p>
+
 
 Notice that the mode of the the difference of the distribution is at $$-0.238$$, also known as Maximum A priori Estimate, the %95-HDI quantifies the uncertainty around this mode, which is the main goal of this analysis.
 
@@ -192,10 +221,12 @@ Other information that can be read from this plot includes:
 - The probability that group 2 is superior to group 1, i.e., $$Theta_2>Theta_1$$ is at least $$95%$$.
 - 
 #### Diagnostic Plots
-Since this package is based on MCMC sampling methods for inferring the posterior, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnostic plots produced by Pymc3:
+Since this package is based on MCMC sampling methods for inferring the posterior, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnostic plots produced by `pymc3`:
 
-![Prior Diagnostic plot.](example_analysis/outputs/Binary_prior_diagnostics.png)
-![Posterior Diagnostic plot.](example_analysis/outputs/Binary_posterior_diagnostics.png)
+<p align="center">
+    <img src="./example_analysis/outputs/Binary_prior_diagnostics.png" width="90%">
+    <img src="./example_analysis/outputs/Binary_posterior_diagnostics.png" width="90%">
+</p>
 
 Notice that different chains for each parameter as converged to one distribution.
 
@@ -205,9 +236,12 @@ The parameters affecting granularity of the analysis can be indicated in section
 - "Draws": This is the number of samples used to plot the distribution. The higher this value, the smooth the plot will look like. Also you can consult the Effective Sample Size (ESS) printed in the log.
 
 ### Multiple Binary observations: Binomial distribution with Beta prior
-For this model, you can indicate the "Histogram_plot" to view a visualisation of the input. For our contrived data, we get the following Figure.
+For this model, you can indicate the "Histogram_plot" to view a visualisation of the input. For our contrived data, we get the following figure.
 
-![Histogram_plot](example_analysis/outputs/Binomial_histogram_plot.png)
+<p align="center">
+    <img src="./example_analysis/outputs/Binomial_histogram_plot.png" width="60%">
+</p>
+
 
 #### Model
 To indicate this model in the config file, it is enough to set the arguments "Variable_type" and "Prior_model" to "Binomial" and "Beta" in the "[Model]" section of the config file.
@@ -219,69 +253,90 @@ By indicating this model, the observations of two groups are assumed to be follo
 
 In a higher level, these two parameters are assumed to follow two Beta distribution with identical parameters. The parameters of this Beta distribution, i.e., priors of thetas, can be indicated with "Beta_a" and "Beta_b" in the "[Model]" section of the config file. Note setting both these parameters too ones will result in a uniform prior.
 
-See a visualization of this model in Following Figure:
-![Hierarchical model.](example_analysis/outputs/Binomial_posterior_hierarchical_graph.png)
+See a visualization of this model in following figure:
+<p align="center">
+    <img src="./example_analysis/outputs/Binomial_posterior_hierarchical_graph.png" width="60%">
+</p>
 
-To check the effect of this model. One can see the Prior of distribution of each theta and their difference in the following Figure: 
-![Theta prior.](example_analysis/outputs/Binomial_prior_theta.png)
+
+To check the effect of this model. One can see the Prior of distribution of each theta and their difference in the following figure: 
+<p align="center">
+    <img src="./example_analysis/outputs/Binomial_prior_theta.png" width="60%">
+</p>
+
 
 Notice that before taking the observed data into account, our prior knowledge, in this case, is formalized as any value between zero and one for each theta is equally likely.
+
 #### Posterior Plots
 The main output of the analysis is the following Figure.
 
-![Posterior Theta.](example_analysis/outputs/Binomial_posterior_theta.png)
+<p align="center">
+    <img src="./example_analysis/outputs/Binomial_posterior_theta.png" width="60%">
+</p>
 
 Notice that the mode of the the difference of the distribution is at $$-0.238$$, also known as Maximum A priori Estimate, the %95-HDI quantifies the uncertainty around this mode, which is the main goal of this analysis.
 
 Other information that can be read from this plot includes:
 - (??)
 - (??)
+
 #### Diagnostic Plots
 Since this package is based on MCMC sampling methods for inferring the posterior, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnostic plots produced by Pymc3:
 
-![Prior Diagnostic plot.](example_analysis/outputs/Binomial_prior_diagnostics.png)
-![Posterior Diagnostic plot.](example_analysis/outputs/Binomial_posterior_diagnostics.png)
+<p align="center">
+    <img src="./example_analysis/outputs/Binomial_prior_diagnostics.png" width="90%">
+    <img src="./example_analysis/outputs/Binomial_posterior_diagnostics.png" width="90%">
+</p>
 
 Notice that different chains for each parameter as converged to one distribution.
 
 
 ### Count observations: Negative Binomial distribution with Normal prior
-For this model, you can indicate the "Count_plot" and "scatter_plot" to view a visualisation of the input. For our contrived data, we get the following Figures.
+For this model, you can indicate the "Count_plot" and "scatter_plot" to view a visualisation of the input. For our contrived data, we get the following figures:
 
-
-![Count plot](example_analysis/outputs/Count_count_plot.png)
-
-![Scatter plot](example_analysis/outputs/Count_scatter_plot.png)
+<p align="center">
+    <img src="./example_analysis/outputs/Count_count_plot.png" width="49%">
+    <img src="./example_analysis/outputs/Count_scatter_plot.png" width="49%">
+</p>
 
 #### Model
-To indicate this model in the config file, it is enough to set the arguments "Variable_type" to "Count" in the "[Model]" section of the config file.
+To indicate this model in the config file, it is enough to set the `Variable_type` to `Count` arguments in the `[Model]` section of the config file.
 
 By indicating this model, the observation of two groups are assumed to follow (TODO)?
 
-***
+***???
 
 For a discussion on this model, including justfication and examples of usage refer to (Chapter 24 in the book 'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015).). It is worth noting the implementation in pymc3 is inspired by the code given in [https://github.com/JWarmenhoven/DBDA-python].
 
 
-See a visualization of this model in Following Figure:
-![Hierarchical model.](example_analysis/outputs/Count_posterior_hierarchical_graph.png)
+See a visualization of this model in the following figure:
+<p align="center">
+    <img src="./example_analysis/outputs/Count_posterior_hierarchical_graph.png" width="90%">
+</p>
 
-To check the effect of this model. One can see the Prior of distribution of each five parameters and their differences in the following Figure: 
-![Mu Prior.](example_analysis/outputs/Count_prior_mu.png)
-![Sigma Prior.](example_analysis/outputs/Count_prior_sigma.png)
+To check the effect of this model. One can see the Prior of distribution of each five parameters and their differences in the following figure: 
 
-
+<p align="center">
+    <img src="./example_analysis/outputs/Count_prior_mu.png" width="46%">
+    <img src="./example_analysis/outputs/Count_prior_sigma.png" width="46%">
+</p>
 
 Notice that before taking the observed data into account, our prior knowledge, in this case, is formalized as any reasonable value for each mu is almost equally likely. Since the domain of mu is the whole R, we can not assume an exactly uniform prior on it.
 
 The package also combines the difference plots with the plot for nu in the following Figure:
-![All prior.](example_analysis/outputs/Count_prior_compare_all_parameters.png)
+<p align="center">
+    <img src="./example_analysis/outputs/Count_prior_compare_all_parameters.png" width="60%">
+</p>
 
 This includes effect size plot, for further information refer to https://en.wikipedia.org/wiki/Effect_size.
+
+
 #### Posterior Plots
 The main output of the analysis is the following Figure.
 
-![Mu Posterior.](example_analysis/outputs/Count_posterior_mu.png)
+<p align="center">
+    <img src="./example_analysis/outputs/Count_posterior_mu.png" width="60%">
+</p>
 
 
 The information that can be read from this plot includes:
@@ -289,24 +344,28 @@ The information that can be read from this plot includes:
 
 
 Similar to prior, we get more plots for the posterior too:
-![Sigma posterior.](example_analysis/outputs/Count_posterior_sigma.png)
-![All posterior.](example_analysis/outputs/Count_posterior_all_parameters.png)
+<p align="center">
+    <img src="./example_analysis/outputs/Count_posterior_sigma.png" width="60%">
+    <img src="./example_analysis/outputs/Count_posterior_all_parameters.png" width="60%">
+</p>
 
 #### Diagnostic Plots
 Since this package is based on MCMC sampling methods for infering the posteriour, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnastic plots produced by Pymc3:
 
-![Prior Diagnostic Plot.](example_analysis/outputs/Count_prior_diagnostics.png)
-![Posterior Diagnostic Plot.](example_analysis/outputs/Count_posterior_diagnostics.png)
+<p align="center">
+    <img src="./example_analysis/outputs/Count_prior_diagnostics.png" width="90%">
+    <img src="./example_analysis/outputs/Count_posterior_diagnostics.png" width="90%">
+</p>
 
 Notice that different chains for each parameter as converged to one distribution.
 
 ### Ordinal observations: Normal distribution with variable tresholds
 For this model, you can indicate the "Count_plot" and "scatter_plot" to view a visualisation of the input. For our contrived data, we get the following Figures.
 
-
-![Count plot](example_analysis/outputs/Ordinal_histogram_plot.png)
-
-![Scatter plot](example_analysis/outputs/Ordinal_scatter_plot.png)
+<p align="center">
+    <img src="./example_analysis/outputs/Ordinal_histogram_plot.png" width="49%">
+    <img src="./example_analysis/outputs/Ordinal_scatter_plot.png" width="49%">
+</p>
 
 #### Model
 To indicate this model in the config file, it is enough to set the arguments "Variable_type" to "Ordinal" in the "[Model]" section of the config file.
@@ -317,25 +376,33 @@ By indicating this model, the observation of two groups are assumed to follow (T
 For a discussion on this model, including justfication and examples of usage refer to (Chapter 23 in the book 'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015)). It is worth noting the implementation in pymc3 is inspired by the code given in [https://github.com/JWarmenhoven/DBDA-python].
 
 
-See a visualization of this model in Following Figure:
-![Hierarchical model.](example_analysis/outputs/Ordinal_posterior_hierarchical_graph.png)
+See a visualization of this model in the following figure:
+<p align="center">
+    <img src="./example_analysis/outputs/Ordinal_posterior_hierarchical_graph.png" width="60%">
+</p>
 
-To check the effect of this model. One can see the Prior of distribution of each five parameters and their differences in the following Figure: 
-![Mu Prior.](example_analysis/outputs/Ordinal_prior_mu.png)
-![Sigma Prior.](example_analysis/outputs/Ordinal_prior_sigma.png)
 
+To check the effect of this model. One can see the Prior of distribution of each five parameters and their differences in the following figure: 
+<p align="center">
+    <img src="./example_analysis/outputs/Ordinal_prior_mu.png" width="46%">
+    <img src="./example_analysis/outputs/Ordinal_prior_sigma.png" width="46%">
+</p>
 
 
 Notice that before taking the observed data into account, our prior knowledge, in this case, is formalized as any reasonable value for each mu is almost equally likely. Since the domain of mu is the whole R, we can not assume an exactly uniform prior on it.
 
-The package also combines the difference plots with the plot for nu in the following Figure:
-![All prior.](example_analysis/outputs/Ordinal_prior_compare_all_parameters.png)
+The package also combines the difference plots with the plot for nu in the following figure:
+<p align="center">
+    <img src="./example_analysis/outputs/Ordinal_prior_compare_all_parameters.png" width="60%">
+</p>
 
 This includes effect size plot, for further information refer to https://en.wikipedia.org/wiki/Effect_size.
-#### Posterior Plots
-The main output of the analysis is the following Figure.
 
-![Mu Posterior.](example_analysis/outputs/Ordinal_posterior_mu.png)
+#### Posterior Plots
+The main output of the analysis is the following figure:
+<p align="center">
+    <img src="./example_analysis/outputs/Ordinal_posterior_mu.png" width="60%">
+</p>
 
 
 The information that can be read from this plot includes:
@@ -343,14 +410,20 @@ The information that can be read from this plot includes:
 
 
 Similar to prior, we get more plots for the posterior too:
-![Sigma posterior.](example_analysis/outputs/Ordinal_posterior_sigma.png)
-![All posterior.](example_analysis/outputs/Ordinal_posterior_all_parameters.png)
+<p align="center">
+    <img src="./example_analysis/outputs/Ordinal_posterior_sigma.png" width="46%">
+    <img src="./example_analysis/outputs/Ordinal_posterior_all_parameters.png" width="46%">
+</p>
+
 
 #### Diagnostic Plots
 Since this package is based on MCMC sampling methods for infering the posteriour, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnastic plots produced by Pymc3:
 
-![Prior Diagnostic Plot.](example_analysis/outputs/Ordinal_prior_diagnostics.png)
-![Posterior Diagnostic Plot.](example_analysis/outputs/Ordinal_posterior_diagnostics.png)
+<p align="center">
+    <img src="./example_analysis/outputs/Ordinal_prior_diagnostics.png" width="90%">
+    <img src="./example_analysis/outputs/Ordinal_posterior_diagnostics.png" width="90%">
+</p>
+
 
 Notice that different chains for each parameter as converged to one distribution.
 
