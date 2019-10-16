@@ -13,9 +13,7 @@
 
 ## Introduction 
 The goal of this package is to facilitate the performance comparison of two algorithms, based on given observations.
-
-Although here, when making such comparison, we study the posterior probabilities instead of performing a significance test.   In the paper, we provide a comparison these two categories of approaches and advocate for including the Bayesian analysis (weather along with or in substitution to frequentest approaches).
-Both these approaches help a researcher claim superiority of one algorithm over another from different aspects.
+In [the paper](README.md#citation) we review four different approaches to assess a hypothesis (see the four different cells in the figure below). However, here we focus on two Bayesian approaches (a) inference with posterior probabilities (b) Bayes Factors. Both these approaches help a researcher claim superiority of one algorithm over another from different aspects.
 
 <p align="center">
     <img src="./algorithms.png">
