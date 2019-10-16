@@ -91,7 +91,7 @@ For reproducablity of your results, it also highly recommended that you make the
 - **`log.log`** : The log of the analysis is stored in this file for debugging purposes.
 - **`posterior_hierarchical_graph.png`** : A pictorial representation of the hierarchical model used in the analysis. This file is created using the `model_to_graphviz` in `pymc3`. To understand the notation refer to their docs ([link 1](https://graphviz.readthedocs.io/en/stable/manual.html), [link2](https://github.com/pymc-devs/pymc3/blob/master/pymc3/model_graph.py)).
 - **`posterior_hierarchical_graph.txt`** : A textual representation of the hierarchical model corresponding to `posterior_hierarchical_graph.png`.
-- **`posterior_diagnostics.png`** and **`prior_diagnostics.png`** : The diagnostics plots drawn using (pymc3's diagnostic)[https://docs.pymc.io/api/diagnostics.html] tools. It is recommended to include these plots in the supplementary material section of the paper to convince the reader that the sampling process was successful.
+- **`posterior_diagnostics.png`** and **`prior_diagnostics.png`** : The diagnostics plots drawn using [`pymc3`'s diagnostic](https://docs.pymc.io/api/diagnostics.html) tools. It is recommended to include these plots in the supplementary material section of the paper to convince the reader that the sampling process was successful.
 - **`count_plot.png`**, **`bar_plot`**, **`histogram_plot`**, or **`scatter_plot`**: These plots basic visualizations of the raw data. Often these plots help match the result of Bayesian analysis to the given data.  
  
 
