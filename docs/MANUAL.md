@@ -1,26 +1,29 @@
 # User Manual for HyPyThesis
 
-(TODO: Shorten this introduction)
-A Bayesian hypothesis assessment framework, tailored to comparing the performances of algorithm pairs. This package is preliminary implementation statistical analyses described in [OUR Paper].
-Also this package can be seen as a complimentary package to [https://github.com/rtmdrr/testSignificanceNLP] where the frequentest approaches are implemented. We followed the simple file format that the previous package required.
+## Table of contents
+- [Introduction](#introduction)
+- [Installation](#installation)
+- [Preparing Artificial Data]()
+- [Prepare Configuration File]()
+- [Running the analysis] ()
+- [Examples]()
+  * [Binary Model]()
+  * [Binomial Model]()
+  * [Metric Model]()
 
-Similar to the previous package we focus on the setup where the performance of two algorithms, A and B, applied on a dataset X, is compared based on an evaluation measure M. Although here, when making such comparison, we study the posterior probabilities instead of performing a significance test.   
-In the paper, we provide a comparison these two categories of approaches and advocate for including the Bayesian analysis (weather along with or in substitution to frequentest approaches).
+## Introduction 
+The goal of this package is to facilitate the performance comparison of two algorithms, based on given observations.
+
+Although here, when making such comparison, we study the posterior probabilities instead of performing a significance test.   In the paper, we provide a comparison these two categories of approaches and advocate for including the Bayesian analysis (weather along with or in substitution to frequentest approaches).
 Both these approaches help a researcher claim superiority of one algorithm over another from different aspects.
 
-## Table of contents
-(TODO: I don't know how to make them good links)
-- [Installation](#heading)
-- [Preparing Artificial Data]
-- [Prepare Configuration File]
-- [Running the analysis ]
-- [Examples]
-  * [Binary Model]
-  * [Binomial Model]
-  * [Metric Model]
+<p align="center">
+    <img src="./algorithms.png">
+</p>
 
 ## Installation
-Check [README](../README.md).
+Checkout the main [README](../README.md#installation) file.
+
 ## Preparing Artificial Data
 For purposes of this manual, we make some artificial data. If you already have your data (as observations) from your experiments, you can skip this step.
 
