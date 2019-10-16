@@ -81,22 +81,18 @@ Many of the parameters specify the details of [the sampling algrithm](https://en
 Checkout the main [README](../README.md#running-the-analysis) file.
 
 ## Output files
-Depending on the types of analyses the user asks, via configuration file, a subset of following files or folders might be stored as the output of the analysis. Note that all the files names below will come after a prefix for the whole analysis.
+Depending on the types of analyses the user asks (via configuration file) a subset of following files/folders will be stored as the output of the analysis. Note that all the files will have a prefix that is specific to the whole analysis.
 
-- **posterior_trace** : A directory where all the samples taken using pymc3 engine for the posterior distribution is stored for further analysis. In literature these samples can be refered to as 'trace', 'chain', or 'samples'. 
-For regular usages, you don't need to touch these files. However for long chains, this might save time for future analyses not to run the sampling process again.
-It also highly recommended that the files in this directory be made available for public to investigate and run their own analysis.
- 
-- **prior_trace** : A directory where all the samples taken using pymc3 engine for the [prior] distribution is stored for further analysis. See [posterior_trace] for more info.
-- **config.ini** : The user's desired configuration file is also copied alongside other output files, for reproducibility and ease of future references.
-- **log.log** : The log of the analysis is stored in this file for debugging purposes.
-- **posterior_hierarchical_graph.png** : A pictorial representation of the hierarchical model used in the analysis. This file is made using the  'model_to_graphviz' in 'pymc3' directly. To understand the notation refer to their docs.
-    - https://graphviz.readthedocs.io/en/stable/manual.html
-    - https://github.com/pymc-devs/pymc3/blob/master/pymc3/model_graph.py
-- **posterior_hierarchical_graph.txt** : A textual representation of the hierarchical model corresponding to [posterior_hierarchical_graph.png].
-- **posterior_diagnostics.png** and **prior_diagnostics.png** : The diagnostics plots drawn using [https://docs.pymc.io/api/diagnostics.html]. It is recommended to include these plots in the supplementary material section of the paper to convince the reader that the sampling process was successful.
-- **count_plot.png**, **bar_plot**, **histogram_plot**, or **scatter_plot**: These plots some basic visualizations of the raw data. Often these plots help match the result of Bayesian analysis to the given data.  
-- 
+- **`posterior_trace`** : A directory where all the samples (collected using `pymc3` engine) for the *posterior* distribution is stored for further analysis. In the literature, these samples are referred to as "trace", "chain", or "samples". 
+For regular usages, you don't need to touch these files. However, if you're deadling with complex models that involve long chains, re-using the trace could save time for future analyses (by not re-running the sampling process again).
+For reproducablity of your results, it also highly recommended that you make the contents of this directory available for public for further investigations.
+- **`prior_trace`** : A directory where all the samples (collected using `pymc3` engine) for the *prior* distribution is stored for further analysis. See `posterior_trace` for more info.
+- **`config.ini`** : The user's desired configuration file is also copied alongside other output files, for reproducibility and ease of future references.
+- **`log.log`** : The log of the analysis is stored in this file for debugging purposes.
+- **`posterior_hierarchical_graph.png`** : A pictorial representation of the hierarchical model used in the analysis. This file is created using the `model_to_graphviz` in `pymc3`. To understand the notation refer to their docs ([link 1](https://graphviz.readthedocs.io/en/stable/manual.html), [link2](https://github.com/pymc-devs/pymc3/blob/master/pymc3/model_graph.py)).
+- **`posterior_hierarchical_graph.txt`** : A textual representation of the hierarchical model corresponding to `posterior_hierarchical_graph.png`.
+- **`posterior_diagnostics.png`** and **`prior_diagnostics.png`** : The diagnostics plots drawn using (pymc3's diagnostic)[https://docs.pymc.io/api/diagnostics.html] tools. It is recommended to include these plots in the supplementary material section of the paper to convince the reader that the sampling process was successful.
+- **`count_plot.png`**, **`bar_plot`**, **`histogram_plot`**, or **`scatter_plot`**: These plots basic visualizations of the raw data. Often these plots help match the result of Bayesian analysis to the given data.  
  
 
 ## Artificial Examples
