@@ -3,7 +3,7 @@
 ## Table of contents
 - [Introduction](#introduction)
 - [Installation](#installation)
-- [Preparing Artificial Data]()
+- [Preparing Synthetic Data](PreparingSyntheticData)
 - [Prepare Configuration File]()
 - [Running the analysis] ()
 - [Examples]()
@@ -22,7 +22,7 @@ In [the paper](README.md#citation) we review four different approaches to assess
 ## Installation
 Checkout the main [README](../README.md#installation) file.
 
-## Preparing Artificial Data
+## Preparing Synthetic Data
 For purposes of this manual, we make some artificial data. If you already have your data (as observations) from your experiments, you can skip this step.
 
 Use the following command to  generate the artificial data: 
