@@ -1,12 +1,12 @@
 # Bayesian Hypothesis Assessment
 A Bayesian hypothesis assessment framework, tailored to comparing pairs of experiments. This package is preliminary 
-implementation statistical analyses described in [PAPER LINK](?). This can also be seen as a complimentary to  
+implementation statistical analyses described in [this paper](#citation). This can also be seen as a complimentary to  
 [testSignificanceNLP](https://github.com/rtmdrr/testSignificanceNLP) package which contains popular Frequentist tests. 
 
 We focus on the setup where the performances of two algorithms, applied on a certain dataset, are provided based on an 
 evaluation measure. The comparison is done by studying the posterior probabilities (rather than binary commonly-used binary decisions in other tests.)
 
-For further discussion of the approaches implemented here (and their comparison to other techniques), refer to [PAPER LINK](?). 
+For further discussion of the approaches implemented here (and their comparison to other techniques), refer to [the paper](#citation) or the extended [manual](docs/MANUAL.md). 
 
 
 ## Getting started
@@ -15,11 +15,10 @@ For running this code, you will need Python (version >=3.6).
 You have two options for installation: 
  - If you don't want to modify any code, you can just install the package and use it in commandline: 
 ```bash
- > pip install ????
+ > pip install HyPyThesis
 ```
 
- - Alternatively, you can clone this project (by running `git clone https://github.com/turkerfan/BayesianEstimationInNLP.git`.) (NEW GIT)
- Before running the code, make sure that you have all the requirements by 
+ - Alternatively, if you'd like to make modifications to the code (e.g., the underlying model) you can clone this project. Before running the code, make sure that you have all the requirements by 
  running the following line to install all the necessary dependencies: 
 ```bash
  > pip install -r requirements.txt
@@ -113,8 +112,13 @@ And then execute the analysis on any of the newly made config files. For example
 If you want to learn more about this package, please refer to the [extended manual](docs/MANUAL.md). 
 If you want to learn about the concepts discusssed here, refer to the paper below. 
 
-## Citation: 
+## Citation 
 If you used this package in your research feel free to cite the following paper: 
 ```
-TODO
+@article{peng2019solving,
+  title={??},
+  author={Sadeqi Azer, Erfan and Khashabi, Daniel and ashish Sabharwal, Ashish and Roth, Dan},
+  journal={??},
+  year={2019}
+}
 ```
