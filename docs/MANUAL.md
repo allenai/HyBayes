@@ -78,25 +78,7 @@ Many of the parameters specify the details of [the sampling algrithm](https://en
 
 
 ## Running the analysis 
-We assume you have already put the observations of the performances two algorithms in two separate files and indicate the information in a config file. To run the analysis, you pass the name of the config file as argument. For example:
-```bash
- > python main.py --config configs/configBinary.ini --verbose
-```
-
-When the flag '--verbose' is one, the more detailed information of the steps of the analysis will be printed in standard output. This flag does not affect the log file that is stored along side other outputs.
-
-And here is the general usage template which can be accessed using '--help' flag at any time:
-```bash
-usage: main.py [-h] [-c CONFIG] [-v]
-
-Run Bayesian Stat
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -c CONFIG, --config CONFIG
-                        address of Config file
-  -v, --verbose         prints the report of the steps
-``` 
+Checkout the main [README](../README.md#running-the-analysis) file.
 
 ## Output files
 Depending on the types of analyses the user asks, via configuration file, a subset of following files or folders might be stored as the output of the analysis. Note that all the files names below will come after a prefix for the whole analysis.
