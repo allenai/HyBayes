@@ -110,11 +110,8 @@ These models capture a lot of common assumption on observed data. Note that if y
 For this model, you can indicate the "Histogram_plot" and "scatter_plot" to view a visualisation of the input. For our contrived data, we get the following figures:
 
 <p align="center">
-    <img src="./example_analysis/outputs/Metric_Histogram_plot.png" width="60%">
-</p>
-
-<p align="center">
-    <img src="./example_analysis/outputs/Metric_scatter_plot.png" width="60%">
+    <img src="./example_analysis/outputs/Metric_Histogram_plot.png" width="49%">
+    <img src="./example_analysis/outputs/Metric_scatter_plot.png" width="49%">
 </p>
 
 
