@@ -4,7 +4,7 @@
 - [Introduction](#introduction)
 - [Installation](#installation)
 - [Preparing Synthetic Data](#Preparing-Synthetic-Data)
-- [Prepare Configuration File]()
+- [Prepare Configuration File](#Preparing-Configuration-Files)
 - [Running the analysis] ()
 - [Examples]()
   * [Binary Model]()
@@ -95,12 +95,12 @@ For reproducablity of your results, it also highly recommended that you make the
 - **`count_plot.png`**, **`bar_plot`**, **`histogram_plot`**, or **`scatter_plot`**: These plots basic visualizations of the raw data. Often these plots help match the result of Bayesian analysis to the given data.  
  
 
-## Artificial Examples
+## Implemented Models
 Current versioin of the package provides 5 pre-implimented models:
-- Binary observations: Bernoulli distribution with Beta prior
-- Multiple Binary observations: Binomial distribution with Beta prior
+- Binary observations: Bernoulli distribution with a Beta prior
+- Multiple Binary observations: Binomial distribution with a Beta prior
 - Metric observations: T-Student distribution with muliple priors
-- Count observations: Negative Binomial distribution with Normal prior
+- Count observations: Negative Binomial distribution with a Normal prior
 - Ordinal observations: Normal distribution with variable tresholds
 
 These models capture a lot of common assumption on observed data. Note that if you have specific information on your observation or other assumptions, it is highly recommended that you add your costum model. If you have model in mind that is a general model and other researchers (expecially within NLP community) are likely to need, feel free to ask us to add to the pakcage.
