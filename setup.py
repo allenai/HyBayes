@@ -39,7 +39,7 @@ setup(
     author='Erfan Sadeqi Azer, Daniel Khashabi',
     author_email='esamath@gmail.com',
     license='BY-NC-SA',
-    keywords="Bayesian Statistics, two groups test, Hypothesis Testing, Bayes Factor"
+    keywords="Bayesian Statistics, two groups test, Hypothesis Testing, Bayes Factor,"
              "NLP, natural language processing, ",
     packages=['HyPyThesis'],
     classifiers=CLASSIFIERS,
