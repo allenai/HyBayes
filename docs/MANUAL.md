@@ -107,7 +107,7 @@ These models capture a lot of common assumption on observed data. Note that if y
 
 
 ### Metric observations: T-Student distribution with multiple choices for priors
-For this model, you can indicate the "Histogram_plot" and "scatter_plot" to view a visualisation of the input. For our contrived data, we get the following figures:
+For this model, you can indicate the "Histogram_plot" and "scatter_plot" to view a visualization of the input. For our contrived data, we get the following figures:
 
 <p align="center">
     <img src="./example_analysis/outputs/Metric_Histogram_plot.png" width="49%">
@@ -116,10 +116,15 @@ For this model, you can indicate the "Histogram_plot" and "scatter_plot" to view
 
 
 #### Model
-To indicate this model in the config file, it is enough to set the arguments "Variable_type" to "Metric" in the "[Model]" section of the config file.
+To indicate this model in the config file, it is enough to set the `Variable_type` argument to `Metric` in the `[Model]` section of the config file.
 
-By indicating this model, the observation of two groups are assumed to follow two separate T-student distributions with parameters $$(mu, sigma)$$, corresponding to each group, and a share parameter nu. Each mu parameter is the indicator of overall performance of corresponding group, whereas sigma is how dispersed the value of the groups are and nu indicates how close the given distribution is to a normal distribution.  Thus the distribution of $$mu_1-mu_2$$ indicates how superior group one is over group two.
-For a discussion on this model, including justfication and examples of usage refer to (Chapter 16 in the book 'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015).). It is worth noting the implementation in `pymc3` is inspired by the code given in [https://github.com/JWarmenhoven/DBDA-python].
+By indicating this model, the observation of two groups are assumed to follow two separahte T-student distributions with parameters (`mu`, `sigma`, corresponding to each group) and a shared parameter `nu`: 
+
+ - Each `mu` parameter is the indicator of overall performance of corresponding group. Thus the distribution of `mu_1-mu_2` indicates how superior group one is over group two.  
+ - The parameter `sigma` shows the dispersionof the value of the groups. 
+ - The parameter `nu` indicates how close the given distribution is to a normal distribution.  
+
+For a discussion on this model, including justfication and examples of usage refer to (Chapter 16 of) the book "Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan" (Second Edition) by John Kruschke (2015). 
 
 ***
 In a higher level, each mu is assumed to follow a wide normal distribution with identical parameters. Each sigma follows a wide uniform distribution and the shared parameter nu follows an exponential distribution. 
@@ -177,7 +182,7 @@ Notice that different chains for each parameter as converged to one distribution
 
 
 ### Binary observations: Bernoulli distribution with Beta prior
-For this model, you can indicate the "count_plot" and "bar_plot" to view a visualisation of the input. For our contrived data, we get the Figures 1 and 2.
+For this model, you can indicate the "count_plot" and "bar_plot" to view a visualization of the input. For our contrived data, we get the Figures 1 and 2.
 
 <p align="center">
     <img src="./example_analysis/outputs/Binary_bar_plot.png" width="48%">
@@ -233,7 +238,7 @@ The parameters affecting granularity of the analysis can be indicated in section
 - "Draws": This is the number of samples used to plot the distribution. The higher this value, the smooth the plot will look like. Also you can consult the Effective Sample Size (ESS) printed in the log.
 
 ### Multiple Binary observations: Binomial distribution with Beta prior
-For this model, you can indicate the "Histogram_plot" to view a visualisation of the input. For our contrived data, we get the following figure.
+For this model, you can indicate the "Histogram_plot" to view a visualization of the input. For our contrived data, we get the following figure.
 
 <p align="center">
     <img src="./example_analysis/outputs/Binomial_histogram_plot.png" width="60%">
@@ -289,7 +294,7 @@ Notice that different chains for each parameter as converged to one distribution
 
 
 ### Count observations: Negative Binomial distribution with Normal prior
-For this model, you can indicate the "Count_plot" and "scatter_plot" to view a visualisation of the input. For our contrived data, we get the following figures:
+For this model, you can indicate the "Count_plot" and "scatter_plot" to view a visualization of the input. For our contrived data, we get the following figures:
 
 <p align="center">
     <img src="./example_analysis/outputs/Count_count_plot.png" width="49%">
@@ -357,7 +362,7 @@ Since this package is based on MCMC sampling methods for infering the posteriour
 Notice that different chains for each parameter as converged to one distribution.
 
 ### Ordinal observations: Normal distribution with variable tresholds
-For this model, you can indicate the "Count_plot" and "scatter_plot" to view a visualisation of the input. For our contrived data, we get the following Figures.
+For this model, you can indicate the "Count_plot" and "scatter_plot" to view a visualization of the input. For our contrived data, we get the following Figures.
 
 <p align="center">
     <img src="./example_analysis/outputs/Ordinal_histogram_plot.png" width="49%">
