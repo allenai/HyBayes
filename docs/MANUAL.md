@@ -33,25 +33,31 @@ Use the following command to  generate the artificial data:
 ```
 
 ## Preparing Configuration Files
-To use this package to analyze your data, you need to prepare the a configuration file that indicates the information needed for the analysis, including the type of plots and files you want to be stored.
+To analyze your data, you need to prepare the a configuration file that specifies the information needed for the analysis (e.g., the address to your observation files, the type of plots and files you want to be stored).
 
-The following shows the general framework of a configuration file. The main sections are Files, Plots, Model, Prior, and Posterior. You can find examples of complete configurations in 'configs' folder.
+The following snippet shows the general structure of a configuration file. The main sections are `Files`, `Plots`, `Model`, `Bayes_factor`, `Prior`, and `Posterior`. You can find examples of complete configurations in [`configs`](configs) folder, after running `make_configs.py`.
 
-Here we explain the first section 'Files': For now, all the experiments use one column observation files except when the observations are assumed to follow Binomial distribution.
-Second and third lines indicate the names and the addresses of two files. The last line indicates a prefix of the output file names. One can make a directory beforehand include in this prefix.  
+The first section of the configuration file is `Files` and it indicates the information for the files which contain 
+your experimental result. For most common usages of our package, you will provide 2 files with single column in each (that is first two lines. The results of the analaysis will be stored in the address specified by `output_prefix`.   
+The rest of the lines in this section indicate the names and the location of two (or any number of) files, which inlucde the result of your experiments. 
 
-```
+```bash
 [Files]
-NumberOfColumns = 1
-File1 = ArtificialData/BinaryData_0.csv
-File2 = ArtificialData/BinaryData_1.csv
-OutputPrefix = experimentFiles/Bern
+number_of_columns = 1
+number_of_files = 2
+output_prefix = metric_experiment_files/Metric
+file1 = artificial_data/Positive_real_data_0.csv
+file2 = artificial_data/Positive_real_data_1.csv
 
 [Plots]
 ...
 
 [Model]
-VariableType = Binary
+Variable_type = Metric
+...
+
+[Bayes_factor]
+analyze = False
 ...
 
 [Prior]
@@ -59,9 +65,10 @@ Analyze = True
 ...
 
 [Posterior]
-Analyze = False
+Analyze = True
 ...
 ```
+
 
 
 The parameters affecting granularity of the analysis can be indicated in sections "[Prior]" and "[Posteriour]" in the config file. Especially, the following three parameters are the most important ones:
