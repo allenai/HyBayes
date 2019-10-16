@@ -1,13 +1,16 @@
-import os
-import numpy as np
 from utils import *
 
 
-
-def get_positive_input(n1=40, n2=30):
-    dd = 0.8
-    y = [2 * np.random.normal(0, 1, size=n1) + 100 - dd,
-         2 * np.random.normal(0, 1, size=n2) + 100 + dd]
+def get_positive_input(n1=40, n2=30, mean_distance=0.8):
+    """
+    Constructs two groups with n1 observations in first and n2 observations in second.
+    :param n1:
+    :param n2:
+    :param mean_distance: distance of means in two gorups
+    :return:
+    """
+    y = [2 * np.random.normal(0, 1, size=n1) + 100 - mean_distance,
+         2 * np.random.normal(0, 1, size=n2) + 100 + mean_distance]
     return y
 
 

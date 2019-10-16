@@ -9,6 +9,7 @@ In the paper, we provide a comparison these two categories of approaches and adv
 Both these approaches help a researcher claim superiority of one algorithm over another from different aspects.
 
 ## Table of contents
+(TODO: I don't know how to make them good links)
 - [Installation](#heading)
 - [Preparing Artificial Data]
 - [Prepare Configuration File]
@@ -119,7 +120,7 @@ These models capture a lot of common assumption on observed data. Note that if y
 
 
 ### Metric observations: T-Student distribution with multiple choices for priors
-For this model, you can indicate the "Histogram_plot" and "scatter_plot" to view a visualisation of the input. For our contrived data, we get the Figures 1 and 2.
+For this model, you can indicate the "Histogram_plot" and "scatter_plot" to view a visualisation of the input. For our contrived data, we get the following figures:
 
 
 ![Histogram plot](example_analysis/outputs/Metric_Histogram_plot.png)
@@ -129,7 +130,8 @@ For this model, you can indicate the "Histogram_plot" and "scatter_plot" to view
 #### Model
 To indicate this model in the config file, it is enough to set the arguments "Variable_type" to "Metric" in the "[Model]" section of the config file.
 
-By indicating this model, the observation of two groups are assumed to follow two separate T-student distributions with parameters $$(mu, sigma)$$, corresponding to each group, and a share parameter nu. Each mu parameter is the indicator of overall performance of corresponding group, whereas sigma is how dispersed the value of the groups are and nu indicates how close the given distribution is to a normal distribution.  Thus the distribution of $$mu_1-mu_2$$ indicates how superior group one is over group two. 
+By indicating this model, the observation of two groups are assumed to follow two separate T-student distributions with parameters $$(mu, sigma)$$, corresponding to each group, and a share parameter nu. Each mu parameter is the indicator of overall performance of corresponding group, whereas sigma is how dispersed the value of the groups are and nu indicates how close the given distribution is to a normal distribution.  Thus the distribution of $$mu_1-mu_2$$ indicates how superior group one is over group two.
+For a discussion on this model, including justfication and examples of usage refer to (Chapter 16 in the book 'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015).). It is worth noting the implementation in pymc3 is inspired by the code given in [https://github.com/JWarmenhoven/DBDA-python].
 
 ***
 In a higher level, each mu is assumed to follow a wide normal distribution with identical parameters. Each sigma follows a wide uniform distribution and the shared parameter nu follows an exponential distribution. 
@@ -226,6 +228,8 @@ To indicate this model in the config file, it is enough to set the arguments "Va
 By indicating this model, the observations of two groups are assumed to be follow two separate Binomial distributions with parameters $$theta_1$$ and $$theta_2$$, corresponding to each group. Each parameter is the indicator of overall performance of corresponding group. Thus the distribution of $$theta_1-theta_2$$ indicates how superior group one is over group two. 
 
 
+
+
 In a higher level, these two parameters are assumed to follow two Beta distribution with identical parameters. The parameters of this Beta distribution, i.e., priors of thetas, can be indicated with "Beta_a" and "Beta_b" in the "[Model]" section of the config file. Note setting both these parameters too ones will result in a uniform prior.
 
 See a visualization of this model in Following Figure:
@@ -268,6 +272,8 @@ To indicate this model in the config file, it is enough to set the arguments "Va
 By indicating this model, the observation of two groups are assumed to follow (TODO)?
 
 ***
+
+For a discussion on this model, including justfication and examples of usage refer to (Chapter 24 in the book 'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015).). It is worth noting the implementation in pymc3 is inspired by the code given in [https://github.com/JWarmenhoven/DBDA-python].
 
 
 See a visualization of this model in Following Figure:
@@ -321,6 +327,7 @@ To indicate this model in the config file, it is enough to set the arguments "Va
 By indicating this model, the observation of two groups are assumed to follow (TODO)?
 
 ***
+For a discussion on this model, including justfication and examples of usage refer to (Chapter 23 in the book 'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015)). It is worth noting the implementation in pymc3 is inspired by the code given in [https://github.com/JWarmenhoven/DBDA-python].
 
 
 See a visualization of this model in Following Figure:

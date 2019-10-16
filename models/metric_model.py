@@ -7,10 +7,15 @@ from scipy import stats
 
 logger = logging.getLogger('root')
 
+
 def add_exp_uniform_normal_t_model(hierarchical_model):
-    '''
+    """
     A student-t model with normal, uniform, exp priors for mu, sigma, nu parameters, respectively.
-    '''
+    Credits of the implementation of this model in pymc3 belongs to
+      http://nbviewer.jupyter.org/github/JWarmenhoven/DBDA-python/blob/master/Notebooks/Chapter%2016.ipynb
+      For a discussion on this model and implementation on R refer to Chapter 16 in the book
+        'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015).
+    """
     mean_y = np.mean([hierarchical_model.stats_y[i].mean for i in range(hierarchical_model.n_groups)])
     sd_y = np.mean([hierarchical_model.stats_y[i].variance for i in range(hierarchical_model.n_groups)]) ** (0.5)
     with pm.Model() as hierarchical_model.pymc_model:

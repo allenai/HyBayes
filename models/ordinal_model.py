@@ -21,12 +21,16 @@ def outcome_probabilities(theta, mu, sigma):
 
 
 def add_ordinal_model(hierarchical_model, min_level=0, max_level=2):
-  '''
+  """
   Adding a model that estimates decisions on "ordinal" data. In particular, "ordinal" data
   is a categorical where the variables have *ordered categories*, however the distances
   between the categories is not known. Each of the categories are represented by "levels"
   (the range of [min_level, max_level].)
-  '''
+  Credits of the implementation of this model in pymc3 belongs to
+  http://nbviewer.jupyter.org/github/JWarmenhoven/DBDA-python/blob/master/Notebooks/Chapter%2023.ipynb
+  For a discussion on this model and implementation on R refer to Chapter 23 in the book 
+    'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015).
+  """
   mean_y = np.mean([hierarchical_model.stats_y[i].mean for i in range(hierarchical_model.n_groups)])
   sd_y = np.mean([hierarchical_model.stats_y[i].variance for i in range(hierarchical_model.n_groups)]) ** (0.5)
   logger.debug(f"sd_y={sd_y}")
