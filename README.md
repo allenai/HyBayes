@@ -33,7 +33,7 @@ If you're using MacOS, install GraphViz via `brew` command:
 ### Preparing configuration file
 To analyze your data, you need to prepare the a configuration file that specifies the information needed for the analysis (e.g., the address to your observation files, the type of plots and files you want to be stored).
 
-You can find more details on this in the [extended manual](docs/MANUAL.md). Additionally, there are examples of complete configurations in [`configs`](configs) folder, after running `make_configs.py`.
+You can find more details on this in the [extended manual](docs/MANUAL.md#preparing-configuration-files). Additionally, there are examples of complete configurations in [`configs`](configs) folder, after running `make_configs.py`.
 
 ## Running the Analysis 
 Let's assume that you have followed the above instructions and:  
