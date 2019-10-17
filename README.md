@@ -86,7 +86,7 @@ This code is published under [Attribution-NonCommercial-ShareAlike 4.0 Internati
 ## Citation 
 If you used this package in your research feel free to cite the following paper: 
 ```
-@article{peng2019solving,
+@article{hypothesisAssessment19,
   title={??},
   author={Sadeqi Azer, Erfan and Khashabi, Daniel and Sabharwal, Ashish and Roth, Dan},
   journal={??},
