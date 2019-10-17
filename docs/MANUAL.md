@@ -110,6 +110,122 @@ These models capture a lot of common assumption on observed data. Note that if y
 
 ***
 
+### Binary observations: Bernoulli distribution with Beta prior
+For this model, you can indicate the `count_plot` and `bar_plot` to view a visualization of the input. For our contrived data, we get the following two figures. 
+
+<p align="center">
+    <img src="./example_analysis/outputs/Binary_bar_plot.png" width="48%">
+    <img src="./example_analysis/outputs/Binary_count_plot.png" width="48%">
+</p>
+
+#### Model
+To indicate this model in the config file, it is enough to set the arguments `VariableType` and `PriorModel` to `Binary` and `Beta`, respectively, in the `[Model]` section of the config file.
+
+By indicating this model, the observations of two groups are assumed to be follow two separate Bernoulli distributions with parameters `theta_1` and `theta_2`, corresponding to each group. Each parameter is the indicator of overall inherent performance of corresponding group. Thus the distribution of `theta_1-theta_2` indicates how superior group one is over group two. 
+
+
+In a higher level, these two parameters are assumed to follow two Beta distributions with identical parameters. The parameters of this Beta distribution (i.e. priors of thetas) can be indicated with `Beta_a` and `Beta_b` in the `[Model]` section of the config file. Note setting both of these parameters two one will result in a uniform prior.
+
+See a visualization of this model in following figure:
+<p align="center">
+    <img src="./example_analysis/outputs/Binary_posterior_hierarchical_graph.png" width="60%">
+</p>
+
+To check the effect of this model. One can see the Prior of distribution of each theta and their difference in the following figure: 
+<p align="center">
+    <img src="./example_analysis/outputs/Binary_prior_theta.png" width="60%">
+</p>
+
+Notice that before taking the observed data into account, our prior knowledge, in this case, is formalized as any value between zero and one for each theta is equally likely.
+
+#### Posterior Plots
+The main output of the analysis is the following figure: 
+
+<p align="center">
+    <img src="./example_analysis/outputs/Binary_posterior_theta.png" width="60%">
+</p>
+
+
+Notice that the mode of the the difference of the distribution is at -0.238, also known as Maximum A priori Estimate, the %95-HDI quantifies the uncertainty around this mode, which is the main goal of this analysis.
+
+Other information that can be read from this plot includes:
+- The probability that group 2 is superior to group 1, i.e., `Theta_2>Theta_1` is at least 95%.
+- 
+#### Diagnostic Plots
+Since this package is based on MCMC sampling methods for inferring the posterior, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnostic plots produced by `pymc3`:
+
+<p align="center">
+    <img src="./example_analysis/outputs/Binary_prior_diagnostics.png" width="90%">
+    <img src="./example_analysis/outputs/Binary_posterior_diagnostics.png" width="90%">
+</p>
+
+Notice that different chains for each parameter as converged to one distribution.
+
+The parameters affecting granularity of the analysis can be indicated in sections `[Prior]` and `[Posteriour]` in the config file. Especially, the following three parameters are the most important ones:
+- "Tune": number of samples to throw away in the beginning. A value of at least 500 is recommended.
+- "Chains": number independent chains. Four chains seem to be sufficient to confirm successful convergence of the chains.
+- "Draws": This is the number of samples used to plot the distribution. The higher this value, the smooth the plot will look like. Also you can consult the Effective Sample Size (ESS) printed in the log.
+
+*** 
+
+### Multiple Binary observations: Binomial distribution with Beta prior
+For this model, you can indicate the "Histogram_plot" to view a visualization of the input. For our contrived data, we get the following figure.
+
+<p align="center">
+    <img src="./example_analysis/outputs/Binomial_histogram_plot.png" width="60%">
+</p>
+
+
+#### Model
+To indicate this model in the config file, it is enough to set the arguments `Variable_type` and `Prior_model` to `Binomial` and `Beta`, respectively, in the `[Model]` section of the config file.
+
+By indicating this model, the observations of two groups are assumed to be follow two separate Binomial distributions with parameters `theta_1` and `theta_2`, corresponding to each group. Each parameter is the indicator of overall performance of corresponding group. Thus the distribution of `theta_1-theta_2` indicates how superior group one is over group two. 
+
+
+
+
+In a higher level, these two parameters are assumed to follow two Beta distribution with identical parameters. The parameters of this Beta distribution, i.e., priors of thetas, can be indicated with `Beta_a` and `Beta_b` in the `[Model]` section of the config file. Note setting both these parameters too ones will result in a uniform prior.
+
+See a visualization of this model in following figure:
+<p align="center">
+    <img src="./example_analysis/outputs/Binomial_posterior_hierarchical_graph.png" width="60%">
+</p>
+
+
+To check the effect of this model. One can see the Prior of distribution of each theta and their difference in the following figure: 
+<p align="center">
+    <img src="./example_analysis/outputs/Binomial_prior_theta.png" width="60%">
+</p>
+
+
+Notice that before taking the observed data into account, our prior knowledge, in this case, is formalized as any value between zero and one for each theta is equally likely.
+
+#### Posterior Plots
+The main output of the analysis is the following Figure.
+
+<p align="center">
+    <img src="./example_analysis/outputs/Binomial_posterior_theta.png" width="60%">
+</p>
+
+Notice that the mode of the the difference of the distribution is at -0.238, also known as Maximum A priori Estimate, the %95-HDI quantifies the uncertainty around this mode, which is the main goal of this analysis.
+
+Other information that can be read from this plot includes:
+- (??)
+- (??)
+
+#### Diagnostic Plots
+Since this package is based on MCMC sampling methods for inferring the posterior, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnostic plots produced by `pymc3`:
+
+<p align="center">
+    <img src="./example_analysis/outputs/Binomial_prior_diagnostics.png" width="90%">
+    <img src="./example_analysis/outputs/Binomial_posterior_diagnostics.png" width="90%">
+</p>
+
+Notice that different chains for each parameter as converged to one distribution.
+
+*** 
+
+
 ### Metric observations: T-Student distribution with multiple choices for priors
 For this model, you can indicate the "Histogram_plot" and "scatter_plot" to view a visualization of the input. For our contrived data, we get the following figures:
 
@@ -186,118 +302,6 @@ Notice that different chains for each parameter as converged to one distribution
 
 *** 
 
-### Binary observations: Bernoulli distribution with Beta prior
-For this model, you can indicate the `count_plot` and `bar_plot` to view a visualization of the input. For our contrived data, we get the following two figures. 
-
-<p align="center">
-    <img src="./example_analysis/outputs/Binary_bar_plot.png" width="48%">
-    <img src="./example_analysis/outputs/Binary_count_plot.png" width="48%">
-</p>
-
-#### Model
-To indicate this model in the config file, it is enough to set the arguments `VariableType` and `PriorModel` to `Binary` and `Beta`, respectively, in the `[Model]` section of the config file.
-
-By indicating this model, the observations of two groups are assumed to be follow two separate Bernoulli distributions with parameters `theta_1` and `theta_2`, corresponding to each group. Each parameter is the indicator of overall inherent performance of corresponding group. Thus the distribution of `theta_1-theta_2` indicates how superior group one is over group two. 
-
-
-In a higher level, these two parameters are assumed to follow two Beta distributions with identical parameters. The parameters of this Beta distribution (i.e. priors of thetas) can be indicated with `Beta_a` and `Beta_b` in the `[Model]` section of the config file. Note setting both of these parameters two one will result in a uniform prior.
-
-See a visualization of this model in following figure:
-<p align="center">
-    <img src="./example_analysis/outputs/Binary_posterior_hierarchical_graph.png" width="60%">
-</p>
-
-To check the effect of this model. One can see the Prior of distribution of each theta and their difference in the following figure: 
-<p align="center">
-    <img src="./example_analysis/outputs/Binary_prior_theta.png" width="60%">
-</p>
-
-Notice that before taking the observed data into account, our prior knowledge, in this case, is formalized as any value between zero and one for each theta is equally likely.
-
-#### Posterior Plots
-The main output of the analysis is the following figure: 
-
-<p align="center">
-    <img src="./example_analysis/outputs/Binary_posterior_theta.png" width="60%">
-</p>
-
-
-Notice that the mode of the the difference of the distribution is at -0.238, also known as Maximum A priori Estimate, the %95-HDI quantifies the uncertainty around this mode, which is the main goal of this analysis.
-
-Other information that can be read from this plot includes:
-- The probability that group 2 is superior to group 1, i.e., `Theta_2>Theta_1` is at least 95%.
-- 
-#### Diagnostic Plots
-Since this package is based on MCMC sampling methods for inferring the posterior, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnostic plots produced by `pymc3`:
-
-<p align="center">
-    <img src="./example_analysis/outputs/Binary_prior_diagnostics.png" width="90%">
-    <img src="./example_analysis/outputs/Binary_posterior_diagnostics.png" width="90%">
-</p>
-
-Notice that different chains for each parameter as converged to one distribution.
-
-The parameters affecting granularity of the analysis can be indicated in sections `[Prior]` and `[Posteriour]` in the config file. Especially, the following three parameters are the most important ones:
-- "Tune": number of samples to throw away in the beginning. A value of at least 500 is recommended.
-- "Chains": number independent chains. Four chains seem to be sufficient to confirm successful convergence of the chains.
-- "Draws": This is the number of samples used to plot the distribution. The higher this value, the smooth the plot will look like. Also you can consult the Effective Sample Size (ESS) printed in the log.
-
-### Multiple Binary observations: Binomial distribution with Beta prior
-For this model, you can indicate the "Histogram_plot" to view a visualization of the input. For our contrived data, we get the following figure.
-
-<p align="center">
-    <img src="./example_analysis/outputs/Binomial_histogram_plot.png" width="60%">
-</p>
-
-
-#### Model
-To indicate this model in the config file, it is enough to set the arguments `Variable_type` and `Prior_model` to `Binomial` and `Beta`, respectively, in the `[Model]` section of the config file.
-
-By indicating this model, the observations of two groups are assumed to be follow two separate Binomial distributions with parameters `theta_1` and `theta_2`, corresponding to each group. Each parameter is the indicator of overall performance of corresponding group. Thus the distribution of `theta_1-theta_2` indicates how superior group one is over group two. 
-
-
-
-
-In a higher level, these two parameters are assumed to follow two Beta distribution with identical parameters. The parameters of this Beta distribution, i.e., priors of thetas, can be indicated with `Beta_a` and `Beta_b` in the `[Model]` section of the config file. Note setting both these parameters too ones will result in a uniform prior.
-
-See a visualization of this model in following figure:
-<p align="center">
-    <img src="./example_analysis/outputs/Binomial_posterior_hierarchical_graph.png" width="60%">
-</p>
-
-
-To check the effect of this model. One can see the Prior of distribution of each theta and their difference in the following figure: 
-<p align="center">
-    <img src="./example_analysis/outputs/Binomial_prior_theta.png" width="60%">
-</p>
-
-
-Notice that before taking the observed data into account, our prior knowledge, in this case, is formalized as any value between zero and one for each theta is equally likely.
-
-#### Posterior Plots
-The main output of the analysis is the following Figure.
-
-<p align="center">
-    <img src="./example_analysis/outputs/Binomial_posterior_theta.png" width="60%">
-</p>
-
-Notice that the mode of the the difference of the distribution is at -0.238, also known as Maximum A priori Estimate, the %95-HDI quantifies the uncertainty around this mode, which is the main goal of this analysis.
-
-Other information that can be read from this plot includes:
-- (??)
-- (??)
-
-#### Diagnostic Plots
-Since this package is based on MCMC sampling methods for inferring the posterior, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnostic plots produced by `pymc3`:
-
-<p align="center">
-    <img src="./example_analysis/outputs/Binomial_prior_diagnostics.png" width="90%">
-    <img src="./example_analysis/outputs/Binomial_posterior_diagnostics.png" width="90%">
-</p>
-
-Notice that different chains for each parameter as converged to one distribution.
-
-*** 
 
 ### Count observations: Negative Binomial distribution with Normal prior
 For this model, you can indicate the "Count_plot" and "scatter_plot" to view a visualization of the input. For our contrived data, we get the following figures:
