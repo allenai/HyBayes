@@ -8,7 +8,7 @@ import pymc3 as pm
 import seaborn as sns
 
 from matplotlib import gridspec
-from utils import *
+from .utils import *
 
 logger = logging.getLogger('root')
 color_list = [plt.cm.get_cmap("tab10").colors[0], plt.cm.get_cmap("tab10").colors[1]]

@@ -5,16 +5,16 @@ import matplotlib.pyplot as plt
 import pickle
 import pymc3 as pm
 
-from models.beta_bern_model import add_beta_bern_model
-from models.beta_binomial_model import add_beta_binomial_model
-from models.count_model import add_count_model
-from models.metric_model import add_exp_uniform_normal_t_model
-from models.ordinal_model import add_ordinal_model
+from .models.beta_bern_model import add_beta_bern_model
+from .models.beta_binomial_model import add_beta_binomial_model
+from .models.count_model import add_count_model
+from .models.metric_model import add_exp_uniform_normal_t_model
+from .models.ordinal_model import add_ordinal_model
 
-from Bayes_factor_analysis import bayes_factor_analysis
-from visualization import difference_plots
+from .Bayes_factor_analysis import bayes_factor_analysis
+from .visualization import difference_plots
 from scipy import stats
-from utils import *
+from .utils import *
 
 logger = logging.getLogger('root')
 
