@@ -35,13 +35,13 @@ setup(
     version='0.0.1',
     description='Bayesian Assessment of Hypotheses ',
     long_description=read('README.md'),
-    url='https://github.com/allenai/HyPyThesis',
+    url='https://github.com/allenai/HyBayes',
     author='Erfan Sadeqi Azer, Daniel Khashabi',
     author_email='esamath@gmail.com',
     license='BY-NC-SA',
     keywords="Bayesian Statistics, two groups test, Hypothesis Testing, Bayes Factor,"
              "NLP, natural language processing, ",
-    packages=['HyPyThesis'],
+    packages=['HyBayes'],
     classifiers=CLASSIFIERS,
     install_requires=install_requirements_list,
     zip_safe=False
