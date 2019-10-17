@@ -1,4 +1,4 @@
-# User Manual for HyPyThesis
+# User Manual for HyBayes
 
 ## Table of contents
 - [Introduction](#introduction)
