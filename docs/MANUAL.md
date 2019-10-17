@@ -316,7 +316,6 @@ To indicate this model in the config file, it is enough to set the `Variable_typ
 
 By indicating this model, the observation of two groups are assumed to follow (TODO)?
 
-***???
 
 For a discussion on this model, including justfication and examples of usage refer to (Chapter 24 in the book 'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015).). It is worth noting the implementation in `pymc3` is inspired by the code given in [https://github.com/JWarmenhoven/DBDA-python].
 
@@ -384,7 +383,6 @@ To indicate this model in the config file, it is enough to set the arguments `Va
 
 By indicating this model, the observation of two groups are assumed to follow (TODO)?
 
-***
 For a discussion on this model, including justfication and examples of usage refer to (Chapter 23 in the book 'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015)). It is worth noting the implementation in `pymc3` is inspired by the code given in [https://github.com/JWarmenhoven/DBDA-python].
 
 
