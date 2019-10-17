@@ -31,7 +31,7 @@ install_requirements_list = [
 ]
 
 setup(
-    name='hypythesis',
+    name='hybayes',
     version='0.0.1',
     description='Bayesian Assessment of Hypotheses ',
     long_description=read('README.md'),
