@@ -15,7 +15,7 @@ For running this code, you will need **Python (version >=3.6)**.
 You have two options for installation: 
  - If you don't want to modify any code, you can just install the package and use it in commandline: 
 ```bash
- > pip install HyPyThesis
+ > pip install HyBayes
 ```
 
  - Alternatively, if you'd like to make modifications to the code (e.g., the underlying model) you can clone this project. Before running the code, make sure that you have all the requirements by 
