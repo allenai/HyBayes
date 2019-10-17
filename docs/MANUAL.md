@@ -5,11 +5,14 @@
 - [Installation](#installation)
 - [Preparing Synthetic Data](#Preparing-Synthetic-Data)
 - [Prepare Configuration File](#Preparing-Configuration-Files)
-- [Running the analysis] ()
-- [Examples]()
-  * [Binary Model]()
-  * [Binomial Model]()
-  * [Metric Model]()
+- [Running the analysis](#running-the-analysis)
+- [Implemented Models](#Implemented-Models)
+  * [An example of model1: Binary Model](#binary-observations-bernoulli-distribution-with-beta-prior)
+  * [An example of model2: Binomial Model](#multiple-binary-observations-binomial-distribution-with-beta-prior)
+  * [An example of model3: Metric Model](#metric-observations-t-student-distribution-with-multiple-choices-for-priors)
+  * [An example of model4: Count Model](#count-observations-negative-binomial-distribution-with-normal-prior)
+  * [An example of model5: Ordinal Model](#ordinal-observations-normal-distribution-with-variable-tresholds)
+- [Adding your own models](#adding-a-new-model)
 
 ## Introduction 
 The goal of this package is to facilitate the performance comparison of two algorithms, based on given observations.
@@ -184,7 +187,7 @@ Notice that different chains for each parameter as converged to one distribution
 *** 
 
 ### Binary observations: Bernoulli distribution with Beta prior
-For this model, you can indicate the "count_plot" and "bar_plot" to view a visualization of the input. For our contrived data, we get the Figures 1 and 2.
+For this model, you can indicate the `count_plot` and `bar_plot` to view a visualization of the input. For our contrived data, we get the following two figures. 
 
 <p align="center">
     <img src="./example_analysis/outputs/Binary_bar_plot.png" width="48%">
@@ -192,19 +195,19 @@ For this model, you can indicate the "count_plot" and "bar_plot" to view a visua
 </p>
 
 #### Model
-To indicate this model in the config file, it is enough to set the arguments "VariableType" and "PriorModel" to "Binary" and "Beta" in the `[Model]` section of the config file.
+To indicate this model in the config file, it is enough to set the arguments `VariableType` and `PriorModel` to `Binary` and `Beta`, respectively, in the `[Model]` section of the config file.
 
-By indicating this model, the observations of two groups are assumed to be follow two separate Bernoulli distributions with parameters $$theta_1$$ and $$theta_2$$, corresponding to each group. Each parameter is the indicator of overall performance of corresponding group. Thus the distribution of $$theta_1-theta_2$$ indicates how superior group one is over group two. 
+By indicating this model, the observations of two groups are assumed to be follow two separate Bernoulli distributions with parameters `theta_1` and `theta_2`, corresponding to each group. Each parameter is the indicator of overall inherent performance of corresponding group. Thus the distribution of `theta_1-theta_2` indicates how superior group one is over group two. 
 
 
-In a higher level, these two parameters are assumed to follow two Beta distribution with identical parameters. The parameters of this Beta distribution, i.e., priors of thetas, can be indicated with "Beta_a" and "Beta_b" in the "[Model]" section of the config file. Note setting both these parameters two one will result in a uniform prior.
+In a higher level, these two parameters are assumed to follow two Beta distributions with identical parameters. The parameters of this Beta distribution (i.e. priors of thetas) can be indicated with `Beta_a` and `Beta_b` in the `[Model]` section of the config file. Note setting both of these parameters two one will result in a uniform prior.
 
-See a visualization of this model in Following Figure:
+See a visualization of this model in following figure:
 <p align="center">
     <img src="./example_analysis/outputs/Binary_posterior_hierarchical_graph.png" width="60%">
 </p>
 
-To check the effect of this model. One can see the Prior of distribution of each theta and their difference in the following Figure: 
+To check the effect of this model. One can see the Prior of distribution of each theta and their difference in the following figure: 
 <p align="center">
     <img src="./example_analysis/outputs/Binary_prior_theta.png" width="60%">
 </p>
