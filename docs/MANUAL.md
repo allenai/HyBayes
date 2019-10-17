@@ -7,11 +7,11 @@
 - [Prepare Configuration File](#Preparing-Configuration-Files)
 - [Running the analysis](#running-the-analysis)
 - [Implemented Models](#Implemented-Models)
-  * [An example of model1: Binary Model](#binary-observations-bernoulli-distribution-with-beta-prior)
-  * [An example of model2: Binomial Model](#multiple-binary-observations-binomial-distribution-with-beta-prior)
-  * [An example of model3: Metric Model](#metric-observations-t-student-distribution-with-multiple-choices-for-priors)
-  * [An example of model4: Count Model](#count-observations-negative-binomial-distribution-with-normal-prior)
-  * [An example of model5: Ordinal Model](#ordinal-observations-normal-distribution-with-variable-tresholds)
+  * [An example of model 1: Binary Model](#binary-observations-bernoulli-distribution-with-beta-prior)
+  * [An example of model 2: Binomial Model](#multiple-binary-observations-binomial-distribution-with-beta-prior)
+  * [An example of model 3: Metric Model](#metric-observations-t-student-distribution-with-multiple-choices-for-priors)
+  * [An example of model 4: Count Model](#count-observations-negative-binomial-distribution-with-normal-prior)
+  * [An example of model 5: Ordinal Model](#ordinal-observations-normal-distribution-with-variable-tresholds)
 - [Adding your own models](#adding-a-new-model)
 
 ## Introduction 
