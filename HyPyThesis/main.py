@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Run Bayesian Statistics Tailored towards"
                                                  "analysing the experiment results specially in NLP area."
-                                                 "Email @.com for comments.")
+                                                 "Email esamath@gmail.com for comments.")
     parser.add_argument("-c", "--config", help="address of Config file", default="configs/configMetric.ini")
     parser.add_argument("-v", "--verbose", help="prints the report of the steps", action="store_true", default=False)
     args = parser.parse_args()
