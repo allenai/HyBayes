@@ -3,8 +3,8 @@
 ## Table of contents
 - [Introduction](#introduction)
 - [Installation](#installation)
-- [Preparing Synthetic Data](#Preparing-Synthetic-Data)
-- [Prepare Configuration File](#Preparing-Configuration-Files)
+- [Preparing Synthetic Data](#preparing-synthetic-data)
+- [Prepare Configuration File](#preparing-configuration-files)
 - [Running the analysis](#running-the-analysis)
 - [Implemented Models](#Implemented-Models)
   * [An example of model 1: Binary Model](#binary-observations-bernoulli-distribution-with-beta-prior)
@@ -175,7 +175,7 @@ Similar to prior, we get more plots for the posterior too:
 </p>
 
 #### Diagnostic Plots
-Since this package is based on MCMC sampling methods for infering the posteriour, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnastic plots produced by Pymc3:
+Since this package is based on MCMC sampling methods for infering the posteriour, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnastic plots produced by `pymc3`:
 
 <p align="center">
     <img src="./example_analysis/outputs/Metric_prior_diagnostics.png" width="90%">
@@ -222,10 +222,10 @@ The main output of the analysis is the following figure:
 </p>
 
 
-Notice that the mode of the the difference of the distribution is at $$-0.238$$, also known as Maximum A priori Estimate, the %95-HDI quantifies the uncertainty around this mode, which is the main goal of this analysis.
+Notice that the mode of the the difference of the distribution is at -0.238, also known as Maximum A priori Estimate, the %95-HDI quantifies the uncertainty around this mode, which is the main goal of this analysis.
 
 Other information that can be read from this plot includes:
-- The probability that group 2 is superior to group 1, i.e., $$Theta_2>Theta_1$$ is at least $$95%$$.
+- The probability that group 2 is superior to group 1, i.e., `Theta_2>Theta_1` is at least 95%.
 - 
 #### Diagnostic Plots
 Since this package is based on MCMC sampling methods for inferring the posterior, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnostic plots produced by `pymc3`:
@@ -237,7 +237,7 @@ Since this package is based on MCMC sampling methods for inferring the posterior
 
 Notice that different chains for each parameter as converged to one distribution.
 
-The parameters affecting granularity of the analysis can be indicated in sections "[Prior]" and "[Posteriour]" in the config file. Especially, the following three parameters are the most important ones:
+The parameters affecting granularity of the analysis can be indicated in sections `[Prior]` and `[Posteriour]` in the config file. Especially, the following three parameters are the most important ones:
 - "Tune": number of samples to throw away in the beginning. A value of at least 500 is recommended.
 - "Chains": number independent chains. Four chains seem to be sufficient to confirm successful convergence of the chains.
 - "Draws": This is the number of samples used to plot the distribution. The higher this value, the smooth the plot will look like. Also you can consult the Effective Sample Size (ESS) printed in the log.
@@ -251,14 +251,14 @@ For this model, you can indicate the "Histogram_plot" to view a visualization of
 
 
 #### Model
-To indicate this model in the config file, it is enough to set the arguments "Variable_type" and "Prior_model" to "Binomial" and "Beta" in the "[Model]" section of the config file.
+To indicate this model in the config file, it is enough to set the arguments `Variable_type` and `Prior_model` to `Binomial` and `Beta`, respectively, in the `[Model]` section of the config file.
 
-By indicating this model, the observations of two groups are assumed to be follow two separate Binomial distributions with parameters $$theta_1$$ and $$theta_2$$, corresponding to each group. Each parameter is the indicator of overall performance of corresponding group. Thus the distribution of $$theta_1-theta_2$$ indicates how superior group one is over group two. 
-
-
+By indicating this model, the observations of two groups are assumed to be follow two separate Binomial distributions with parameters `theta_1` and `theta_2`, corresponding to each group. Each parameter is the indicator of overall performance of corresponding group. Thus the distribution of `theta_1-theta_2` indicates how superior group one is over group two. 
 
 
-In a higher level, these two parameters are assumed to follow two Beta distribution with identical parameters. The parameters of this Beta distribution, i.e., priors of thetas, can be indicated with "Beta_a" and "Beta_b" in the "[Model]" section of the config file. Note setting both these parameters too ones will result in a uniform prior.
+
+
+In a higher level, these two parameters are assumed to follow two Beta distribution with identical parameters. The parameters of this Beta distribution, i.e., priors of thetas, can be indicated with `Beta_a` and `Beta_b` in the `[Model]` section of the config file. Note setting both these parameters too ones will result in a uniform prior.
 
 See a visualization of this model in following figure:
 <p align="center">
@@ -281,14 +281,14 @@ The main output of the analysis is the following Figure.
     <img src="./example_analysis/outputs/Binomial_posterior_theta.png" width="60%">
 </p>
 
-Notice that the mode of the the difference of the distribution is at $$-0.238$$, also known as Maximum A priori Estimate, the %95-HDI quantifies the uncertainty around this mode, which is the main goal of this analysis.
+Notice that the mode of the the difference of the distribution is at -0.238, also known as Maximum A priori Estimate, the %95-HDI quantifies the uncertainty around this mode, which is the main goal of this analysis.
 
 Other information that can be read from this plot includes:
 - (??)
 - (??)
 
 #### Diagnostic Plots
-Since this package is based on MCMC sampling methods for inferring the posterior, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnostic plots produced by Pymc3:
+Since this package is based on MCMC sampling methods for inferring the posterior, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnostic plots produced by `pymc3`:
 
 <p align="center">
     <img src="./example_analysis/outputs/Binomial_prior_diagnostics.png" width="90%">
@@ -314,7 +314,7 @@ By indicating this model, the observation of two groups are assumed to follow (T
 
 ***???
 
-For a discussion on this model, including justfication and examples of usage refer to (Chapter 24 in the book 'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015).). It is worth noting the implementation in pymc3 is inspired by the code given in [https://github.com/JWarmenhoven/DBDA-python].
+For a discussion on this model, including justfication and examples of usage refer to (Chapter 24 in the book 'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015).). It is worth noting the implementation in `pymc3` is inspired by the code given in [https://github.com/JWarmenhoven/DBDA-python].
 
 
 See a visualization of this model in the following figure:
@@ -358,7 +358,7 @@ Similar to prior, we get more plots for the posterior too:
 </p>
 
 #### Diagnostic Plots
-Since this package is based on MCMC sampling methods for infering the posteriour, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnastic plots produced by Pymc3:
+Since this package is based on MCMC sampling methods for infering the posteriour, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnastic plots produced by `pymc3`:
 
 <p align="center">
     <img src="./example_analysis/outputs/Count_prior_diagnostics.png" width="90%">
@@ -376,12 +376,12 @@ For this model, you can indicate the "Count_plot" and "scatter_plot" to view a v
 </p>
 
 #### Model
-To indicate this model in the config file, it is enough to set the arguments "Variable_type" to "Ordinal" in the "[Model]" section of the config file.
+To indicate this model in the config file, it is enough to set the arguments `Variable_type` to `Ordinal` in the `[Model]` section of the config file.
 
 By indicating this model, the observation of two groups are assumed to follow (TODO)?
 
 ***
-For a discussion on this model, including justfication and examples of usage refer to (Chapter 23 in the book 'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015)). It is worth noting the implementation in pymc3 is inspired by the code given in [https://github.com/JWarmenhoven/DBDA-python].
+For a discussion on this model, including justfication and examples of usage refer to (Chapter 23 in the book 'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015)). It is worth noting the implementation in `pymc3` is inspired by the code given in [https://github.com/JWarmenhoven/DBDA-python].
 
 
 See a visualization of this model in the following figure:
@@ -425,7 +425,7 @@ Similar to prior, we get more plots for the posterior too:
 
 
 #### Diagnostic Plots
-Since this package is based on MCMC sampling methods for infering the posteriour, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnastic plots produced by Pymc3:
+Since this package is based on MCMC sampling methods for infering the posteriour, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnastic plots produced by `pymc3`:
 
 <p align="center">
     <img src="./example_analysis/outputs/Ordinal_prior_diagnostics.png" width="90%">
