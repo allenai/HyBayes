@@ -1,5 +1,5 @@
 import os
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 # Utility method to read the README.rst file.
@@ -31,7 +31,7 @@ install_requirements_list = [
 ]
 
 setup(
-    name='hypythesis',
+    name='hybayes',
     version='0.0.1',
     description='Bayesian Assessment of Hypotheses ',
     long_description=read('README.md'),
@@ -41,7 +41,8 @@ setup(
     license='BY-NC-SA',
     keywords="Bayesian Statistics, two groups test, Hypothesis Testing, Bayes Factor,"
              "NLP, natural language processing, ",
-    packages=['HyBayes'],
+    #packages=['HyBayes'],
+    packages=find_packages(exclude=['tests.*', 'tests']),
     classifiers=CLASSIFIERS,
     install_requires=install_requirements_list,
     zip_safe=False
