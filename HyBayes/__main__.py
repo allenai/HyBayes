@@ -3,11 +3,12 @@ import configparser
 import logging
 import matplotlib as mpl
 import traceback
+import numpy as np 
 
-from experiment import Experiment
+from .experiment import Experiment
 from shutil import copyfile
-from utils import *
-from visualization import pre_analysis_plots
+from .utils import *
+from .visualization import pre_analysis_plots
 
 if __name__ == '__main__':
     logs_folder_made = mk_dir_if_not_exists("logs")

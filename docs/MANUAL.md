@@ -124,7 +124,7 @@ To indicate this model in the config file, it is enough to set the arguments `Va
 By indicating this model, the observations of two groups are assumed to be follow two separate Bernoulli distributions with parameters `theta_1` and `theta_2`, corresponding to each group. Each parameter is the indicator of overall inherent performance of corresponding group. Thus the distribution of `theta_1-theta_2` indicates how superior group one is over group two. 
 
 
-In a higher level, these two parameters are assumed to follow two Beta distributions with identical parameters. The parameters of this Beta distribution (i.e. priors of thetas) can be indicated with `Beta_a` and `Beta_b` in the `[Model]` section of the config file. Note setting both of these parameters two one will result in a uniform prior.
+In a higher level, these two parameters are assumed to follow two Beta distributions with identical parameters. The parameters of this Beta distribution (i.e. priors of thetas) can be indicated with `Beta_a` and `Beta_b` in the `[Model]` section of the config file. Note setting both of these parameters to one will result in a uniform prior.
 
 See a visualization of this model in following figure:
 <p align="center">
@@ -316,7 +316,6 @@ To indicate this model in the config file, it is enough to set the `Variable_typ
 
 By indicating this model, the observation of two groups are assumed to follow (TODO)?
 
-***???
 
 For a discussion on this model, including justfication and examples of usage refer to (Chapter 24 in the book 'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015).). It is worth noting the implementation in `pymc3` is inspired by the code given in [https://github.com/JWarmenhoven/DBDA-python].
 
@@ -384,7 +383,6 @@ To indicate this model in the config file, it is enough to set the arguments `Va
 
 By indicating this model, the observation of two groups are assumed to follow (TODO)?
 
-***
 For a discussion on this model, including justfication and examples of usage refer to (Chapter 23 in the book 'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015)). It is worth noting the implementation in `pymc3` is inspired by the code given in [https://github.com/JWarmenhoven/DBDA-python].
 
 
