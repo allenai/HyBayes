@@ -42,7 +42,7 @@ Let's assume that you have followed the above instructions and:
 
 To run the analysis, you pass the name of the config file as argument: 
 ```bash
- > python main.py --config myConfigFile.ini --verbose
+ > python -m HyBayes --config my_config_file.ini --verbose
 ```
 
 When the flag `--verbose` is on, the details of the analysis will be printed in standard output. 
@@ -50,29 +50,33 @@ This flag does not affect the log file that is stored along side other outputs.
 
 And here is the general usage template which can be accessed using `--help` flag at any time:
 ```bash
-usage: main.py [-h] [-c CONFIG] [-v]
+ > python -m HyBayes --help
+usage: __main__.py [-h] [-c CONFIG] [-v] [--make_configs] [--make_data]
 
-Run Bayesian Statistics Tailored towards analysing the experiment results
-specially in NLP area. Email @.com for comments.
+Run Bayesian Statistics Tailored towardsanalysing the experiment results
+specially in NLP area.Email esamath@gmail.com for comments.
 
 optional arguments:
   -h, --help            show this help message and exit
   -c CONFIG, --config CONFIG
                         address of Config file
   -v, --verbose         prints the report of the steps
-
+  --make_configs        if on, example configuration files will be made.
+  --make_data           if on, example data files will be made.
 ```
 
 ### Examples 
 To demonstrate everything with a quick example, run the following command to generate toy data: 
 ```bash
- > python make_data.py
- > python make_configs.py
+ > python -m HyBayes --make_data
 ```
-
+You can see the some artificial data made in directory `artificial_data`. Moreover either use the config files provided in the repository [], or run:
+```bash
+ > python -m HyBayes --make_configs
+ ```
 And then execute the analysis on any of the newly made config files. For example: 
 ```bash
- > python main.py --config configs/config_metric.ini --verbose
+ > python -m HyBayes --config configs/config_metric.ini --verbose
 ```
 
 ## Further Reading
@@ -88,7 +92,7 @@ If you used this package in your research feel free to cite the following paper:
 ```
 @article{hypothesisAssessment19,
   title={??},
-  author={Sadeqi Azer, Erfan and Khashabi, Daniel and Sabharwal, Ashish and Roth, Dan},
+  author={{Sadeqi Azer}, Erfan and Khashabi, Daniel and Sabharwal, Ashish and Roth, Dan},
   journal={??},
   year={2019}
 }
