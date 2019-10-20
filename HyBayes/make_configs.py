@@ -3,8 +3,11 @@ import configparser
 import copy
 import os
 
+from .utils import *
+
+script_address = os.path.abspath(__file__)
 config_folder_name = "configs"
-config_template_file_name = "config_template.ini"
+config_template_address = script_address.replace("make_configs.py", "config_template.ini")
 artificial_data_folder_name = "artificial_data"
 
 
@@ -15,7 +18,7 @@ def read_template_config(quick: bool = False) -> configparser.ConfigParser:
     :return:
     """
     config = configparser.ConfigParser()
-    config.read(os.path.join(config_folder_name, config_template_file_name))
+    config.read(config_template_address)
     if quick:
         plot_stage = "Prior"
         config[plot_stage]["analyze"] = "False"
@@ -191,6 +194,16 @@ def write_config(config: configparser.ConfigParser, file_name: str) -> None:
         config.write(write_file)
         print(f"Writing config file: {address}")
 
+def run_all(quick=False):
+    logs_folder_made = mk_dir_if_not_exists(config_folder_name)
+    if logs_folder_made:
+        print(f"The directory {config_folder_name} is created.")
+    write_config(make_binary_config(read_template_config(quick)), "config_binary.ini")
+    write_config(make_binomial_config(read_template_config(quick)), "config_binomial.ini")
+    write_config(make_count_config(read_template_config(quick)), "config_count.ini")
+    write_config(make_metric_config(read_template_config(quick)), "config_metric.ini")
+    write_config(make_ordinal_config(read_template_config(quick)), "config_ordinal.ini")
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -198,11 +211,7 @@ if __name__ == '__main__':
     parser.add_argument("-q", "--quick", help="With this flag the configs only include posterior and with low values"
                                               " for draw, cains, and tune", action="store_true", default=False)
     args = parser.parse_args()
+    run_all(args.quick)
 
-    write_config(make_binary_config(read_template_config(args.quick)), "config_binary.ini")
-    write_config(make_binomial_config(read_template_config(args.quick)), "config_binomial.ini")
-    write_config(make_count_config(read_template_config(args.quick)), "config_count.ini")
-    write_config(make_metric_config(read_template_config(args.quick)), "config_metric.ini")
-    write_config(make_ordinal_config(read_template_config(args.quick)), "config_ordinal.ini")
 
 

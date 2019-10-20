@@ -21,7 +21,10 @@ if __name__ == '__main__':
                                                  "Email esamath@gmail.com for comments.")
     parser.add_argument("-c", "--config", help="address of Config file", default="configs/configMetric.ini")
     parser.add_argument("-v", "--verbose", help="prints the report of the steps", action="store_true", default=False)
+    parser.add_argument("--make_configs", help="if on, example configuration files will be made.", action="store_true",default=False)
+    parser.add_argument("--make_data", help="if on, example data files will be made.", action="store_true",default=False)
     args = parser.parse_args()
+
     logging_one_file_name = f"{time.time()}.log"
     logging_one_file_address = f"logs/{logging_one_file_name}"
     print(f"Logs for this run will be stored at {logging_one_file_address}", flush=True)
@@ -39,6 +42,16 @@ if __name__ == '__main__':
     fho = logging.FileHandler(filename=logging_one_file_address, mode='w')
     fho.setLevel(logging.DEBUG)
     logger.addHandler(fho)
+
+    if args.make_data:
+        from .make_data import run_all
+        run_all()
+        exit(0)
+    if args.make_configs:
+        from .make_configs import run_all
+        run_all()
+        exit(0)
+
     config = configparser.ConfigParser()
     logger.info(f"Reading config file: {args.config}")
     config.read(args.config)

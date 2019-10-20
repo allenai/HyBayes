@@ -1,4 +1,6 @@
-from utils import *
+import numpy as np
+
+from .utils import *
 
 
 def get_positive_input(n1=40, n2=30, mean_distance=0.8):
@@ -24,7 +26,7 @@ def get_binary_input(n1=25, a1=12, n2=28, a2=20):
     return [x1, x2]
 
 
-def save_input(input_function, file_name_prefix):
+def save_input(input_function, file_name_prefix, folder_name):
     y = input_function()
     form = "%d" if y[0].dtype == np.int else "%f"
     for i in range(2):
@@ -60,13 +62,15 @@ def get_binomial_input(n1=20, p1=0.44, n2=25, p2=0.52):
     x2[:, 1] = np.random.binomial(n=x2[:, 0], p=p2, )
     return [x1, x2]
 
-
-if __name__ == '__main__':
+def run_all():
     folder_name = "artificial_data"
     mk_dir_if_not_exists(folder_name)
 
-    save_input(get_binary_input, file_name_prefix="Binary_data")
-    save_input(get_positive_input, file_name_prefix="Positive_real_data")
-    save_input(get_count_input, file_name_prefix="Count_data")
-    save_input(get_ordinal_input, file_name_prefix="Ordinal_data")
-    save_input(get_binomial_input, file_name_prefix="Binomial_data")
+    save_input(get_binary_input, file_name_prefix="Binary_data", folder_name=folder_name)
+    save_input(get_positive_input, file_name_prefix="Positive_real_data", folder_name=folder_name)
+    save_input(get_count_input, file_name_prefix="Count_data", folder_name=folder_name)
+    save_input(get_ordinal_input, file_name_prefix="Ordinal_data", folder_name=folder_name)
+    save_input(get_binomial_input, file_name_prefix="Binomial_data", folder_name=folder_name)
+
+if __name__ == '__main__':
+    run_all()
