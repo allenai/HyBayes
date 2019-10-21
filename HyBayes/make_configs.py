@@ -48,6 +48,9 @@ def make_metric_config(config: configparser.ConfigParser) -> configparser.Config
     config["Plots"]["Histogram_plot"] = "True"
 
     config["Model"]["Variable_type"] = "Metric"
+    config["Model"]["mu_ROPE_begin"] = "-0.1"
+    config["Model"]["mu_ROPE_end"] = "0.1"
+
     # config["Model"]["UnitInterval"] = "False" # UnitInterval is not implemented yet
 
     for plot_stage in ["Prior", "Posterior"]:
@@ -78,6 +81,9 @@ def make_count_config(config: configparser.ConfigParser) -> configparser.ConfigP
     config["Plots"]["Count_plot"] = "True"
 
     config["Model"]["Variable_type"] = "Count"
+    config["Model"]["mu_ROPE_begin"] = "-0.1"
+    config["Model"]["mu_ROPE_end"] = "0.1"
+
     # config["Model"]["Zero_inflation"] = "False" # Zero_inflation is not implemented yet
 
     for plot_stage in ["Prior", "Posterior"]:
@@ -115,6 +121,9 @@ def make_ordinal_config(config: configparser.ConfigParser) -> configparser.Confi
     config["Model"]["Variable_type"] = "Ordinal"
     config["Model"]["Min_level"] = "0"
     config["Model"]["Max_level"] = "2"
+    config["Model"]["mu_ROPE_begin"] = "-0.1"
+    config["Model"]["mu_ROPE_end"] = "0.1"
+
     # config["Model"]["Zero_inflation"] = "False" # Zero_inflation is not implemented yet
 
     for plot_stage in ["Prior", "Posterior"]:
@@ -147,6 +156,9 @@ def make_binary_config(config: configparser.ConfigParser) -> configparser.Config
     config["Model"]["Prior_model"] = "Beta"
     config["Model"]["Beta_a"] = "1"
     config["Model"]["Beta_b"] = "1"
+    config["Model"]["theta_ROPE_begin"] = "-0.1"
+    config["Model"]["theta_ROPE_end"] = "0.1"
+
 
     for plot_stage in ["Prior", "Posterior"]:
         config[plot_stage]["Mean_plot"] = "True"
@@ -174,6 +186,8 @@ def make_binomial_config(config: configparser.ConfigParser) -> configparser.Conf
     config["Model"]["Prior_model"] = "Beta"
     config["Model"]["Beta_a"] = "1"
     config["Model"]["Beta_b"] = "1"
+    config["Model"]["theta_ROPE_begin"] = "-0.1"
+    config["Model"]["theta_ROPE_end"] = "0.1"
 
     for plot_stage in ["Prior", "Posterior"]:
         config[plot_stage]["Mean_plot"] = "True"

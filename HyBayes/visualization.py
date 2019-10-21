@@ -157,14 +157,14 @@ def one_parameter_plot(hierarchical_model, var, file_prefix, config_plot=None, s
     ax2 = plt.subplot(gs[2, :2])
     ax3 = plt.subplot(gs[2, 2:])
     printLine()
-    diff = trace[var][:, 0] - trace[var][:, 1]
+    diff_values = trace[var][:, 0] - trace[var][:, 1]
     printLine()
     diff_var_name = f"{var}_1-{var}_2"
-    trace.add_values({diff_var_name: diff})
+    # trace.add_values({diff_var_name: diff})
     printLine()
     logger.debug(diff_var_name)
-    pm.plot_posterior(trace,  # takes a lot for count variable I don't know why
-                      var_names=[diff_var_name, ],
+    pm.plot_posterior(diff_values,  # takes a lot for count variable I don't know why
+                      # var_names=[diff_var_name, ],
                       figsize=(4, 4),
                       textsize=text_ratio,
                       credible_interval = credible_interval,
@@ -176,6 +176,7 @@ def one_parameter_plot(hierarchical_model, var, file_prefix, config_plot=None, s
                       ax=ax1,
                       color=color, # todo from config
                       )
+    ax.set_title(diff_var_name)
     printLine()
     for ind, ax in enumerate([ax2, ax3]):
         printLine()
@@ -297,6 +298,7 @@ def compare_all_parameters_plot(hierarchical_model, config_plot, vars, file_pref
                           round_to=round_to,
                           point_estimate=point_estimate,
                           ref_val=0,
+                          # Get a rope here
                           kind=plot_kind,
                           ax=axes[ind],
                           color=color,
