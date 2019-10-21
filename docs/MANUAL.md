@@ -288,7 +288,7 @@ Similar to prior, we get more plots for the posterior too:
     <img src="./example_analysis/outputs/Metric_posterior_all_parameters.png" width="46%">
 </p>
 
-It is highly recommended in data analysis to pay attention to parameters other than centerality
+It is highly recommended in data analysis to pay attention to parameters other than centerality ((TODO))
 #### Diagnostic Plots
 Since this package is based on MCMC sampling methods for infering the posteriour, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnastic plots produced by `pymc3`:
 
