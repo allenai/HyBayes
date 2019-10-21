@@ -247,7 +247,7 @@ In a higher level, each mu is assumed to follow a wide normal distribution with 
 
 See a visualization of this model in Following Figure:
 <p align="center">
-    <img src="./example_analysis/outputs/Metric/Metric_posterior_hierarchical_graph.png" width="60%">
+    <img src="./example_analysis/outputs/Metric_posterior_hierarchical_graph.png" width="60%">
 </p>
 
 
@@ -285,10 +285,11 @@ The information that can be read from this plot includes:
 Similar to prior, we get more plots for the posterior too:
 <p align="center">
     <img src="./example_analysis/outputs/Metric_posterior_sigma.png" width="46%">
-    <img src="./example_analysis/outputs/Metric_posterior_all_parameters.png" width="46%">
+    <img src="./example_analysis/outputs/Metric_prior_compare_all_parameters.png" width="46%">
 </p>
 
-It is highly recommended in data analysis to pay attention to parameters other than centerality ((TODO))
+Beside the centerality parameters, it is highly recommended to discuss other parameters too. 
+
 #### Diagnostic Plots
 Since this package is based on MCMC sampling methods for infering the posteriour, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnastic plots produced by `pymc3`:
 
@@ -356,7 +357,7 @@ The information that can be read from this plot includes:
 Similar to prior, we get more plots for the posterior too:
 <p align="center">
     <img src="./example_analysis/outputs/Count_posterior_sigma.png" width="60%">
-    <img src="./example_analysis/outputs/Count_posterior_all_parameters.png" width="60%">
+    <img src="./example_analysis/outputs/Count_posterior_compare_all_parameters.png" width="60%">
 </p>
 
 #### Diagnostic Plots
@@ -421,7 +422,7 @@ The information that can be read from this plot includes:
 Similar to prior, we get more plots for the posterior too:
 <p align="center">
     <img src="./example_analysis/outputs/Ordinal_posterior_sigma.png" width="46%">
-    <img src="./example_analysis/outputs/Ordinal_posterior_all_parameters.png" width="46%">
+    <img src="./example_analysis/outputs/Ordinal_posterior_compare_all_parameters.png" width="46%">
 </p>
 
 
