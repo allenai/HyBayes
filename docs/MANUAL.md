@@ -455,7 +455,7 @@ theta_rope_end = 0.1
 ```
 This section of the config file starts with turning on analysis in the first line. Recall that this line is not enough to run Bayes Factor Analysis unless both prior and poesteriour analyses are on too. For each parameter you can indicate a [ROPE](http://doingbayesiandataanalysis.blogspot.com/2013/08/how-much-of-bayesian-posterior.html) similar to the last two lines I have indicated. Also optionally, you can ask for the estimation of BF be done for a few smaller ROPEs too with `number_of_smaller_ropes`.
 
-The output of this analysis can be found in the log file and in a csv file with name `{prefix}_Bayes_factor.csv`. For example when the software is run for the metric example above we may see the following:
+The output of this analysis can be found in the log file and in a csv file with name `{prefix}_Bayes_factor.csv`. For example when the software is run for the binomial example above we may see the following:
 ```
 ************************* Bayes Factor Analysis *********************************
 Estimated Bayes factor corresponding to ROPE = [-0.1  0.1] is equal to 1.723621984974298
@@ -469,5 +469,6 @@ Here are values for Bayes factors for other smaller ROPE intervals:
 3  [-0.057870370370370385, 0.057870370370370385]  1.376417
 4    [-0.04822530864197532, 0.04822530864197532]  1.312773
 *********************************************************************************
+
 ```
-Notice the BF of around 1.72 in the first line. You may refer to the link given above to interpret this value.
+Notice the BF of almost 1 (i.e., very neutral) in the first line. You may refer to the link given above to interpret this value.
