@@ -325,9 +325,10 @@ See a visualization of this model in the following figure:
 <p align="center">
     <img src="./example_analysis/outputs/Count_posterior_hierarchical_graph.png" width="90%">
 </p>
+The posteroiur plots in this section are configured to be `kde` type compared to default `hist` just to see this version too. This can be set in the config file, section `plots`, variable `kind`.
 
 To check the effect of this model. One can see the Prior of distribution of each five parameters and their differences in the following figure: 
-((TODO))(KDE)Count_prior_mu.png Count_prior_sigma.png Count_prior_compare_all_parameters.png Count_prior_compare_all_parameters.png
+
 <p align="center">
     <img src="./example_analysis/outputs/Count_prior_mu.png" width="46%">
     <img src="./example_analysis/outputs/Count_prior_sigma.png" width="46%">
