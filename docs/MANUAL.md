@@ -419,8 +419,8 @@ The main output of the analysis is the following figure:
 
 
 The information that can be read from this plot includes:
-- ((TODO))
-
+- With probablity 0.987, mu_1 is greater than mu_2.
+- With probablity 0.95, mu_1-mu_2 in [0.409, 8.55]. One can claim that the first group is inherently bettern than the second group by a margin of higher than 0.4.
 
 Similar to prior, we get more plots for the posterior too:
 <p align="center">
@@ -444,7 +444,30 @@ Notice that different chains for each parameter as converged to one distribution
 Currently, adding a new model is only possible if you clone this repository. You need to add a file in the `models` directory. See similar implimentations in that directory.
 
 ### Bayes Factor (BF) Analysis
-Also known as Bayesian hypothesis testing.
-The package also outputs the Bayes Factor for several lengths of intervals around the ROPE.
-((TODO))
+Another common approach to assess hypotheses within Bayesian approach is to study a quantity known as Bayes Factor. This approach is widly refered to as Bayesian hypothesis testing. In the [the paper](README.md#citation), this approach is discussed in Section 2.4.
+Indicating your interested in Bayes Factor Analysis in the config file is easy. First you need to indicate that both Prior and Posteriour analyses are `True`. Then, you may indicate some settings in `Bayes_factor` section.
+```
+[Bayes_factor]
+analyze = True
+number_of_smaller_ropes = 5
+theta_rope_begin = -0.1
+theta_rope_end = 0.1
+```
+This section of the config file starts with turning on analysis in the first line. Recall that this line is not enough to run Bayes Factor Analysis unless both prior and poesteriour analyses are on too. For each parameter you can indicate a [ROPE](http://doingbayesiandataanalysis.blogspot.com/2013/08/how-much-of-bayesian-posterior.html) similar to the last two lines I have indicated. Also optionally, you can ask for the estimation of BF be done for a few smaller ROPEs too with `number_of_smaller_ropes`.
 
+The output of this analysis can be found in the log file and in a csv file with name `{prefix}_Bayes_factor.csv`. For example when the software is run for the metric example above we may see the following:
+```
+************************* Bayes Factor Analysis *********************************
+Estimated Bayes factor corresponding to ROPE = [-0.1  0.1] is equal to 1.723621984974298
+To get a trusted estimation, make sure the number of draws is high enough and multiple runs of the software give similar estimate
+To interpret the Bayes factor refer to the table in https://www.r-bloggers.com/what-does-a-bayes-factor-feel-like/
+Here are values for Bayes factors for other smaller ROPE intervals:
+                                            ROPE        BF
+0                                    [-0.1, 0.1]  1.723622
+1    [-0.08333333333333334, 0.08333333333333334]  1.576957
+2    [-0.06944444444444446, 0.06944444444444446]  1.454396
+3  [-0.057870370370370385, 0.057870370370370385]  1.376417
+4    [-0.04822530864197532, 0.04822530864197532]  1.312773
+*********************************************************************************
+```
+Notice the BF of around 1.72 in the first line. You may refer to the link given above to interpret this value.
