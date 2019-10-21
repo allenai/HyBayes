@@ -210,8 +210,8 @@ The main output of the analysis is the following Figure.
 Notice that the mode of the the difference of the distribution is at -0.238, also known as Maximum A priori Estimate, the %95-HDI quantifies the uncertainty around this mode, which is the main goal of this analysis.
 
 Other information that can be read from this plot includes:
-- (??)
-- (??)
+- ((TODO))
+- ((TODO))
 
 #### Diagnostic Plots
 Since this package is based on MCMC sampling methods for inferring the posterior, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnostic plots produced by `pymc3`:
@@ -251,7 +251,7 @@ In a higher level, each mu is assumed to follow a wide normal distribution with 
 
 See a visualization of this model in Following Figure:
 <p align="center">
-    <img src="./outputsForManual/Metric/Metric_posterior_hierarchical_graph.png" width="60%">
+    <img src="./example_analysis/outputs/Metric/Metric_posterior_hierarchical_graph.png" width="60%">
 </p>
 
 
@@ -281,7 +281,7 @@ The main output of the analysis is the following Figure.
 
 
 The information that can be read from this plot includes:
-- XX
+- ((TODO))
 
 
 Similar to prior, we get more plots for the posterior too:
@@ -314,7 +314,7 @@ For this model, you can indicate the "Count_plot" and "scatter_plot" to view a v
 #### Model
 To indicate this model in the config file, it is enough to set the `Variable_type` to `Count` arguments in the `[Model]` section of the config file.
 
-By indicating this model, the observation of two groups are assumed to follow (TODO)?
+By indicating this model, the observation of two groups are assumed to follow ((TODO))
 
 
 For a discussion on this model, including justfication and examples of usage refer to (Chapter 24 in the book 'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015).). It is worth noting the implementation in `pymc3` is inspired by the code given in [https://github.com/JWarmenhoven/DBDA-python].
@@ -326,7 +326,7 @@ See a visualization of this model in the following figure:
 </p>
 
 To check the effect of this model. One can see the Prior of distribution of each five parameters and their differences in the following figure: 
-
+((TODO))(KDE)Count_prior_mu.png Count_prior_sigma.png Count_prior_compare_all_parameters.png Count_prior_compare_all_parameters.png
 <p align="center">
     <img src="./example_analysis/outputs/Count_prior_mu.png" width="46%">
     <img src="./example_analysis/outputs/Count_prior_sigma.png" width="46%">
@@ -351,7 +351,7 @@ The main output of the analysis is the following Figure.
 
 
 The information that can be read from this plot includes:
-- XX
+- ((TODO))
 
 
 Similar to prior, we get more plots for the posterior too:
@@ -381,7 +381,7 @@ For this model, you can indicate the "Count_plot" and "scatter_plot" to view a v
 #### Model
 To indicate this model in the config file, it is enough to set the arguments `Variable_type` to `Ordinal` in the `[Model]` section of the config file.
 
-By indicating this model, the observation of two groups are assumed to follow (TODO)?
+By indicating this model, the observation of two groups are assumed to follow ((TODO))
 
 For a discussion on this model, including justfication and examples of usage refer to (Chapter 23 in the book 'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015)). It is worth noting the implementation in `pymc3` is inspired by the code given in [https://github.com/JWarmenhoven/DBDA-python].
 
@@ -416,7 +416,7 @@ The main output of the analysis is the following figure:
 
 
 The information that can be read from this plot includes:
-- XX
+- ((TODO))
 
 
 Similar to prior, we get more plots for the posterior too:
@@ -443,5 +443,5 @@ To add a new model, you need to add a file in the director models. See similar i
 ### Bayes Factor (BF) Analysis
 Also known as Bayesian hypothesis testing.
 The package also outputs the Bayes Factor for several lengths of intervals around the ROPE.
-(TODO)
+((TODO))
 
