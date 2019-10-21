@@ -207,11 +207,7 @@ The main output of the analysis is the following Figure.
     <img src="./example_analysis/outputs/Binomial_posterior_theta.png" width="60%">
 </p>
 
-Notice that the mode of the the difference of the distribution is at -0.238, also known as Maximum A priori Estimate, the %95-HDI quantifies the uncertainty around this mode, which is the main goal of this analysis.
-
-Other information that can be read from this plot includes:
-- ((TODO))
-- ((TODO))
+Notice that the mode of the the difference of the distribution is at -0.238, also known as Maximum A priori Estimate, the %95-HDI quantifies the uncertainty around this mode, which is the main goal of this analysis. Moreover, With probablity 9.966, theta_2 is greater than theta_1.
 
 #### Diagnostic Plots
 Since this package is based on MCMC sampling methods for inferring the posterior, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnostic plots produced by `pymc3`:
@@ -281,7 +277,9 @@ The main output of the analysis is the following Figure.
 
 
 The information that can be read from this plot includes:
-- ((TODO))
+- Most likly value for mu_1 - mu_2 is -0.993.
+- With probablity 0.95, mu_1 - mu_2 is a value in [-1.93, -0.643].
+- With probablity 0.982, mu_1 is smaller than mu_2.
 
 
 Similar to prior, we get more plots for the posterior too:
@@ -290,6 +288,7 @@ Similar to prior, we get more plots for the posterior too:
     <img src="./example_analysis/outputs/Metric_posterior_all_parameters.png" width="46%">
 </p>
 
+It is highly recommended in data analysis to pay attention to parameters other than centerality
 #### Diagnostic Plots
 Since this package is based on MCMC sampling methods for infering the posteriour, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnastic plots produced by `pymc3`:
 
