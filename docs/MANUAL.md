@@ -285,10 +285,10 @@ The information that can be read from this plot includes:
 Similar to prior, we get more plots for the posterior too:
 <p align="center">
     <img src="./example_analysis/outputs/Metric_posterior_sigma.png" width="46%">
-    <img src="./example_analysis/outputs/Metric_prior_compare_all_parameters.png" width="46%">
+    <img src="./example_analysis/outputs/Metric_posterior_compare_all_parameters.png" width="46%">
 </p>
 
-Beside the centerality parameters, it is highly recommended to discuss other parameters too. 
+Beside the centerality parameters, it is highly recommended to discuss other parameters too. For example, according to the above difference plot for sigma, on one hand it is almost twice probable for sigma_2 to be greater than sigma_1. On the other hand, with 0.95 probablity the difference of two sigmas are in [-0.836, 0.581]. One can interpret this as the lack of notable difference in deviation the two groups of observations.
 
 #### Diagnostic Plots
 Since this package is based on MCMC sampling methods for infering the posteriour, it is important to make sure the sampling process has been done with sufficient granularity. For this purpose you can investigate the diagnastic plots produced by `pymc3`:
@@ -314,8 +314,9 @@ For this model, you can indicate the "Count_plot" and "scatter_plot" to view a v
 #### Model
 To indicate this model in the config file, it is enough to set the `Variable_type` to `Count` arguments in the `[Model]` section of the config file.
 
-By indicating this model, the observation of two groups are assumed to follow ((TODO))
+By indicating this model, the observation of two groups are assumed to follow a negative binomial distribution with seperate mu and alpha for each group. Since it is not easy to interpret alpha parameter of negative binomial distribution, we calculate "sigma" and "skewness" as deterministic functions of "alpha" and "mu."
 
+In the upper level, as the prior, since mu needs to be possitive, its logarithm is assumed to follow Normal distribution, whereas alpha is assumed to follow exponential distribution.
 
 For a discussion on this model, including justfication and examples of usage refer to (Chapter 24 in the book 'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015).). It is worth noting the implementation in `pymc3` is inspired by the code given in [https://github.com/JWarmenhoven/DBDA-python].
 
@@ -350,8 +351,6 @@ The main output of the analysis is the following Figure.
 </p>
 
 
-The information that can be read from this plot includes:
-- ((TODO))
 
 
 Similar to prior, we get more plots for the posterior too:
@@ -371,17 +370,21 @@ Since this package is based on MCMC sampling methods for infering the posteriour
 Notice that different chains for each parameter as converged to one distribution.
 
 ### Ordinal observations: Normal distribution with variable tresholds
-For this model, you can indicate the "Count_plot" and "scatter_plot" to view a visualization of the input. For our contrived data, we get the following Figures.
+For this model, you can indicate the "Count_plot" to view a visualization of the input. For our contrived data, we get the following Figures.
 
 <p align="center">
-    <img src="./example_analysis/outputs/Ordinal_histogram_plot.png" width="49%">
-    <img src="./example_analysis/outputs/Ordinal_scatter_plot.png" width="49%">
+    <img src="./example_analysis/outputs/Ordinal_count_plot.png" width="49%">
 </p>
 
 #### Model
 To indicate this model in the config file, it is enough to set the arguments `Variable_type` to `Ordinal` in the `[Model]` section of the config file.
 
-By indicating this model, the observation of two groups are assumed to follow ((TODO))
+By indicating this model, we assume each level, i.e., possible values for the observations,
+is a representitive for an interval from real line,
+such that the intervals for all levels partition the whole real line.
+The intervals are half open finite lengths except the first level and the last with some latent thresholds. The interval corresponding to the first level is assumed to be from negative infinity to a threshold.
+This allows us to study a latent space with a distance.
+
 
 For a discussion on this model, including justfication and examples of usage refer to (Chapter 23 in the book 'Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan', Second Edition, by John Kruschke (2015)). It is worth noting the implementation in `pymc3` is inspired by the code given in [https://github.com/JWarmenhoven/DBDA-python].
 
@@ -438,7 +441,7 @@ Since this package is based on MCMC sampling methods for infering the posteriour
 Notice that different chains for each parameter as converged to one distribution.
 
 ## Adding a new Model
-To add a new model, you need to add a file in the director models. See similar implimentations in that file.
+Currently, adding a new model is only possible if you clone this repository. You need to add a file in the `models` directory. See similar implimentations in that directory.
 
 ### Bayes Factor (BF) Analysis
 Also known as Bayesian hypothesis testing.
