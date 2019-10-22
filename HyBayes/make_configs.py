@@ -79,6 +79,7 @@ def make_count_config(config: configparser.ConfigParser) -> configparser.ConfigP
 
     config["Plots"]["Scatter_plot"] = "True"
     config["Plots"]["Count_plot"] = "True"
+    config["Plots"]["kind"] = "kde"
 
     config["Model"]["Variable_type"] = "Count"
     config["Model"]["mu_ROPE_begin"] = "-0.1"
@@ -117,7 +118,8 @@ def make_ordinal_config(config: configparser.ConfigParser) -> configparser.Confi
 
     config["Plots"]["Scatter_plot"] = "True"
     config["Plots"]["Count_plot"] = "True"
-
+    config["Plots"]["kind"] = "kde"
+    
     config["Model"]["Variable_type"] = "Ordinal"
     config["Model"]["Min_level"] = "0"
     config["Model"]["Max_level"] = "2"

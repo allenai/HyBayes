@@ -176,7 +176,7 @@ def one_parameter_plot(hierarchical_model, var, file_prefix, config_plot=None, s
                       ax=ax1,
                       color=color, # todo from config
                       )
-    ax.set_title(diff_var_name)
+    ax1.set_title(diff_var_name)
     printLine()
     for ind, ax in enumerate([ax2, ax3]):
         printLine()
