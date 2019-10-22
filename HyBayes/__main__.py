@@ -16,9 +16,12 @@ if __name__ == '__main__':
     logging.basicConfig(filename=logging_total_file_name, filemode="a", level=logging.DEBUG)
     logger = logging.getLogger('root')
 
-    parser = argparse.ArgumentParser(description="Run Bayesian Statistics Tailored towards"
-                                                 "analysing the experiment results specially in NLP area."
-                                                 "Email esamath@gmail.com for comments.")
+    parser = argparse.ArgumentParser(description=
+                                     "Run Bayesian Statistics Tailored towards"
+                                     "analysing the experiment results specially in NLP area. "
+                                     "For an extended manual refer to "
+                                     "https://github.com/allenai/HyBayes/blob/master/docs/MANUAL.md\t"
+                                     "Email esamath@gmail.com for comments.")
     parser.add_argument("-c", "--config", help="address of Config file", default="configs/configMetric.ini")
     parser.add_argument("-v", "--verbose", help="prints the report of the steps", action="store_true", default=False)
     parser.add_argument("--make_configs", help="if on, example configuration files will be made.", action="store_true",default=False)

@@ -163,7 +163,7 @@ def one_parameter_plot(hierarchical_model, var, file_prefix, config_plot=None, s
     # trace.add_values({diff_var_name: diff})
     printLine()
     logger.debug(diff_var_name)
-    pm.plot_posterior(diff_values,  # takes a lot for count variable I don't know why
+    pm.plot_posterior(diff_values,
                       # var_names=[diff_var_name, ],
                       figsize=(4, 4),
                       textsize=text_ratio,
@@ -174,8 +174,9 @@ def one_parameter_plot(hierarchical_model, var, file_prefix, config_plot=None, s
                       ref_val=0,
                       kind=plot_kind,
                       ax=ax1,
-                      color=color, # todo from config
+                      color=color,
                       )
+    printLine()
     ax1.set_title(diff_var_name)
     printLine()
     for ind, ax in enumerate([ax2, ax3]):

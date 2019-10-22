@@ -25,6 +25,7 @@ def printLine(depth=1):
      as well as the time from last printLine call.
     """
     global last_time
+    return 
     new_time = time.time()
     for i in range(1, depth + 1):
         info = inspect.stack()[i]
