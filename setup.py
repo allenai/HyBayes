@@ -8,7 +8,7 @@ def read(file_name):
 
 
 CLASSIFIERS = [
-    'Development Status :: ????',
+    'Development Status :: 3 - Alpha',
     'Intended Audience :: Science/Research',
     'Operating System :: OS Independent',
     'Programming Language :: Python :: 3',
