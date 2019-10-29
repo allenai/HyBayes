@@ -35,6 +35,7 @@ setup(
     version='0.0.1',
     description='Bayesian Assessment of Hypotheses',
     long_description=read('README.md'),
+    long_description_content_type='text/markdown',
     url='https://github.com/allenai/HyBayes',
     download_url='https://github.com/allenai/HyBayes/archive/0.0.1.tar.gz',
     author='Erfan Sadeqi Azer, Daniel Khashabi',
