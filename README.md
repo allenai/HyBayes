@@ -90,10 +90,10 @@ This code is published under [Attribution-NonCommercial-ShareAlike 4.0 Internati
 ## Citation 
 If you used this package in your research feel free to cite the following paper: 
 ```
-@article{hypothesisAssessment19,
-  title={??},
+@misc{hypothesisAssessment19,
+  title={Not All Claims are Created Equal: Choosing the Right Hypothesis Assessment Tests for Your Claims Choosing the Right Approach to Assess Your Hypotheses},
   author={{Sadeqi Azer}, Erfan and Khashabi, Daniel and Sabharwal, Ashish and Roth, Dan},
-  journal={??},
+  howpublished={arxiv},
   year={2019}
 }
 ```
