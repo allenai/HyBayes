@@ -91,7 +91,7 @@ This code is published under [Attribution-NonCommercial-ShareAlike 4.0 Internati
 If you used this package in your research feel free to cite the following paper: 
 ```
 @misc{hypothesisAssessment19,
-  title={Not All Claims are Created Equal: Choosing the Right Hypothesis Assessment Tests for Your Claims Choosing the Right Approach to Assess Your Hypotheses},
+  title={Not All Claims are Created Equal: Choosing the Right Approach to Assess Your Hypotheses},
   author={{Sadeqi Azer}, Erfan and Khashabi, Daniel and Sabharwal, Ashish and Roth, Dan},
   howpublished={arxiv},
   year={2019}
