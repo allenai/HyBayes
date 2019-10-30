@@ -38,7 +38,7 @@ setup(
     long_description_content_type='text/markdown',
     include_package_data=True,
     url='https://github.com/allenai/HyBayes',
-    download_url='https://github.com/allenai/HyBayes/archive/0.0.1.tar.gz',
+    download_url='https://github.com/allenai/HyBayes/archive/0.0.2.tar.gz',
     author='Erfan Sadeqi Azer, Daniel Khashabi',
     author_email='esamath@gmail.com',
     license='BY-NC-SA',
