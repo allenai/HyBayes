@@ -70,7 +70,7 @@ To demonstrate everything with a quick example, run the following command to gen
 ```bash
  > python -m HyBayes --make_data
 ```
-You can see the some artificial data made in directory `artificial_data`. Moreover either use the config files provided in the repository [], or run:
+You can see that some artificial data is made in directory `artificial_data`. Moreover either use the config files provided in the repository [], or run:
 ```bash
  > python -m HyBayes --make_configs
  ```
