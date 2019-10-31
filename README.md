@@ -84,7 +84,7 @@ If you want to learn more about this package, please refer to the [extended manu
 If you want to learn about the concepts discusssed here, refer to the paper below. 
 
 ## License 
-This code is published under [Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode) license.  
+This code is published under [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0) license.  
 
 
 ## Citation 
