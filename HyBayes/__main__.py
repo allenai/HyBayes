@@ -9,7 +9,7 @@ from .experiment import Experiment
 from shutil import copyfile
 from .utils import *
 from .visualization import pre_analysis_plots
-
+__version__ = "0.0.3"
 if __name__ == '__main__':
     logs_folder_made = mk_dir_if_not_exists("logs")
     logging_total_file_name = f"logs/allLogs.log"
@@ -17,11 +17,13 @@ if __name__ == '__main__':
     logger = logging.getLogger('root')
 
     parser = argparse.ArgumentParser(description=
+                                     f"HyBayes {__version__}: "
                                      "Run Bayesian Statistics Tailored towards"
                                      "analysing the experiment results specially in NLP area. "
                                      "For an extended manual refer to "
                                      "https://github.com/allenai/HyBayes/blob/master/docs/MANUAL.md\t"
-                                     "Email esamath@gmail.com for comments.")
+                                     "Email esamath@gmail.com for comments."
+                                     )
     parser.add_argument("-c", "--config", help="address of Config file", default="configs/configMetric.ini")
     parser.add_argument("-v", "--verbose", help="prints the report of the steps", action="store_true", default=False)
     parser.add_argument("--make_configs", help="if on, example configuration files will be made.", action="store_true",default=False)
@@ -57,7 +59,11 @@ if __name__ == '__main__':
 
     config = configparser.ConfigParser()
     logger.info(f"Reading config file: {args.config}")
-    config.read(args.config)
+    if not os.path.isfile(args.config):
+        logger.error(f"File not found: {args.config} ")
+        exit(0)
+    else:
+        config.read(args.config)
 
     try:
         if logs_folder_made:

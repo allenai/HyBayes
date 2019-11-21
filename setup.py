@@ -32,7 +32,7 @@ install_requirements_list = [
 
 setup(
     name='hybayes',
-    version='0.0.2',
+    version='0.0.3',
     description='Bayesian Assessment of Hypotheses',
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
@@ -41,7 +41,7 @@ setup(
     download_url='https://github.com/allenai/HyBayes/archive/0.0.2.tar.gz',
     author='Erfan Sadeqi Azer, Daniel Khashabi',
     author_email='esamath@gmail.com',
-    license='BY-NC-SA',
+    license='Apache 2.0',
     keywords="Bayesian Statistics, two groups test, Hypothesis Testing, Bayes Factor,"
              "NLP, natural language processing, ",
     #packages=['HyBayes'],
