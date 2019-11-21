@@ -24,11 +24,15 @@ You have two options for installation:
  > pip install -r requirements.txt
 ``` 
 
-
-If you're using MacOS, install GraphViz via `brew` command: 
+In case you have issue with installing GraphViz, consider using conda installer:
+```bash
+ > conda install -c anaconda graphviz --yes
+```
+If you are using MacOS, `brew` command can used: 
 ```bash
  > brew install graphviz
 ```
+
 
 ### Preparing configuration file
 To analyze your data, you need to prepare the a configuration file that specifies the information needed for the analysis (e.g., the address to your observation files, the type of plots and files you want to be stored).
