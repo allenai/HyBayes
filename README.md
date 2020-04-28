@@ -94,10 +94,10 @@ This code is published under [Apache 2.0](https://www.apache.org/licenses/LICENS
 ## Citation 
 If you used this package in your research feel free to cite the following paper: 
 ```
-@misc{hypothesisAssessment19,
-  title={Not All Claims are Created Equal: Choosing the Right Approach to Assess Your Hypotheses},
+@inproceedings{hypothesisAssessment20,
+  title={Not All Claims are Created Equal:Choosing the Right Statistical Approach to Assess Hypotheses},
   author={{Sadeqi Azer}, Erfan and Khashabi, Daniel and Sabharwal, Ashish and Roth, Dan},
-  howpublished={arxiv},
-  year={2019}
+  booktitle={Annual Meeting of the Association for Computational Linguistics (ACL)},
+  year={2020}
 }
 ```
